@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test URL-ova sa društvenih mreža</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .logo-preview {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            text-align: center;
+            background-image: 
+              linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+              linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+              linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+              linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        img {
+            max-width: 200px;
+            max-height: 200px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        input[type="url"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .test-urls {
+            margin-top: 20px;
+        }
+        .test-url-btn {
+            margin: 5px;
+            background-color: #2196F3;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        #statusMessage {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test URL-ova sa društvenih mreža</h1>
+    
+    <div class="container">
+        <h2>Testiranje URL-a sa društvenih mreža</h2>
+        <p>Unesite URL adresu slike sa društvene mreže da proverite da li će ispravno biti prikazana:</p>
+        
+        <form id="testForm">
+            <input type="url" id="imageUrl" placeholder="Unesite URL slike (npr. https://i.imgur.com/yQGiMd5.png)" required>
+            <button type="submit">Testiraj URL</button>
+        </form>
+        
+        <div class="logo-preview">
+            <img id="logoPreview" src="" alt="Logo preview" style="display: none;">
+            <p id="noPreview">Ovde će biti prikazan logo</p>
+        </div>
+        
+        <div id="statusMessage"></div>
+        
+        <div class="test-urls">
+            <h3>Probajte neke od ovih URL-ova:</h3>
+            <button class="test-url-btn" data-url="https://i.imgur.com/yQGiMd5.png">Imgur direktni link</button>
+            <button class="test-url-btn" data-url="https://imgur.com/yQGiMd5">Imgur stranica</button>
+            <button class="test-url-btn" data-url="https://www.facebook.com/photo/?fbid=122115841468289299">Facebook slika</button>
+            <button class="test-url-btn" data-url="https://pbs.twimg.com/profile_images/1683325380441128960/yRsRRjGO_400x400.jpg">Twitter slika</button>
+            <button class="test-url-btn" data-url="https://scontent.fbeg1-1.fna.fbcdn.net/example.jpg">Facebook CDN</button>
+            <button class="test-url-btn" data-url="https://drive.google.com/file/d/1FZ51rVQgE06xHi9HE7kioO2DpNQZz_G3/view">Google Drive</button>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h2>Provera trenutnog logotipa</h2>
+        <p>Ovo je logotip koji je trenutno sačuvan u lokalnom skladištu:</p>
+        
+        <div class="logo-preview">
+            <img id="currentLogo" src="" alt="Current logo">
+            <p id="noCurrentLogo" style="display:none;">Nema sačuvanog logotipa</p>
+        </div>
+        
+        <button id="clearLogoBtn">Obriši sačuvani logo</button>
+    </div>
+    
+    <div class="container">
+        <h2>Informacije o validaciji URL-a</h2>
+        <div id="urlValidation"></div>
+    </div>
+
+    <script>
+        // DOM elementi
+        const testForm = document.getElementById('testForm');
+        const imageUrl = document.getElementById('imageUrl');
+        const logoPreview = document.getElementById('logoPreview');
+        const noPreview = document.getElementById('noPreview');
+        const statusMessage = document.getElementById('statusMessage');
+        const currentLogo = document.getElementById('currentLogo');
+        const noCurrentLogo = document.getElementById('noCurrentLogo');
+        const clearLogoBtn = document.getElementById('clearLogoBtn');
+        const urlValidation = document.getElementById('urlValidation');
+        const testUrlButtons = document.querySelectorAll('.test-url-btn');
+        
+        // Učitavanje trenutnog loga iz localStorage-a
+        function loadCurrentLogo() {
+            const savedLogo = localStorage.getItem('site_logo');
+            if (savedLogo) {
+                currentLogo.src = savedLogo;
+                currentLogo.style.display = 'block';
+                noCurrentLogo.style.display = 'none';
+            } else {
+                currentLogo.style.display = 'none';
+                noCurrentLogo.style.display = 'block';
+            }
+        }
+        
+        // Brisanje loga iz localStorage-a
+        clearLogoBtn.addEventListener('click', function() {
+            if (confirm('Da li ste sigurni da želite obrisati sačuvani logo?')) {
+                localStorage.removeItem('site_logo');
+                loadCurrentLogo();
+                statusMessage.innerHTML = '<div class="success">Logo je uspešno obrisan iz localStorage-a.</div>';
+            }
+        });
+        
+        // Test URL validacije
+        function isValidImageUrl(url) {
+            // Provera da li je URL sa društvenih mreža (Facebook, Instagram, Twitter, Imgur, etc.)
+            const socialMediaPatterns = [
+                /facebook\.com/i,
+                /instagram\.com/i,
+                /twitter\.com/i,
+                /x\.com/i,              // Novi Twitter/X domen
+                /imgur\.com/i,
+                /pinterest\.com/i,
+                /linkedin\.com/i,
+                /tumblr\.com/i,
+                /flickr\.com/i,
+                /cdn\./i,
+                /cloudfront\.net/i,
+                /cloudinary\.com/i,
+                /googleusercontent\.com/i,
+                /fbcdn\.net/i,          // Facebook CDN
+                /twimg\.com/i,          // Twitter Images
+                /cdninstagram\.com/i,   // Instagram CDN
+                /pinimg\.com/i,         // Pinterest Images
+                /wp\.com/i,             // WordPress
+                /staticflickr\.com/i,   // Flickr Static
+                /pbs\.twimg\.com/i,     // Twitter (X) images
+                /media\.giphy\.com/i,   // Giphy
+                /media-cdn\./i,         // Razni CDN-ovi za medije
+                /imgflip\.com/i,        // ImgFlip
+                /vk\.com/i,             // VKontakte
+                /tiktok\.com/i,         // TikTok (za potencijalne avatare)
+                /giphy\.com/i           // Giphy linkovi
+            ];
+            
+            // Specifični obrasci za poznate servise za deljenje slika
+            const imageHostPatterns = [
+                /imgur\.com\/[a-zA-Z0-9]{5,10}(\.[a-zA-Z]{3,4})?$/i,   // Imgur direktni linkovi
+                /i\.imgur\.com/i,
+                /ibb\.co/i,
+                /postimg\.cc/i,
+                /imgbb\.com/i,
+                /imageshack\.com/i,
+                /dropbox\.com.*\?dl=1/i,
+                /drive\.google\.com.*\/view/i,
+                /drive\.google\.com.*\/uc\?/i,      // Google Drive direktan link
+                /onedrive\.live\.com.*\?/i,         // OneDrive linkovi
+                /dl\.dropboxusercontent\.com/i,     // Dropbox direktni linkovi
+                /media\.discordapp\.net/i,          // Discord media
+                /res\.cloudinary\.com/i,            // Cloudinary resursi
+                /\.(googleusercontent|ggpht)\.com/i // Google Photo/Drive URL-ovi
+            ];
+            
+            // Specifični obrasci za URL transformacije
+            let transformedUrl = url;
+            let isTransformed = false;
+            
+            // Google Drive transformacija
+            if (url.includes('drive.google.com') && url.includes('/file/d/')) {
+                const fileId = url.match(/\/file\/d\/([^\/]+)/);
+                if (fileId && fileId[1]) {
+                    transformedUrl = `https://drive.google.com/uc?export=view&id=${fileId[1]}`;
+                    isTransformed = true;
+                }
+            }
+            
+            // Instagram specific pattern - često zahteva posebnu obradu
+            const isInstagramPost = url.includes('instagram.com/p/');
+            
+            // Provera da li URL odgovara nekom od društvenih mreža
+            const isSocialMedia = socialMediaPatterns.some(pattern => pattern.test(url));
+            
+            // Provera da li URL odgovara nekom od direktnih servisa za deljenje slika
+            const isImageHost = imageHostPatterns.some(pattern => pattern.test(url));
+            
+            // Provera da li URL ima ekstenziju slike
+            const hasImageExtension = /\.(jpg|jpeg|png|gif|bmp|webp|svg|ico|tiff|avif)(\?.*)?$/i.test(url);
+            
+            // Provera za direktne linkove do slika koji sadrže ključne reči
+            const hasImageKeywords = /(image|photo|slika|picture|avatar|logo|thumbnail|icon|media|cdn)/i.test(url);
+            
+            return {
+                isValid: isSocialMedia || isImageHost || hasImageExtension || hasImageKeywords || isInstagramPost,
+                isSocialMedia,
+                isImageHost,
+                hasImageExtension,
+                hasImageKeywords,
+                isInstagramPost,
+                transformedUrl,
+                isTransformed
+            };
+        }
+        
+        // Test URL-a
+        testForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const url = imageUrl.value.trim();
+            if (!url) {
+                statusMessage.innerHTML = '<div class="error">Molimo unesite URL adresu.</div>';
+                return;
+            }
+            
+            // Provera validnosti URL-a
+            const validationResult = isValidImageUrl(url);
+            const testUrl = validationResult.isTransformed ? validationResult.transformedUrl : url;
+            
+            // Prikaz rezultata validacije
+            let validationHtml = `<h3>Rezultati validacije za URL: ${url}</h3>`;
+            validationHtml += `<ul>`;
+            validationHtml += `<li>Da li je validan URL slike: <strong>${validationResult.isValid ? 'Da' : 'Ne'}</strong></li>`;
+            validationHtml += `<li>Prepoznat kao društvena mreža: <strong>${validationResult.isSocialMedia ? 'Da' : 'Ne'}</strong></li>`;
+            validationHtml += `<li>Prepoznat kao servis za deljenje slika: <strong>${validationResult.isImageHost ? 'Da' : 'Ne'}</strong></li>`;
+            validationHtml += `<li>Ima ekstenziju slike: <strong>${validationResult.hasImageExtension ? 'Da' : 'Ne'}</strong></li>`;
+            validationHtml += `<li>Sadrži ključne reči za slike: <strong>${validationResult.hasImageKeywords ? 'Da' : 'Ne'}</strong></li>`;
+            
+            if (validationResult.isTransformed) {
+                validationHtml += `<li>URL je transformisan: <strong>Da</strong></li>`;
+                validationHtml += `<li>Transformisani URL: <code>${validationResult.transformedUrl}</code></li>`;
+            }
+            
+            validationHtml += `</ul>`;
+            urlValidation.innerHTML = validationHtml;
+            
+            // Testiranje učitavanja slike
+            statusMessage.innerHTML = '<div style="color: blue;">Učitavanje slike...</div>';
+            
+            const testImg = new Image();
+            testImg.onload = function() {
+                // Slika je uspešno učitana
+                logoPreview.src = testUrl;
+                logoPreview.style.display = 'block';
+                noPreview.style.display = 'none';
+                statusMessage.innerHTML = '<div class="success">Slika je uspešno učitana!</div>';
+                
+                // Dodaj dugme za čuvanje
+                statusMessage.innerHTML += '<button id="saveThisLogo" style="margin-left: 10px; background-color: #4CAF50;">Sačuvaj ovaj logo</button>';
+                document.getElementById('saveThisLogo').addEventListener('click', function() {
+                    localStorage.setItem('site_logo', testUrl);
+                    loadCurrentLogo();
+                    statusMessage.innerHTML = '<div class="success">Logo je uspešno sačuvan u localStorage-u!</div>';
+                });
+            };
+            
+            testImg.onerror = function() {
+                // Greška pri učitavanju slike
+                logoPreview.style.display = 'none';
+                noPreview.style.display = 'block';
+                statusMessage.innerHTML = `
+                    <div class="error">
+                        Nemoguće učitati sliku sa unetog URL-a.<br>
+                        <small>
+                            Mogući razlozi:<br>
+                            - URL ne vodi direktno do slike<br>
+                            - Sajt ne dozvoljava preuzimanje slika (CORS ograničenja)<br>
+                            - Koristite link sa društvene mreže koji zahteva pristup<br>
+                        </small>
+                    </div>
+                `;
+            };
+            
+            testImg.src = testUrl;
+        });
+        
+        // Test URL dugmad
+        testUrlButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                imageUrl.value = url;
+                testForm.dispatchEvent(new Event('submit'));
+            });
+        });
+        
+        // Inicijalizacija
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrentLogo();
+        });
+    </script>
+</body>
+</html>
