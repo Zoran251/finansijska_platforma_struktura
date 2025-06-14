@@ -1,0 +1,31 @@
+# Development files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Backup files
+*.bak
+*~
+
+# Test files (keep only for development)
+test-*.html
+debug-*.html
+*-test.html
+*-backup.*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Node modules (if added later)
+node_modules/
+
+# Production builds
+dist/
+build/
