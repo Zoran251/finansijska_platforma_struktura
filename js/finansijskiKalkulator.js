@@ -52,8 +52,25 @@ function calculateInvestment() {
 
 // Prikazuje rezultate kalkulacije
 function displayResults(yearlyData, totalInvested, totalValue) {
-    // Prikazujemo sekciju sa rezultatima
-    const resultSection = document.getElementById('investmentResult');
+    // Pokušavamo da pronađemo aktivni modal
+    const activeModal = document.querySelector('.modal.show') || document.querySelector('.modal');
+    let resultSection = null;
+    
+    if (activeModal) {
+        resultSection = activeModal.querySelector('#investmentResult');
+    }
+    
+    // Fallback - traži u celom dokumentu
+    if (!resultSection) {
+        const resultSections = document.querySelectorAll('#investmentResult');
+        resultSection = resultSections[resultSections.length - 1]; // Uzmi poslednji
+    }
+    
+    if (!resultSection) {
+        console.error('Ne mogu da pronađem investmentResult element');
+        return;
+    }
+    
     resultSection.classList.remove('d-none');
     
     // Formatiramo vrednosti kao valutu
@@ -63,31 +80,62 @@ function displayResults(yearlyData, totalInvested, totalValue) {
         minimumFractionDigits: 0
     });
     
-    // Popunjavamo vrednosti
-    document.getElementById('totalInvested').textContent = formatter.format(totalInvested);
-    document.getElementById('totalReturn').textContent = formatter.format(totalValue);
-    document.getElementById('compoundInterest').textContent = formatter.format(totalValue - totalInvested);
+    // Popunjavamo vrednosti - pokušavamo u aktivnom modalu prvo
+    let totalInvestedElement, totalReturnElement, compoundInterestElement;
+    
+    if (activeModal) {
+        totalInvestedElement = activeModal.querySelector('#totalInvested');
+        totalReturnElement = activeModal.querySelector('#totalReturn');
+        compoundInterestElement = activeModal.querySelector('#compoundInterest');
+    }
+    
+    // Fallback
+    if (!totalInvestedElement) totalInvestedElement = document.querySelector('#totalInvested');
+    if (!totalReturnElement) totalReturnElement = document.querySelector('#totalReturn');
+    if (!compoundInterestElement) compoundInterestElement = document.querySelector('#compoundInterest');
+    
+    if (totalInvestedElement) totalInvestedElement.textContent = formatter.format(totalInvested);
+    if (totalReturnElement) totalReturnElement.textContent = formatter.format(totalValue);
+    if (compoundInterestElement) compoundInterestElement.textContent = formatter.format(totalValue - totalInvested);
     
     // Crtamo grafikon
-    drawInvestmentChart(yearlyData);
+    drawInvestmentChart(yearlyData, activeModal);
 }
 
 // Crta grafikon rasta investicije
-function drawInvestmentChart(yearlyData) {
-    const ctx = document.getElementById('investmentChart').getContext('2d');
+function drawInvestmentChart(yearlyData, activeModal = null) {
+    let canvasElement = null;
+    
+    // Pokušavamo da pronađemo canvas u aktivnom modalu
+    if (activeModal) {
+        canvasElement = activeModal.querySelector('#investmentChart');
+    }
+    
+    // Fallback - traži u celom dokumentu
+    if (!canvasElement) {
+        const canvases = document.querySelectorAll('#investmentChart');
+        canvasElement = canvases[canvases.length - 1]; // Uzmi poslednji
+    }
+    
+    if (!canvasElement) {
+        console.error('Ne mogu da pronađem investmentChart canvas element');
+        return;
+    }
+    
+    const ctx = canvasElement.getContext('2d');
     
     // Pripremamo podatke za grafikon
     const years = yearlyData.map(data => `Godina ${data.year}`);
     const investedValues = yearlyData.map(data => data.invested);
     const totalValues = yearlyData.map(data => data.value);
     
-    // Ako već postoji grafikon, uništavamo ga
-    if (window.investmentChart instanceof Chart) {
-        window.investmentChart.destroy();
+    // Ako već postoji grafikon za ovaj canvas, uništavamo ga
+    if (canvasElement.chart instanceof Chart) {
+        canvasElement.chart.destroy();
     }
     
     // Kreiramo novi grafikon
-    window.investmentChart = new Chart(ctx, {
+    canvasElement.chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: years,

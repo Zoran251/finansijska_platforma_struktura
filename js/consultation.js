@@ -34,18 +34,76 @@ function saveConsultationData(formData) {
     // Učitaj postojeće podatke ili kreiraj novi niz ako ne postoje
     const appointments = JSON.parse(localStorage.getItem('consultationAppointments') || '[]');
     
+    // Kreiraj ID za konsultaciju
+    const consultationId = Date.now().toString();
+    
     // Dodaj novu konsultaciju
-    appointments.push({
-        id: Date.now().toString(),
+    const newAppointment = {
+        id: consultationId,
         ...formData,
         status: 'pending',
         createdAt: new Date().toISOString()
-    });
+    };
+    
+    appointments.push(newAppointment);
     
     // Sačuvaj u localStorage
     localStorage.setItem('consultationAppointments', JSON.stringify(appointments));
     
+    // Dodaj notifikaciju za admina
+    addAdminNotification(newAppointment);
+    
+    // Dodaj notifikaciju za korisnika
+    addUserNotification(newAppointment);
+    
     return true;
+}
+
+// Funkcija za dodavanje notifikacije za admina
+function addAdminNotification(appointment) {
+    const notifications = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
+    
+    const notification = {
+        id: `consultation_${appointment.id}`,
+        type: 'consultation_request',
+        title: 'Nova konsultacija zakazana',
+        message: `${appointment.name} je zakazao konsultaciju za ${new Date(appointment.dateTime).toLocaleString('sr-RS')}`,
+        timestamp: new Date().toISOString(),
+        read: false,
+        data: {
+            consultationId: appointment.id,
+            clientName: appointment.name,
+            clientEmail: appointment.email,
+            dateTime: appointment.dateTime,
+            topic: appointment.topic
+        }
+    };
+    
+    notifications.unshift(notification);
+    localStorage.setItem('admin_notifications', JSON.stringify(notifications));
+}
+
+// Funkcija za dodavanje notifikacije za korisnika
+function addUserNotification(appointment) {
+    const notifications = JSON.parse(localStorage.getItem('user_notifications') || '[]');
+    
+    const notification = {
+        id: `consultation_user_${appointment.id}`,
+        type: 'consultation_pending',
+        title: 'Konsultacija zakazana',
+        message: `Vaša konsultacija je zakazana za ${new Date(appointment.dateTime).toLocaleString('sr-RS')}. Čeka se potvrda admina.`,
+        timestamp: new Date().toISOString(),
+        read: false,
+        data: {
+            consultationId: appointment.id,
+            dateTime: appointment.dateTime,
+            status: 'pending'
+        }
+    };
+    
+    notifications.unshift(notification);
+    localStorage.setItem('user_notifications', JSON.stringify(notifications));
+}
     
     // Vraćamo true ako je uspešno sačuvano
     return true;
