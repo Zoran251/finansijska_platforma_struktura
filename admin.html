@@ -624,17 +624,23 @@
         const currentLogo = document.getElementById('currentLogo');
         const saveSuccess = document.getElementById('saveSuccess');
         const logoutBtn = document.getElementById('logoutBtn');
-        
-        // Provera da li je korisnik već prijavljen
+          // Provera da li je korisnik već prijavljen
         function checkLoginStatus() {
+            console.log('🔍 Checking login status...');
             const isLoggedIn = localStorage.getItem('admin_logged_in');
             const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
             
+            console.log('Admin logged in:', isLoggedIn);
+            console.log('Current user:', currentUser);
+            console.log('Admin email check:', currentUser.email === ADMIN_EMAIL);
+            
             // Provera da li je korisnik prijavljen i da li je admin
             if (isLoggedIn === 'true' && currentUser.email === ADMIN_EMAIL) {
+                console.log('✅ User is logged in as admin, showing admin panel');
                 loginSection.style.display = 'none';
                 adminSection.style.display = 'block';
             } else {
+                console.log('❌ User not logged in or not admin, showing login form');
                 // Prikaži login formu
                 loginSection.style.display = 'block';
                 adminSection.style.display = 'none';
@@ -648,16 +654,23 @@
                 currentLogo.src = savedLogo;
             }
         }
-        
-        // Prijava admina - koristi hardkodiranu lozinku za lakši pristup
+          // Prijava admina - koristi hardkodiranu lozinku za lakši pristup
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('🔐 Login form submitted');
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
+            console.log('Login attempt:', email, password);
+            console.log('Admin credentials:', ADMIN_EMAIL, ADMIN_PASSWORD);
+            console.log('Email match:', email === ADMIN_EMAIL);
+            console.log('Password match:', password === ADMIN_PASSWORD);
+            
             // Jednostavna provera sa hardkodiranim kredencijalima
             if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+                console.log('✅ Login successful!');
+                
                 // Store user data in localStorage na isti način kao u preview.html
                 localStorage.setItem('currentUser', JSON.stringify({
                     email: email,
@@ -666,10 +679,15 @@
                 }));
                 localStorage.setItem('admin_logged_in', 'true');
                 
+                console.log('Hiding login section...');
                 loginSection.style.display = 'none';
+                console.log('Showing admin section...');
                 adminSection.style.display = 'block';
                 loginError.style.display = 'none';
+                
+                console.log('✅ Admin panel should now be visible');
             } else {
+                console.log('❌ Login failed!');
                 loginError.style.display = 'block';
                 loginError.textContent = 'Netačan email ili lozinka. Koristite: zorandostica2@gmail.com / zoran2403';
             }
@@ -1515,7 +1533,8 @@
             });
         }
         
-        // Funkcija za promenu statusa konsultacije lokalno        function updateConsultationStatusLocal(id, newStatus) {
+        // Funkcija za promenu statusa konsultacije lokalno
+        function updateConsultationStatusLocal(id, newStatus) {
             const consultations = JSON.parse(localStorage.getItem('consultationAppointments') || '[]');
             let updatedConsultation = null;
             
@@ -1663,9 +1682,12 @@
                 }
             }
         }
-        
-        // Inicijalizacija
+          // Inicijalizacija
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Admin panel DOM loaded');
+            console.log('Login section element:', loginSection);
+            console.log('Admin section element:', adminSection);
+            
             checkLoginStatus();
             loadSavedLogo();
             loadLocalStorageData();
