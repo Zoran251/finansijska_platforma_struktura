@@ -1364,14 +1364,22 @@
             document.getElementById('completedCount').textContent = completed;
             document.getElementById('canceledCount').textContent = canceled;
         }
-        
-        // Funkcija za učitavanje konsultacija u admin panelu
+          // Funkcija za učitavanje konsultacija u admin panelu
         function loadConsultations() {
+            console.log('🔄 Loading consultations...');
+            
+            // IZMENA: Čitamo iz 'consultationAppointments' umesto 'consultations'
             const consultations = JSON.parse(localStorage.getItem('consultationAppointments') || '[]');
+            
+            console.log('📋 Found consultations:', consultations);
+            
             const filter = document.getElementById('consultationsFilter')?.value || 'all';
             const container = document.getElementById('consultationsTable');
             
-            if (!container) return;
+            if (!container) {
+                console.error('❌ Consultations table not found');
+                return;
+            }
             
             // Filtriraj konsultacije prema izabranom filteru
             let filteredConsultations = [...consultations];
@@ -1381,12 +1389,14 @@
             
             // Sortiraj po datumu (najnovije prvo)
             filteredConsultations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            
-            // Ako nema konsultacija
+              // Ako nema konsultacija
             if (filteredConsultations.length === 0) {
+                console.log('📭 No consultations found');
                 container.innerHTML = '<div class="empty-state"><p>Nema zakazanih konsultacija.</p></div>';
                 return;
             }
+            
+            console.log('✅ Displaying', filteredConsultations.length, 'consultations');
             
             // Prevod statusa na srpski
             const statusTranslation = {
