@@ -1,0 +1,24 @@
+/* Vendor prefixes for backdrop-filter */
+.container,
+.modal-content,
+.hero-description,
+.support-chat {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+/* Fix for Safari scrolling */
+.chat-messages,
+.modal-content {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Modern scrollbar styling with cross-browser support */
+.chat-messages {
+    scrollbar-width: thin;
+    -webkit-scrollbar-width: thin;
+    scrollbar-color: var(--gold-medium) rgba(22, 22, 26, 0.95);
+    -webkit-scrollbar-color: var(--gold-medium) rgba(22, 22, 26, 0.95);
+}
+
+/* Остатак CSS кода пребацити из inline стилова */
