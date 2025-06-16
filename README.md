@@ -18,7 +18,7 @@
 
 ## 🚀 Demo aplikacije
 
-**[▶️ Pokrenite Golden Balance Live Demo](https://zoran25.github.io/finansijska_platforma_struktura)**
+**[▶️ Pokrenite Golden Balance Live Demo](https://zoran251.github.io/finansijska_platforma_struktura/preview.html)**
 
 ## 💡 Kako funkcioniše
 
