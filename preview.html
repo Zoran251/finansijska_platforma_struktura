@@ -1,334 +1,328 @@
 <!DOCTYPE html>
-<html lang="sr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinPlatforma - Pregled</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#667eea">
-    <meta name="description" content="Napredna finansijska platforma za upravljanje ličnim finansijama">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    
-    <link rel="stylesheet" href="styles/preview.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="js/responsive.js"></script>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header" id="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-brand">
-                    <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=FP" alt="Logo" class="brand-logo">
-                    <span class="brand-text">FinPlatforma</span>
-                </div>
-                
-                <div class="nav-menu" id="navMenu">
-                    <a href="#home" class="nav-link active">Početna</a>
-                    <a href="#features" class="nav-link">Funkcionalnosti</a>
-                    <a href="#about" class="nav-link">O nama</a>
-                    <a href="#contact" class="nav-link">Kontakt</a>
-                    <a href="index.html" class="nav-link nav-app">Aplikacija</a>
-                </div>
-                
-                <div class="nav-toggle" id="navToggle">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="hero-container">
-            <div class="hero-content">
-                <h1 class="hero-title">
-                    Upravljajte svojim <span class="highlight">finansijama</span> pametno
-                </h1>
-                <p class="hero-description">
-                    Napredna platforma za praćenje prihoda, rashoda i budžeta. 
-                    Analizirajte svoje finansijske navike i donosite bolje odluke.
-                </p>
-                <div class="hero-buttons">
-                    <a href="index.html" class="btn btn-primary">
-                        <i class="fas fa-rocket"></i>
-                        Počnite odmah
-                    </a>
-                    <a href="#features" class="btn btn-secondary">
-                        <i class="fas fa-info-circle"></i>
-                        Saznajte više
-                    </a>
-                </div>
-                
-                <!-- Mobile App Download -->
-                <div class="download-section">
-                    <p class="download-text">Preuzmite aplikaciju:</p>
-                    <button class="btn btn-download" id="installBtn">
-                        <i class="fas fa-download"></i>
-                        Instaliraj aplikaciju
-                    </button>
-                </div>
-            </div>
+    <title>Golden Balance | Finansijska platforma</title>    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="js/finansijskiKalkulator.js" defer></script><link rel="stylesheet" href="css/styles.css">    <link rel="stylesheet" href="css/support-chat.css"><style>
+        :root {
+            /* Enhanced Gold Palette */
+            --gold-bright: #FFD700; /* Svetlija zlatna */
+            --gold-medium: #D4AF37; /* Osnovna zlatna */
+            --gold-dark: #B8860B; /* Tamnija zlatna */
+            --gold-pale: #F0E68C; /* Bleda zlatna */
+            --gold-glow: rgba(255, 215, 0, 0.3); /* Zlatni sjaj za efekte */
             
-            <div class="hero-image">
-                <div class="dashboard-preview">
-                    <div class="preview-header">
-                        <div class="preview-dots">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                    <div class="preview-content">
-                        <div class="preview-stats">
-                            <div class="stat-card">
-                                <div class="stat-icon income">
-                                    <i class="fas fa-arrow-up"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h4>Prihodi</h4>
-                                    <p>125,000 RSD</p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon expense">
-                                    <i class="fas fa-arrow-down"></i>
-                                </div>
-                                <div class="stat-info">
-                                    <h4>Rashodi</h4>
-                                    <p>85,000 RSD</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="preview-chart">
-                            <div class="chart-placeholder">
-                                <i class="fas fa-chart-line"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Ključne funkcionalnosti</h2>
-                <p class="section-subtitle">
-                    Sve što vam je potrebno za potpunu kontrolu nad finansijama
-                </p>
-            </div>
+            /* Gradijenti */
+            --gradient-gold: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B);
+            --gradient-gold-light: linear-gradient(135deg, #F0E68C, #FFD700);
+            --gradient-gold-dark: linear-gradient(135deg, #B8860B, #8B6914);
             
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-tachometer-alt"></i>
-                    </div>
-                    <h3>Dashboard</h3>
-                    <p>Pregled svih finansijskih podataka na jednom mestu sa interaktivnim graficima.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-exchange-alt"></i>
-                    </div>
-                    <h3>Transakcije</h3>
-                    <p>Lako dodavanje i praćenje svih prihoda i rashoda sa kategorijama.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
-                    <h3>Budžet</h3>
-                    <p>Postavite budžete po kategorijama i pratite potrošnju u realnom vremenu.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <h3>Analitika</h3>
-                    <p>Detaljni izvештaji i analize vaših finansijskih navika.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobilna aplikacija</h3>
-                    <p>Pristup aplikaciji sa bilo kog uređaja, rad offline bez interneta.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Bezbednost</h3>
-                    <p>Vaši podaci su sigurni sa naprednim sistemom autentifikacije.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section class="about" id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>O FinPlatformi</h2>
-                    <p>
-                        FinPlatforma je napredna aplikacija za upravljanje ličnim finansijama 
-                        koja vam pomaže da steknete potpunu kontrolu nad svojim novcem.
-                    </p>
-                    <p>
-                        Sa intuitivnim interfejsom i naprednim funkcionalnostima, možete 
-                        lako pratiti prihode, rashode, postaviti budžete i analizirati 
-                        svoje finansijske navike.
-                    </p>
-                    
-                    <div class="stats-container">
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="1000">0</h3>
-                            <p>Aktivnih korisnika</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="50000">0</h3>
-                            <p>Transakcija obrađeno</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3 class="stat-number" data-target="99">0</h3>
-                            <p>% Zadovoljnih korisnika</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="about-image">
-                    <div class="image-placeholder">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Kontaktirajte nas</h2>
-                <p class="section-subtitle">
-                    Imate pitanja? Rado ćemo vam pomoći!
-                </p>
-            </div>
+            /* Logo Styles */
+            --logo-bg-color: rgba(30, 30, 40, 0.2);
+            --logo-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            --logo-loaded-shadow: 0 0 5px rgba(212, 175, 55, 0.7);
+            --logo-loaded-glow: 0 0 15px rgba(212, 175, 55, 0.9);
             
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Email</h4>
-                            <p>info@finplatforma.com</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-phone"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Telefon</h4>
-                            <p>+381 11 123 4567</p>
-                        </div>
-                    </div>
-                    
-                    <div class="contact-item">
-                        <div class="contact-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div class="contact-details">
-                            <h4>Adresa</h4>
-                            <p>Beograd, Srbija</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Ime:</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="message">Poruka:</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i>
-                            Pošaljite poruku
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=FP" alt="Logo" class="footer-logo">
-                    <span class="footer-text">FinPlatforma</span>
-                </div>
-                
-                <div class="footer-links">
-                    <a href="#home">Početna</a>
-                    <a href="#features">Funkcionalnosti</a>
-                    <a href="#about">O nama</a>
-                    <a href="#contact">Kontakt</a>
-                </div>
-                
-                <div class="footer-social">
-                    <a href="#" class="social-link">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-link">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                </div>
-            </div>
+            /* Tamna paleta */
+            --dark-bg: #0A0A0A; /* Tamnija pozadina */
+            --dark-card: #121212; /* Tamnija kartica */
+            --dark-accent: #1E1E1E; /* Tamni akcent */
             
-            <div class="footer-bottom">
-                <p>&copy; 2024 FinPlatforma. Sva prava zadržana.</p>
-            </div>
-        </div>
-    </footer>
+            /* Tekst */
+            --light-text: #FFFFFF; /* Čist beli tekst za bolji kontrast */
+            --muted-text: #CCCCCC; /* Svetliji sivi za bolju čitljivost */
+            
+            /* Dodatni efekti */
+            --border-light: rgba(212, 175, 55, 0.3);
+            --glass-effect: rgba(255, 215, 0, 0.05);
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.2);
+            --box-shadow-hover: 0 8px 30px rgba(255, 215, 0, 0.15);
+            
+            /* Dimenzije i razmaci */
+            --border-radius: 0.75rem;
+            --border-radius-lg: 1.25rem;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1.25rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            
+            /* Tranzicije */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    <script src="js/preview.js"></script>
-    <script src="js/sw-register.js"></script>
-</body>
-</html>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            color: var(--light-text);
+            line-height: 1.7;
+            background: var(--dark-bg);
+            background-image: 
+                radial-gradient(at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+                radial-gradient(at 80% 80%, rgba(184, 134, 11, 0.05) 0%, transparent 40%);
+            position: relative;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-top: 70px; /* Add padding for fixed header */
+        }
+
+        /* Modern Background Effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.03) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.03) 0%, transparent 30%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Enhanced background animation */
+        @keyframes backgroundAnimation {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.1;
+            }
+            50% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: scale(1.1) rotate(5deg);
+                opacity: 0.1;
+            }
+        }
+        
+        @keyframes backgroundAnimation {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            100% {
+                transform: rotate(5deg) scale(1.1);
+            }
+        }
+        
+        @keyframes morph {
+            0% {
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            }
+            25% { 
+                border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+            }
+            50% {
+                border-radius: 50% 
+            }
+            75% {
+                border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            }
+            100% {
+                border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            }
+        }        /* Action Buttons */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+        
+        /* Admin Panel Button special styling */
+        #adminSettingsBtn .ai-chat-button {
+            background: linear-gradient(45deg, var(--gold-dark), var(--gold-medium));
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            box-shadow: 0 3px 10px rgba(184, 134, 11, 0.3);
+        }
+        
+        #adminSettingsBtn .ai-chat-button:hover {
+            box-shadow: 0 5px 15px rgba(184, 134, 11, 0.5);
+            border-color: rgba(212, 175, 55, 0.8);
+        }
+
+        /* Add more space at the top for the fixed header */
+        .container {
+            background: rgba(16, 16, 18, 0.3);
+            border-radius: var(--border-radius-lg);
+            margin: 5.5rem auto 2rem auto; /* Added top margin for fixed header */
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 1200px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.03), transparent);
+            pointer-events: none;
+        }        .chart-container {
+            position: relative;
+            background: rgba(25, 25, 25, 0.98);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            margin-top: var(--spacing-xl);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            min-height: 300px;
+        }
+
+        .section-card {
+            background: var(--dark-card);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--box-shadow);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+            transform: translateY(0);
+        }
+        
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+          .section-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+            border-radius: 0 0 0 100%;
+            pointer-events: none;
+            opacity: 0.5;
+        }        /* Navigation Header */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, rgba(10, 10, 12, 0.98), rgba(30, 30, 34, 0.95));
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 3px 20px rgba(0, 0, 0, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .brand {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--gold-medium);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .brand:hover {
+            transform: translateY(-2px);
+        }          .brand img {
+            height: 50px;
+            width: auto;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(255, 215, 0, 0.05));
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+            object-fit: contain; /* Add this to ensure image maintains aspect ratio */
+            max-width: none; /* Remove any max-width restriction */
+            min-width: 50px; /* Ensure minimum width */
+            min-height: 50px; /* Ensure minimum height */
+        }
+        
+        .brand:hover img {
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.7));
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), rgba(255, 215, 0, 0.1));
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+
+        .brand i {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #2563eb, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        button, .button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            background: var(--gradient-gold);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 0.5px;
+        }
+        
+        button:hover, .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:active, .button:active {
+            transform: translateY(0);
+        }
+        
+        button::before, .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+            z-index: -1;
+        }
+        
+        button:hover::before, .button:hover::before {
+            transform: translateX(100%);
+        }        .ai-chat-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             gap: 0.6rem;
             color: #1a1a1a;
             padding: 0.6rem 1.3rem;
@@ -3311,12 +3305,10 @@
                     animateCounters();
                 }
             }, 2000);        });
-    </script>      <!-- Consultation functionality -->
+    </script>
+      <!-- Consultation functionality -->
     <script src="js/consultation.js"></script>
     <script src="js/autofill.js"></script>
-    <script src="js/chat.js"></script>
-    <script src="js/monthlyStats.js"></script>
-    <script src="js/imageHandler.js"></script>
       <!-- Chat Support Scripts -->
     <script src="js/support-kb.js"></script>
     <script src="js/support-chat.js"></script>
