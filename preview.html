@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Golden Balance | Finansijska platforma</title>    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="js/finansijskiKalkulator.js" defer></script><link rel="stylesheet" href="css/styles.css">    <link rel="stylesheet" href="css/support-chat.css"><style>
+    <title>Golden Balance | Finansijska platforma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="js/finansijskiKalkulator.js" defer></script><link rel="stylesheet" href="css/styles.css">    <style>
         :root {
             /* Enhanced Gold Palette */
             --gold-bright: #FFD700; /* Svetlija zlatna */
@@ -1662,7 +1663,7 @@
         }
         
         .feature-card:hover {
-           
+            transform: translateY(-8px) rotateX(5deg) rotateY(5deg);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 12px 12px rgba(0, 0, 0, 0.25);
             border-color: rgba(212, 175, 55, 0.4);
             -webkit-background-clip: padding-box;
@@ -2000,8 +2001,7 @@
             color: var(--muted-text);
         }
 
-        /* Chat Modal Styles */
-        #chatContainer {
+        /* Chat Modal Styles */        #chatContainer {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -2009,16 +2009,199 @@
             max-width: 90vw;
             background: rgba(22, 22, 26, 0.95);
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);            display: flex;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
             flex-direction: column;
-            z-index: 1001;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        #chatContainer.open {
-            transform: translateY(0);
-        }    </style>
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            z-index: 1000;        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navigation Header -->
+    <header class="nav-header">
+        <div class="brand" onclick="window.location.href='#'">
+            <img id="siteLogo" src="https://i.imgur.com/yQGiMd5.png" alt="Golden Balance Logo">
+            <span style="background: linear-gradient(45deg, #FFD700, #D4AF37, #B8860B); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);">Golden Balance</span>
+        </div>
+        
+        <script>
+            // Učitavanje loga iz localStorage-a ako postoji
+            document.addEventListener('DOMContentLoaded', function() {
+                // Inicijalizacija slike loga
+                const siteLogoElement = document.getElementById('siteLogo');
+                const defaultLogoUrl = 'https://i.imgur.com/yQGiMd5.png';
+                
+                // Dodavanje event listenera za slučaj da slika ne može biti prikazana
+                siteLogoElement.addEventListener('error', function() {
+                    console.error('Greška pri prikazivanju slike - vraćamo na default logo');
+                    this.src = defaultLogoUrl;
+                    logoDiagnostics('Greška pri prikazivanju loga u DOM-u');
+                });
+                
+                // Učitavanje loga iz localStorage-a ako postoji
+                const savedLogo = localStorage.getItem('site_logo');
+                if (savedLogo) {
+                    try {
+                        // Preload image to ensure it loads properly
+                        const img = new Image();
+                        
+                        // Set crossOrigin for external URLs
+                        if (savedLogo.startsWith('http')) {
+                            img.crossOrigin = 'anonymous';
+                        }
+                        
+                        img.onload = function() {
+                            // Provera dimenzija učitane slike
+                            if (this.naturalWidth === 0 || this.naturalHeight === 0) {
+                                console.error('Učitana slika ima nulte dimenzije');
+                                document.getElementById('siteLogo').src = 'https://i.imgur.com/yQGiMd5.png';
+                                return;
+                            }
+                            
+                            // Log veličine za dijagnostiku
+                            console.log('Učitana slika dimenzije:', this.naturalWidth, 'x', this.naturalHeight);
+                            
+                            document.getElementById('siteLogo').src = savedLogo;
+                            console.log("Logo uspešno učitan:", savedLogo.substring(0, 100) + "...");
+                            // Dodajemo klasu za vidljivu indikaciju da je logo učitan
+                            document.getElementById('siteLogo').classList.add('logo-loaded');
+                            
+                            // Provera vidljivosti nakon učitavanja
+                            setTimeout(testLogoVisibility, 100);
+                        };
+                        img.onerror = function() {
+                            console.error('Greška pri učitavanju loga iz localStorage-a');
+                            // Fallback na default logo
+                            document.getElementById('siteLogo').src = 'https://i.imgur.com/yQGiMd5.png';
+                            logoDiagnostics('Greška pri učitavanju loga');
+                        };
+                        img.src = savedLogo;
+                    } catch (error) {
+                        console.error('Greška pri učitavanju loga:', error);
+                        // Fallback na default logo
+                        document.getElementById('siteLogo').src = 'https://i.imgur.com/yQGiMd5.png';
+                        logoDiagnostics('Greška pri parsiranju loga', error);
+                    }
+                } else {
+                    console.log('Nema sačuvanog loga, koristi se default');
+                }
+                
+                // Funkcija za dijagnostiku problema sa logom
+                function logoDiagnostics(message, error) {
+                    console.group('Logo Dijagnostika');
+                    console.log('Poruka:', message);
+                    if (error) console.error('Detalji greške:', error);
+                    
+                    // Provera formata loga
+                    if (savedLogo) {
+                        if (savedLogo.startsWith('data:image')) {
+                            console.log('Format loga: Base64 enkodirana slika');
+                            console.log('Dužina Base64 stringa:', savedLogo.length);
+                            if (savedLogo.length > 1000000) {
+                                console.warn('Logo je veoma velik (>1MB). Ovo može uzrokovati problem.');
+                            }
+                            
+                            // Provera tipa slike
+                            const imageType = savedLogo.split(';')[0].split(':')[1];
+                            console.log('Tip slike:', imageType);
+                            
+                            if (imageType === 'image/svg+xml') {
+                                console.log('SVG format može zahtevati posebnu obradu za transparentnost');
+                            }
+                        } else if (savedLogo.startsWith('http')) {
+                            console.log('Format loga: URL');
+                            console.log('URL loga:', savedLogo);
+                            
+                            // Provera za poznate problematične URL-ove
+                            if (savedLogo.includes('facebook.com') || savedLogo.includes('instagram.com')) {
+                                console.warn('URL sa društvenih mreža može imati CORS ograničenja.');
+                            }
+                            
+                            // Provera CORS statusa
+                            const corsTestImg = new Image();
+                            corsTestImg.crossOrigin = 'anonymous';
+                            corsTestImg.onload = () => console.log('CORS: URL podržava cross-origin pristup');
+                            corsTestImg.onerror = () => console.warn('CORS: Moguć problem sa cross-origin pristupom');
+                            corsTestImg.src = savedLogo;
+                        }
+                    } else {
+                        console.warn('Logo nije pronađen u localStorage-u');
+                    }
+                    
+                    console.log('Za više detalja koristite logo-dijagnostika.html');
+                    console.groupEnd();
+                }
+                // Funkcija za testiranje da li je logo prikazan
+                function testLogoVisibility() {
+                    const logoElement = document.getElementById('siteLogo');
+                    if (!logoElement) {
+                        console.error('Element logo nije pronađen u DOM-u');
+                        return false;
+                    }
+                    
+                    // Provera da li je slika vidljiva u viewportu
+                    const rect = logoElement.getBoundingClientRect();
+                    const isVisible = (
+                        rect.top >= 0 &&
+                        rect.left >= 0 &&
+                        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                    );
+                    
+                    console.log('Logo element vidljivost:', isVisible ? 'Vidljiv' : 'Nije vidljiv');
+                    console.log('Logo dimenzije:', rect.width, 'x', rect.height);
+                    
+                    if (rect.width === 0 || rect.height === 0) {
+                        console.warn('Logo ima nultu dimenziju - moguće da nije pravilno učitan');
+                    }
+                    
+                    // Dodatna provera prirodnih dimenzija slike
+                    const naturalWidth = logoElement.naturalWidth;
+                    const naturalHeight = logoElement.naturalHeight;
+                    console.log('Prirodne dimenzije loga:', naturalWidth, 'x', naturalHeight);
+                    
+                    if (naturalWidth === 0 || naturalHeight === 0) {
+                        console.error('Logo nije učitan ili ima prirodnu dimenziju nula');
+                        return false;
+                    }
+                    
+                    return isVisible && rect.width > 0 && rect.height > 0 && naturalWidth > 0 && naturalHeight > 0;
+                }
+                
+                // Testiranje vidljivosti loga nakon što se stranica učita
+                window.addEventListener('load', function() {
+                    setTimeout(testLogoVisibility, 500); // Provera nakon 500ms
+                });
+                
+                // Provera da li je korisnik administrator
+                const adminEmail = 'zorandostica2@gmail.com';
+                const loggedInUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                const isAdmin = loggedInUser.email === adminEmail;
+                
+                // Prikazuje admin dugme samo ako je administrator prijavljen
+                const adminSettingsBtn = document.getElementById('adminSettingsBtn');
+                if (isAdmin && localStorage.getItem('admin_logged_in') === 'true') {
+                    if (adminSettingsBtn) {
+                        adminSettingsBtn.classList.remove('d-none');
+                    }
+                } else {
+                    if (adminSettingsBtn) {
+                        adminSettingsBtn.classList.add('d-none');
+                    }
+                }
+                
+                // Dodavanje hover animacije za zupčanik                const spinIcon = document.querySelector('.fa-spin-hover');
+                if (spinIcon) {
+                    spinIcon.addEventListener('mouseover', function() {
+                        this.classList.add('fa-spin');
+                    });
+                    spinIcon.addEventListener('mouseout', function() {
+                        this.classList.remove('fa-spin');
+                    });
+                }
+            });
+        </script>
+    </style>
 </head>
 <body>
     <!-- Modern Navigation Header -->
@@ -2040,8 +2223,9 @@
                     </div>
                 </div>
             </div>
-              <!-- Support Chat Trigger -->
-            <button class="ai-chat-button support-btn" id="openSupport">
+            
+            <!-- Support Chat Trigger -->
+            <button class="ai-chat-button" id="openSupport">
                 <i class="fas fa-headset"></i>
                 <span>Tehnička podrška</span>
             </button><!-- Admin Settings Button -->            <a href="admin.html" id="adminSettingsBtn" class="d-none">
@@ -2074,167 +2258,8 @@
                 </div>
             </div>
         </div>
-          <script>
-            // Logo functionality
-            document.addEventListener('DOMContentLoaded', function() {
-                const siteLogoElement = document.getElementById('siteLogo');
-                const defaultLogoUrl = 'https://i.imgur.com/yQGiMd5.png';
-                
-                if (siteLogoElement) {
-                    siteLogoElement.addEventListener('error', function() {
-                        console.error('Greška pri prikazivanju slike - vraćamo na default logo');
-                        this.src = defaultLogoUrl;
-                        logoDiagnostics('Greška pri prikazivanju loga u DOM-u');
-                    });
-                    
-                    // Učitavanje loga iz localStorage-a ako postoji
-                    const savedLogo = localStorage.getItem('site_logo');
-                    if (savedLogo) {
-                        try {
-                            const img = new Image();
-                            
-                            if (savedLogo.startsWith('http')) {
-                                img.crossOrigin = 'anonymous';
-                            }
-                            
-                            img.onload = function() {
-                                if (this.naturalWidth === 0 || this.naturalHeight === 0) {
-                                    console.error('Učitana slika ima nulte dimenzije');
-                                    siteLogoElement.src = defaultLogoUrl;
-                                    return;
-                                }
-                                
-                                console.log('Učitana slika dimenzije:', this.naturalWidth, 'x', this.naturalHeight);
-                                siteLogoElement.src = savedLogo;
-                                console.log("Logo uspešno učitan:", savedLogo.substring(0, 100) + "...");
-                                siteLogoElement.classList.add('logo-loaded');
-                                
-                                setTimeout(testLogoVisibility, 100);
-                            };
-                            
-                            img.onerror = function() {
-                                console.error('Greška pri učitavanju loga iz localStorage-a');
-                                siteLogoElement.src = defaultLogoUrl;
-                                logoDiagnostics('Greška pri učitavanju loga');
-                            };
-                            
-                            img.src = savedLogo;
-                        } catch (error) {
-                            console.error('Greška pri učitavanju loga:', error);
-                            siteLogoElement.src = defaultLogoUrl;
-                            logoDiagnostics('Greška pri parsiranju loga', error);
-                        }
-                    } else {
-                        console.log('Nema sačuvanog loga, koristi se default');
-                    }
-                }
-                
-                // Funkcija za dijagnostiku problema sa logom
-                function logoDiagnostics(message, error) {
-                    console.group('Logo Dijagnostika');
-                    console.log('Poruka:', message);
-                    if (error) console.error('Detalji greške:', error);
-                    
-                    const savedLogo = localStorage.getItem('site_logo');
-                    if (savedLogo) {
-                        if (savedLogo.startsWith('data:image')) {
-                            console.log('Format loga: Base64 enkodirana slika');
-                            console.log('Dužina Base64 stringa:', savedLogo.length);
-                            if (savedLogo.length > 1000000) {
-                                console.warn('Logo je veoma velik (>1MB). Ovo može uzrokovati problem.');
-                            }
-                            
-                            const imageType = savedLogo.split(';')[0].split(':')[1];
-                            console.log('Tip slike:', imageType);
-                            
-                            if (imageType === 'image/svg+xml') {
-                                console.log('SVG format može zahtevati posebnu obradu za transparentnost');
-                            }
-                        } else if (savedLogo.startsWith('http')) {
-                            console.log('Format loga: URL');
-                            console.log('URL loga:', savedLogo);
-                            
-                            if (savedLogo.includes('facebook.com') || savedLogo.includes('instagram.com')) {
-                                console.warn('URL sa društvenih mreža može imati CORS ograničenja.');
-                            }
-                        }
-                    } else {
-                        console.warn('Logo nije pronađen u localStorage-u');
-                    }
-                    
-                    console.log('Za više detalja koristite logo-dijagnostika.html');
-                    console.groupEnd();
-                }
-                
-                // Funkcija za testiranje da li je logo prikazan
-                function testLogoVisibility() {
-                    const logoElement = document.getElementById('siteLogo');
-                    if (!logoElement) {
-                        console.error('Element logo nije pronađen u DOM-u');
-                        return false;
-                    }
-                    
-                    const rect = logoElement.getBoundingClientRect();
-                    const isVisible = (
-                        rect.top >= 0 &&
-                        rect.left >= 0 &&
-                        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                        rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-                    );
-                    
-                    console.log('Logo element vidljivost:', isVisible ? 'Vidljiv' : 'Nije vidljiv');
-                    console.log('Logo dimenzije:', rect.width, 'x', rect.height);
-                    
-                    if (rect.width === 0 || rect.height === 0) {
-                        console.warn('Logo ima nultu dimenziju - moguće da nije pravilno učitan');
-                    }
-                    
-                    const naturalWidth = logoElement.naturalWidth;
-                    const naturalHeight = logoElement.naturalHeight;
-                    console.log('Prirodne dimenzije loga:', naturalWidth, 'x', naturalHeight);
-                    
-                    if (naturalWidth === 0 || naturalHeight === 0) {
-                        console.error('Logo nije učitan ili ima prirodnu dimenziju nula');
-                        return false;
-                    }
-                    
-                    return isVisible && rect.width > 0 && rect.height > 0 && naturalWidth > 0 && naturalHeight > 0;
-                }
-                
-                // Testiranje vidljivosti loga nakon što se stranica učita
-                window.addEventListener('load', function() {
-                    setTimeout(testLogoVisibility, 500);
-                });
-                
-                // Provera da li je korisnik administrator
-                const adminEmail = 'zorandostica2@gmail.com';
-                const loggedInUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-                const isAdmin = loggedInUser.email === adminEmail;
-                
-                // Prikazuje admin dugme samo ako je administrator prijavljen
-                const adminSettingsBtn = document.getElementById('adminSettingsBtn');
-                if (isAdmin && localStorage.getItem('admin_logged_in') === 'true') {
-                    if (adminSettingsBtn) {
-                        adminSettingsBtn.classList.remove('d-none');
-                    }
-                } else {
-                    if (adminSettingsBtn) {
-                        adminSettingsBtn.classList.add('d-none');
-                    }
-                }
-                
-                // Dodavanje hover animacije za zupčanik
-                const spinIcon = document.querySelector('.fa-spin-hover');
-                if (spinIcon) {
-                    spinIcon.addEventListener('mouseover', function() {
-                        this.classList.add('fa-spin');
-                    });
-                    spinIcon.addEventListener('mouseout', function() {
-                        this.classList.remove('fa-spin');
-                    });
-                }
-            });
-
+        
+        <script>
             // Button click handlers
             document.getElementById('loginBtn')?.addEventListener('click', () => {
                 document.getElementById('loginModal').style.display = 'block';
@@ -2360,8 +2385,7 @@
                 <button type="submit" class="btn btn-primary btn-block">Registruj se</button>
                 <p class="auth-switch">Već imate nalog? <a href="#" id="showLogin">Prijavite se</a></p>
             </form>
-        </div>
-    </div>    <div class="container">
+        </div>    </div>    <div class="container" style="display: block !important; visibility: visible !important; background: rgba(16, 16, 18, 0.9) !important; margin: 120px auto 2rem auto !important; padding: 2.5rem !important; border: 2px solid red !important;">
         <div class="hero-section">
             <h1 class="hero-title">Optimizujte vaše finansije uz našu pomoć.</h1>
             <p class="hero-description">
@@ -2564,9 +2588,12 @@
                     </ul>
                 </div>
 
-                <!-- Support -->                <div>
-                    <h4 style="color: var(--gold-bright); font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem;">Podrška</h4>                    <ul style="list-style: none; padding: 0;">                        <li style="margin-bottom: 0.75rem;">
-                            <a href="#openSupport" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s;">
+                <!-- Support -->
+                <div>
+                    <h4 style="color: var(--gold-bright); font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem;">Podrška</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#" onclick="document.getElementById('openSupport').click()" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s; cursor: pointer;">
                                 <i class="fas fa-headset" style="margin-right: 0.5rem; color: var(--gold-bright);"></i>Tehnička podrška
                             </a>
                         </li>
@@ -2907,7 +2934,39 @@
                 </p>
             </form>
         </div>
-    </div>    <!-- Support Chat će se kreirati dinamički putem support-chat.js -->
+    </div>
+
+    <!-- Support Chat Interface -->    <div id="supportChat" class="support-chat collapsed">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-headset"></i> Tehnička Podrška
+            </div>
+            <div class="chat-actions">
+                <button class="btn" aria-label="Menu toggle">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="btn" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-body">
+            <div class="chat-messages"></div>
+            <div class="thinking-indicator d-none">
+                Razmišljam
+                <div class="thinking-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Unesite vašu poruku..." id="chatInput">
+                <button class="send-message" aria-label="Submit">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>    </div>
 
     <script>
         // Handle modal functionality
@@ -3309,13 +3368,9 @@
       <!-- Consultation functionality -->
     <script src="js/consultation.js"></script>
     <script src="js/autofill.js"></script>
-      <!-- Chat Support Scripts -->
-    <script src="js/support-kb.js"></script>
-    <script src="js/support-chat.js"></script>
     
-    <!-- Floating Support Button -->
-    <button class="floating-support-btn support-btn" title="Tehnička Podrška">
-        🎧
-    </button>
+    <!-- Chat Support Scripts -->
+    <script src="js/support-kb.js"></script>
+    <script src="js/chat-working.js"></script>
 </body>
 </html>
