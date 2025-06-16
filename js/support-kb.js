@@ -34,12 +34,16 @@ if (typeof window.supportKB === 'undefined') {
     ],
     savings: [
         {
-            keywords: ['štednja', 'ušteda', 'štedeti', 'investicija', 'investirati'],
-            response: 'U našoj aplikaciji možete pratiti vašu štednju i postaviti ciljeve štednje. Preporučujemo da izdvojite barem 10-20% vaših mesečnih prihoda za štednju i investicije.'
+            keywords: ['štednja', 'ušteda', 'štedeti'],
+            response: 'U našoj aplikaciji možete pratiti vašu štednju i postaviti ciljeve štednje. Preporučujemo da izdvojite barem 10-20% vaših mesečnih prihoda za štednju.'
         },
         {
             keywords: ['ciljevi', 'cilj', 'finansijski ciljevi'],
             response: 'Postavljanje finansijskih ciljeva vam pomaže da bolje planirate vašu štednju. Možete postaviti više ciljeva sa različitim rokovima.'
+        },
+        {
+            keywords: ['investicija', 'investirati', 'ulaganje', 'akcije', 'obveznice', 'ETF', 'kriptovalute', 'sopstveno ulaganje', 'samostalno investiranje', 'gde da investir', 'kako da investir', 'koje akcije', 'koji fond', 'koji ETF', 'koju kriptovalutu', 'kako da uložim', 'da li da kupim', 'da li da prodam', 'savet za investiranje', 'savet za ulaganje'],
+            response: 'Nažalost, iz bezbednosnih i regulatornih razloga, ne možemo davati savete za samostalno investiranje ili preporučivati konkretne investicije. Za sva pitanja o investiranju, predlažemo da zakažete konsultacije sa našim finansijskim savetnikom. Želite li da zakažete konsultacije?'
         }
     ],
     technicalIssues: [
@@ -71,7 +75,33 @@ if (typeof window.supportKB === 'undefined') {
         {
             keywords: ['besplatno', 'cena', 'plaćanje', 'koliko košta', 'price'],
             response: 'Golden Balance aplikacija je trenutno besplatna za korišćenje. Možete kreirati nalog i početi planiranje budžeta odmah!'
-        }    ]
+        }    ],
+    finance: [
+        {
+            keywords: ['kredit', 'krediti', 'stambeni kredit', 'gotovinski kredit', 'kreditna sposobnost', 'kamatna stopa', 'otplata', 'anuitet', 'kalkulator kredita'],
+            response: 'Za informacije o kreditima, kamatnim stopama i otplati, koristite naš finansijski kalkulator ili zakažite konsultacije sa stručnjakom.'
+        },
+        {
+            keywords: ['osiguranje', 'životno osiguranje', 'penzija', 'penzioni fond', 'penziono planiranje'],
+            response: 'Možete koristiti našu aplikaciju za planiranje penzije i praćenje uplata u penzione fondove. Za detaljnije savete, preporučujemo konsultacije.'
+        },
+        {
+            keywords: ['porez', 'porezi', 'porez na dohodak', 'porez na imovinu', 'PDV', 'tax', 'taxes'],
+            response: 'Za osnovne informacije o porezima, možete koristiti našu bazu znanja. Za specifične slučajeve, preporučujemo konsultacije sa poreskim savetnikom.'
+        },
+        {
+            keywords: ['inflacija', 'devizni kurs', 'kamata', 'EURIBOR', 'LIBOR', 'finansijska tržišta', 'ekonomija', 'makroekonomija', 'budžetski deficit', 'BDP', 'GDP'],
+            response: 'Naša baza znanja pokriva osnovne pojmove iz ekonomije i finansija. Ako imate konkretno pitanje, slobodno pitajte.'
+        },
+        {
+            keywords: ['finansijska pismenost', 'osnove finansija', 'šta je budžet', 'šta je štednja', 'šta je investicija', 'šta je kredit', 'šta je kamata', 'šta je inflacija'],
+            response: 'Finansijska pismenost je ključ uspešnog upravljanja novcem. Naša aplikacija i baza znanja pomažu vam da naučite sve osnovne pojmove.'
+        },
+        {
+            keywords: ['računovodstvo', 'bilans stanja', 'bilans uspeha', 'finansijski izveštaj', 'analiza bilansa'],
+            response: 'Za osnovne informacije o računovodstvu i finansijskim izveštajima, možete koristiti našu bazu znanja ili zakazati konsultacije sa stručnjakom.'
+        }
+    ]
     };
 } else {
     console.log('Support Knowledge Base already exists, skipping redeclaration');
