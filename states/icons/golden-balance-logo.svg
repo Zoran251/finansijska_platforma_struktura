@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preuzimanje loga kao ikone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #0E0E10;
+            color: #F8F8FF;
+        }
+        .container {
+            background-color: #16161A;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #D4AF37;
+        }
+        button {
+            background: linear-gradient(135deg, #D4AF37 0%, #A8861D 100%);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .preview {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .icon-preview {
+            text-align: center;
+        }
+        .icon-preview img {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .download-btn {
+            margin-top: 10px;
+        }
+        #status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+        }
+        .error {
+            background-color: rgba(239, 68, 68, 0.2);
+            border: 1px solid #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Preuzimanje loga kao ikone za PWA</h1>
+        <p>Ova stranica će konvertovati logo sa Imgur-a u SVG ikone za vašu PWA aplikaciju.</p>
+        
+        <div>
+            <label for="logoUrl">URL loga (ili učitavanje lokalnog fajla):</label>
+            <input type="text" id="logoUrl" value="https://i.imgur.com/yQGiMd5.png" style="width: 100%; padding: 8px; margin: 10px 0;">
+            <p>ili</p>
+            <input type="file" id="logoFile" accept="image/*">
+        </div>
+        
+        <button id="generateIcons">Preuzmi i generiši ikone</button>
+        
+        <div id="status"></div>
+        
+        <div class="preview" id="previewContainer">
+            <!-- Ikone će biti prikazane ovde -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('generateIcons').addEventListener('click', async function() {
+            const statusEl = document.getElementById('status');
+            const previewContainer = document.getElementById('previewContainer');
+            const logoUrl = document.getElementById('logoUrl').value.trim();
+            const logoFile = document.getElementById('logoFile').files[0];
+            
+            statusEl.textContent = 'Preuzimam logo...';
+            statusEl.className = '';
+            previewContainer.innerHTML = '';
+            
+            try {
+                let imgSrc;
+                
+                if (logoFile) {
+                    // Koristi lokalni fajl
+                    imgSrc = await readFileAsDataURL(logoFile);
+                } else if (logoUrl) {
+                    // Koristi URL
+                    imgSrc = logoUrl;
+                } else {
+                    throw new Error('Molim unesite URL ili izaberite fajl.');
+                }
+                
+                // Veličine ikona koje nam trebaju
+                const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+                
+                // Koristi Canvas za kreiranje različitih veličina
+                for (const size of sizes) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Učitaj sliku
+                    const img = new Image();
+                    img.crossOrigin = 'Anonymous';
+                    
+                    await new Promise((resolve, reject) => {
+                        img.onload = () => {
+                            // Optimalno centriranje i skaliranje
+                            const aspectRatio = img.width / img.height;
+                            let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+                            
+                            if (aspectRatio > 1) {
+                                drawHeight = size;
+                                drawWidth = size * aspectRatio;
+                                offsetX = -(drawWidth - size) / 2;
+                            } else {
+                                drawWidth = size;
+                                drawHeight = size / aspectRatio;
+                                offsetY = -(drawHeight - size) / 2;
+                            }
+                            
+                            // Crtaj sliku na canvasu
+                            ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+                            
+                            // Kreiraj element za pregled
+                            const iconPreview = document.createElement('div');
+                            iconPreview.className = 'icon-preview';
+                            
+                            // Pretvori u PNG ili SVG
+                            const iconUrl = canvas.toDataURL('image/png');
+                            const iconImg = document.createElement('img');
+                            iconImg.src = iconUrl;
+                            iconImg.width = size;
+                            iconImg.height = size;
+                            iconImg.alt = `Icon ${size}x${size}`;
+                            
+                            // Dodaj dugme za preuzimanje
+                            const downloadLink = document.createElement('a');
+                            downloadLink.href = iconUrl;
+                            downloadLink.download = `icon-${size}x${size}.png`;
+                            downloadLink.className = 'download-btn';
+                            downloadLink.textContent = `Preuzmi ${size}x${size}`;
+                            downloadLink.style.display = 'block';
+                            downloadLink.style.marginTop = '5px';
+                            downloadLink.style.textDecoration = 'none';
+                            downloadLink.style.color = '#D4AF37';
+                            
+                            iconPreview.appendChild(iconImg);
+                            iconPreview.appendChild(document.createElement('br'));
+                            iconPreview.appendChild(downloadLink);
+                            
+                            previewContainer.appendChild(iconPreview);
+                            resolve();
+                        };
+                        
+                        img.onerror = () => {
+                            reject(new Error('Greška pri učitavanju slike.'));
+                        };
+                        
+                        img.src = imgSrc;
+                    });
+                }
+                
+                statusEl.textContent = 'Ikone su uspešno generisane! Kliknite na "Preuzmi" ispod svake ikone da je sačuvate, pa premestite u icons folder.';
+                statusEl.className = 'success';
+                
+            } catch (error) {
+                statusEl.textContent = `Greška: ${error.message}`;
+                statusEl.className = 'error';
+                console.error(error);
+            }
+        });
+        
+        // Funkcija za učitavanje fajla kao DataURL
+        function readFileAsDataURL(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error('Greška pri čitanju fajla.'));
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+</body>
+</html>
