@@ -104,10 +104,6 @@ function addUserNotification(appointment) {
     notifications.unshift(notification);
     localStorage.setItem('user_notifications', JSON.stringify(notifications));
 }
-    
-    // Vraćamo true ako je uspešno sačuvano
-    return true;
-}
 
 // Funkcija za validaciju i slanje forme
 async function submitConsultationForm(event) {
