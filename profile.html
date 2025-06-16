@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="sr">
 <head>
@@ -5,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moj Profil - Finansijska Aplikacija</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <script src="js/responsive.js"></script>
     <style>
         :root {
             --gold-bright: #D4AF37; /* Svetla zlatna */
@@ -3203,31 +3202,24 @@
             const amountInput = document.getElementById(`${category}-amount`);
             const dateInput = document.getElementById(`${category}-date`);
 
-            // Debugging - provera stvarnih vrednosti
-            console.log(`Dodavanje troška - Kategorija: ${category}`);
-            console.log(`Input element: ${nameInput ? 'Postoji' : 'Ne postoji'}`);
-            console.log(`Vrednost input elementa: "${nameInput ? nameInput.value : 'N/A'}"`);
-
-            const name = nameInput ? nameInput.value.trim() : '';
-            const amount = parseFloat(amountInput ? amountInput.value : '0');
-            const date = dateInput ? dateInput.value : '';
-            
-            console.log(`Obrađene vrednosti - Naziv: "${name}", Iznos: ${amount}, Datum: ${date}`);
+            const name = nameInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const date = dateInput.value;
 
             // Validation
-            if (name === '') {
+            if (!name) {
                 alert('Molim unesite naziv troška');
                 nameInput.focus();
                 return;
             }
-            
-            if (isNaN(amount) || amount <= 0) {
+
+            if (!amount || amount <= 0) {
                 alert('Molim unesite valjan iznos');
                 amountInput.focus();
                 return;
             }
-            
-            if (!date || date.trim() === '') {
+
+            if (!date) {
                 alert('Molim izaberite datum');
                 dateInput.focus();
                 return;
@@ -3239,10 +3231,9 @@
                 name: name,
                 amount: amount,
                 date: date,
-                category: category,                timestamp: new Date().toISOString()
-            };
-            
-            // Save expense
+                category: category,
+                timestamp: new Date().toISOString()
+            };            // Save expense
             saveExpense(expense);
 
             // Update totals
@@ -3940,7 +3931,9 @@
                     category: 'savings',
                     timestamp: new Date().toISOString()
                 }
-            );            // Save test expenses
+            );
+
+            // Save test expenses
             localStorage.setItem(userExpensesKey, JSON.stringify(testExpenses));
 
             // Create test income history
@@ -3954,46 +3947,4178 @@
             localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
 
             // Set current income in input field
-            const incomeInput = document.getElementById('monthlyIncome');
-            if (incomeInput) {
-                incomeInput.value = 120000;
-                
-                // Highlight the income field to show it's been updated
-                incomeInput.style.border = '2px solid var(--gold-bright)';
-                incomeInput.style.boxShadow = '0 0 10px var(--gold-bright)';
-                incomeInput.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-                
-                // Also highlight the income header if it exists
-                const incomeHeader = document.querySelector('.income-header');
-                if (incomeHeader) {
-                    incomeHeader.style.background = 'var(--gold-bright)';
-                    incomeHeader.style.color = '#000000';
-                    incomeHeader.style.padding = '0.5rem';
-                    incomeHeader.style.borderRadius = '0.5rem';
+            document.getElementById('monthlyIncome').value = 120000;
+
+            // Refresh all displays
+            loadExpensesIntoTables();
+            updateMonthlyExpensesDisplay();            loadRecentTransactions();
+            updateBudgetCards();
+
+            alert('Test podaci su uspešno kreirani! Možete videti percentage promene u budget karticama.');
+        }        // Function to handle smart navigation from preview.html
+        function handleSmartNavigation() {
+            const budgetSection = sessionStorage.getItem('budgetSection');
+            const showIncomeAlert = sessionStorage.getItem('showIncomeAlert');
+            
+            if (budgetSection) {
+                if (budgetSection === 'income' && showIncomeAlert === 'true') {
+                    // Show income setup alert and navigate to income section
+                    showIncomeSetupAlert();
+                    sessionStorage.removeItem('showIncomeAlert');
+                } else if (budgetSection === 'expenses') {
+                    // Navigate directly to expense tracking forms
+                    setTimeout(() => {
+                        const budgetLink = document.querySelector('[data-section="budget"]');
+                        if (budgetLink) {
+                            budgetLink.click();
+                            // Give some time for the section to load, then scroll to expense forms
+                            setTimeout(() => {
+                                const expenseSection = document.getElementById('expenseTrackerSection');
+                                if (expenseSection) {
+                                    expenseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    
+                                    // Optional: Show a brief informational message
+                                    setTimeout(() => {
+                                        // Highlight the expense tracker section briefly
+                                        expenseSection.style.border = '2px solid #D4AF37';
+                                        expenseSection.style.borderRadius = '8px';
+                                        expenseSection.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                                        
+                                        // Remove highlight after 3 seconds
+                                        setTimeout(() => {
+                                            expenseSection.style.border = '';
+                                            expenseSection.style.backgroundColor = '';
+                                        }, 3000);
+                                    }, 500);
+                                }
+                            }, 300);
+                        }
+                    }, 100);
                 }
                 
-                // Remove highlights after 5 seconds
-                setTimeout(() => {
-                    incomeInput.style.border = '';
-                    incomeInput.style.boxShadow = '';
-                    incomeInput.style.backgroundColor = '';
-                    
-                    if (incomeHeader) {
-                        incomeHeader.style.background = '';
-                        incomeHeader.style.color = '#000000';
-                        incomeHeader.style.padding = '';
-                        incomeHeader.style.borderRadius = '';
-                    }
-                }, 5000);
+                // Clean up sessionStorage
+                sessionStorage.removeItem('budgetSection');
             }
-            
-            // Update all the UI components
-            updateMonthlyExpensesDisplay();
-            loadRecentTransactions();
-            updateBudgetCards();
-            
-            alert('Test podaci su uspešno kreirani!');
+        }// Function to show income setup alert
+        function showIncomeSetupAlert() {
+            // Navigate to budget section first
+            setTimeout(() => {
+                const budgetLink = document.querySelector('[data-section="budget"]');
+                if (budgetLink) {
+                    budgetLink.click();
+                    
+                    // Show alert after section loads
+                    setTimeout(() => {
+                        alert('Dobrodošli u praćenje budžeta! Prvo unesite svoj mesečni prihod da bismo mogli da nastavimo sa planiranjem troškova.');
+                        
+                        // Scroll specifically to the income section (Mesečni prihodi)
+                        const incomeSection = document.querySelector('.income-section');
+                        if (incomeSection) {
+                            incomeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        
+                        // Focus and highlight the income input field
+                        const incomeInput = document.getElementById('monthlyIncome');
+                        if (incomeInput) {
+                            setTimeout(() => {
+                                incomeInput.focus();
+                                
+                                // Add a stronger highlight to draw attention to the income section
+                                incomeInput.style.border = '3px solid #D4AF37';
+                                incomeInput.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.5)';
+                                incomeInput.style.backgroundColor = '#fffdf7';
+                                
+                                // Also highlight the income section header
+                                const incomeHeader = incomeSection.querySelector('h4');
+                                if (incomeHeader) {
+                                    incomeHeader.style.background = 'linear-gradient(135deg, #D4AF37 0%, #F7E98E 100%)';
+                                    incomeHeader.style.color = '#000';
+                                    incomeHeader.style.padding = '0.5rem 1rem';
+                                    incomeHeader.style.borderRadius = '8px';
+                                    incomeHeader.style.marginBottom = '1rem';
+                                }
+                                
+                                // Remove highlights after 5 seconds
+                                setTimeout(() => {
+                                    incomeInput.style.border = '';
+                                    incomeInput.style.boxShadow = '';
+                                    incomeInput.style.backgroundColor = '';
+                                    
+                                    if (incomeHeader) {
+                                        incomeHeader.style.background = '';
+                                        incomeHeader.style.color = '#000000';
+                                        incomeHeader.style.padding = '';
+                                        incomeHeader.style.borderRadius = '';
+                                    }
+                                }, 5000);
+                            }, 200);
+                        }
+                    }, 300);
+                }
+            }, 100);
         }
     </script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moj Profil - Finansijska Aplikacija</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --gold-bright: #D4AF37; /* Svetla zlatna */
+            --gold-medium: #C5A028; /* Srednja zlatna */
+            --gold-dark: #A8861D; /* Tamna zlatna */
+            --gold-pale: #E6C870; /* Bleda zlatna */
+            --gradient-gold: linear-gradient(135deg, #D4AF37, #C5A028, #A8861D); /* Zlatni gradijent */
+            --gradient-gold-light: linear-gradient(135deg, #E6C870, #D4AF37); /* Svetli zlatni gradijent */
+            --gradient-gold-dark: linear-gradient(135deg, #A8861D, #856614); /* Tamni zlatni gradijent */
+            --dark-bg: #0E0E10; /* Tamna pozadina */
+            --dark-card: #16161A; /* Tamna kartica */
+            --dark-accent: #222224; /* Tamni akcentni element */
+            --light-text: #F8F8FF; /* Svetli tekst */
+            --muted-text: #BBBBBB; /* Prigušeni tekst */
+            --border-light: rgba(212, 175, 55, 0.2);
+            --glass-effect: rgba(212, 175, 55, 0.03);
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            --primary: var(--gold-bright);
+            --primary-dark: var(--gold-dark);
+            --danger: #ef4444;
+            --success: #10b981;
+            --gray-100: var(--dark-bg);
+            --gray-200: var(--dark-card);
+            --gray-500: var(--muted-text);
+            --gray-700: var(--light-text);
+            --shadow: var(--box-shadow);
+            --border-radius: 1rem;
+            --border-radius-lg: 1.5rem;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--dark-bg);
+            position: relative;
+            min-height: 100vh;
+            color: var(--light-text);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, transparent 30%, var(--dark-bg) 70%), 
+                        radial-gradient(circle at top left, var(--gold-bright), transparent 40%),
+                        radial-gradient(circle at bottom right, var(--gold-dark), transparent 40%),
+                        radial-gradient(circle at top right, var(--gold-medium), transparent 40%);
+            background-size: 100% 100%, 50% 50%, 50% 50%, 50% 50%;
+            background-position: center, top left, bottom right, top right;
+            filter: blur(60px);
+            opacity: 0.1;
+            z-index: -2;
+            transform: rotate(0deg);
+            animation: backgroundAnimation 30s infinite alternate ease-in-out;
+        }
+        
+        @keyframes backgroundAnimation {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            100% {
+                transform: rotate(5deg) scale(1.1);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            width: 90%;
+            background: rgba(16, 16, 18, 0.3);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.03), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            background: rgba(16, 16, 18, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            margin: 0 1rem 1rem 1rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 0.5px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: white;
+        }        .btn-primary:hover {
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gold-bright);
+            border: 2px solid var(--gold-bright);
+        }
+
+        .btn-outline:hover {
+            background: var(--gold-bright);
+            color: black;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+        
+        .success-message i {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        /* Budget Planner Styles */
+        .budget-planner {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .income-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .income-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--gray-700);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .budget-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-card {
+            background-color: var(--gray-100);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .category-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold-bright);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-header h4 i {
+            width: 32px;
+            height: 32px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-bright);
+        }
+        
+        .category-percent {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .category-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-desc {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+        }
+        
+        .category-progress {
+            height: 0.5rem;
+            background-color: var(--gray-200);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 1rem;
+        }
+        
+        .category-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-control label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        .percent-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 0.5rem;
+            background: var(--gray-200);
+            border-radius: 1rem;
+            outline: none;
+        }
+        
+        .percent-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .percent-slider::-moz-range-thumb {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .budget-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            background: rgba(212, 175, 55, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--gold-bright);
+            margin: 2rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .transaction-amount.savings {
+            color: var(--success);
+        }
+        
+        /* Expense Tracker Styles */
+        .expenses-tracker {
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .expense-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .expense-tab {
+            padding: 0.75rem 1.25rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--gray-500);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .expense-tab:hover {
+            color: var(--primary);
+        }
+        
+        .expense-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .expense-tab-content {
+            display: none;
+        }
+        
+        .expense-tab-content.active {
+            display: block;
+        }
+        
+        .expense-form {
+            background-color: var(--gray-100);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .expense-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--gray-700);
+        }
+        
+        .expense-form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .expense-form-col {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .expense-form-col label {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .expense-form-col input {
+            padding: 0.625rem 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+        }
+        
+        .expense-form-button {
+            align-self: flex-end;
+        }
+        
+        .expense-table-container {
+            overflow-x: auto;
+        }
+        
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+          .expense-table th {
+            background-color: rgba(22, 22, 26, 0.8);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gold-bright);
+            border-bottom: 2px solid var(--border-light);
+        }        .expense-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--light-text);
+        }
+          .expense-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+          .expense-table tfoot td {
+            font-weight: 600;
+            border-top: 2px solid var(--border-light);
+            background: rgba(22, 22, 26, 0.5);
+            color: var(--gold-bright);
+        }
+        
+        .expense-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .expense-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .expense-delete {
+            color: var(--danger);
+        }
+        
+        .expense-delete:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .expense-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Profile Layout */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .profile-info {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--primary);
+        }
+
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-email {
+            color: var(--muted-text);
+            font-size: 0.875rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: rgba(22, 22, 26, 0.5);
+            border: 1px solid transparent;
+        }
+        
+        .expense-form {
+            background-color: rgba(22, 22, 26, 0.5);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--box-shadow);
+        }
+
+        .expense-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--light-text);
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .expense-form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .expense-form-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--gradient-gold);
+            color: white;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            font-size: 1.25em;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(16, 16, 18, 0.5);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            color: var(--light-text);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold-medium);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Budget Stats */
+        .budget-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(22, 22, 26, 0.6);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            flex: 1;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+            pointer-events: none;
+        }
+
+        .stat-card.income {
+            border-color: var(--success);
+        }
+
+        .stat-card.expense {
+            border-color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card.income .stat-value {
+            color: var(--success);
+        }
+
+        .stat-card.expense .stat-value {
+            color: var(--danger);
+        }
+
+        .stat-label {
+            color: var(--muted-text);
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Transactions */
+        .transactions-list {
+            margin-top: 2rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(22, 22, 26, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            margin-bottom: 0.75rem;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .transaction-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .transaction-category {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .income {
+            color: var(--success);
+        }
+
+        .expense {
+            color: var(--danger);
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #fee2e2;
+        }
+
+        .danger-zone h3 {
+            color: var(--danger);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .danger-zone p {
+            color: var(--gray-500);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(22, 22, 26, 0.85);
+            border-radius: var(--border-radius-lg);
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-col {
+                margin-bottom: 1.25rem;
+            }            .form-col:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .support-chat {
+                right: 20px;
+                width: calc(100vw - 40px);
+                max-width: 350px;
+                height: 450px;
+            }
+        }
+
+        .support-chat.collapsed {
+            transform: translateY(120%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chat-header {
+            padding: 1rem;
+            background: var(--gradient-gold);
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            color: black;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-actions button {
+            background: none;
+            border: none;
+            color: black;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .chat-actions button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .chat-message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-message {
+            background: var(--gradient-gold);
+            color: black;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        .bot-message {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            background: rgba(16, 16, 18, 0.7);
+            color: var(--light-text);
+        }
+
+        .chat-input button {
+            background: var(--gradient-gold);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            color: black;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .chat-input button:hover {
+            transform: translateY(-2px);
+        }
+
+        .support-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--gradient-gold);
+            color: black;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.2s;
+            z-index: 1000;
+        }
+
+        .support-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .d-flex {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" style="background: rgba(10, 10, 12, 0.95); padding: 1rem 2rem; backdrop-filter: blur(10px); box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(212, 175, 55, 0.15);">
+        <div class="header-content" style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="preview.html" class="logo" style="text-decoration: none;">
+                <span style="font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Golden Balance</span>
+            </a>            <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
+                <a href="preview.html" class="btn" style="background: linear-gradient(135deg, #D4AF37, #A8861D); color: #0E0E10; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-home"></i> Početna
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dodatni prostor ispod fiksnog headera -->
+    <div style="height: 80px;"></div>
+    
+    <div class="container">
+        <div class="profile-container" style="display: flex; gap: 2rem; position: relative;">
+            <!-- Sidebar -->
+            <aside class="sidebar" style="flex: 1; max-width: 250px; background: rgba(22, 22, 26, 0.7); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: var(--box-shadow); border: 1px solid var(--border-light); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+                <div class="profile-info">
+                    <img src="https://ui-avatars.com/api/?name=Korisnik&background=3b82f6&color=fff&size=128" 
+                         alt="Profilna slika" 
+                         class="profile-pic" 
+                         id="userProfilePic">
+                    <h2 class="profile-name" id="userName">Korisničko Ime</h2>
+                    <p class="profile-email" id="userEmail">korisnik@example.com</p>
+                </div>
+                
+                <ul class="nav-menu">                    <li class="nav-item">
+                        <a href="#profile" class="nav-link active" id="profileLink" data-section="profile">
+                            <i class="fas fa-user-edit"></i>
+                            Moj Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#budget" class="nav-link" id="budgetLink" data-section="budget">
+                            <i class="fas fa-wallet"></i>
+                            Moj Budžet
+                        </a>
+                    </li>
+                    <li class="nav-item">                        <a href="#settings" class="nav-link" id="settingsLink" data-section="settings">
+                            <i class="fas fa-cog"></i>
+                            Podešavanja
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Odjava
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+
+            <!-- Main Content -->
+            <main class="main-content" style="flex: 3; background: rgba(22, 22, 26, 0.7); border-radius: var(--border-radius); padding: var(--spacing-lg); box-shadow: var(--box-shadow); border: 1px solid var(--border-light); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+                <!-- Profile Section -->
+                <section id="profileSection">
+                    <h2 class="section-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-edit"></i> Moj Profil
+                    </h2>
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="firstName" class="form-label">Ime</label>
+                                <input type="text" id="firstName" class="form-control" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="lastName" class="form-label">Prezime</label>
+                                <input type="text" id="lastName" class="form-control" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="email" class="form-label">Email adresa</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="phone" class="form-label">Broj telefona</label>
+                                <input type="tel" id="phone" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="address" class="form-label">Adresa</label>
+                            <input type="text" id="address" class="form-control">
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="city" class="form-label">Grad</label>
+                                <input type="text" id="city" class="form-control">
+                            </div>
+                            <div class="form-col">
+                                <label for="postalCode" class="form-label">Poštanski broj</label>
+                                <input type="text" id="postalCode" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="profileImageUrl" class="form-label">URL profilne slike</label>
+                            <input type="url" id="profileImageUrl" class="form-control" placeholder="Unesite URL slike (npr. https://example.com/slika.jpg)">
+                            <small class="form-text text-muted">Unesite direktan link do slike sa interneta</small>
+                        </div>                        <button type="button" class="btn btn-primary" onclick="saveProfileData()">
+                            <i class="fas fa-save"></i> Sačuvaj promene
+                        </button>
+                    </form>
+                </section>
+
+
+                <!-- Budget Section (initially hidden) -->
+                <section id="budgetSection" style="display: none;">
+                    <div id="budgetHeader" style="background: rgba(22, 22, 26, 0.9); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <h2 class="section-title" style="font-size: 2rem; font-weight: 800; margin: 0; color: #D4AF37; display: flex; align-items: center; gap: 1rem;">
+                            <i class="fas fa-chart-pie" style="color: #D4AF37; font-size: 1.8rem;"></i> 
+                            <span>Praćenje Proračuna</span>
+                        </h2>
+                        <p style="margin: 0.5rem 0 0; color: #D4AF37; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Pratite sve svoje prihode i troškove na jednom mjestu</p>
+                    </div>
+                    
+                    <style>
+                        .budget-stats {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                            gap: 1.5rem;
+                            margin: 2rem 0;
+                        }
+                        
+                        .stat-card {
+                            background: rgba(22, 22, 26, 0.7);
+                            backdrop-filter: blur(10px);
+                            border-radius: 12px;
+                            padding: 1.5rem;
+                            border: 1px solid var(--border-light);
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        
+                        .stat-card::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            height: 4px;
+                            background: var(--gradient-gold);
+                        }
+                        
+                        .stat-card.income::before { background: var(--gradient-gold); }
+                        .stat-card.expense::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+                        
+                        .stat-card:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+                        }
+                        
+                        .stat-label {
+                            color: #ffffff; /* Bijela boja za bolji kontrast */
+                            font-size: 1rem; /* Povećana veličina fonta */
+                            margin-bottom: 0.5rem;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            font-weight: 600; /* Podebljani font */
+                            text-shadow: 0 1px 2px rgba(0,0,0,0.2); /* Lagana sjena za bolju čitljivost */
+                        }
+                        
+                        .stat-value {
+                            font-size: 1.75rem;
+                            font-weight: 700;
+                            margin: 0.5rem 0;
+                            background: var(--gradient-gold);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                        }
+                        
+                        .stat-card.expense .stat-value {
+                            background: linear-gradient(90deg, #ef4444, #f87171);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                        }
+                        
+                        .stat-change {
+                            font-size: 0.85rem;
+                            color: var(--muted-text);
+                            display: flex;
+                            align-items: center;
+                            gap: 0.25rem;
+                        }
+                        
+                        .stat-change.positive {
+                            color: #10b981;
+                        }
+                        
+                        .stat-change.negative {
+                            color: #ef4444;
+                        }
+                    </style>
+                    
+                    <div class="budget-stats">
+                        <div class="stat-card income">
+                            <div class="stat-label">
+                                <i class="fas fa-arrow-down" style="color: #D4AF37;"></i> <span style="color: #D4AF37; font-weight: 600;">Ukupni prihodi</span>
+                            </div>
+                            <div class="stat-value" id="totalIncome">0 RSD</div>
+                            <div class="stat-change" id="incomeChange">
+                                <i class="fas fa-arrow-up"></i> 0% u odnosu na prošli mesec
+                            </div>
+                        </div>
+                        <div class="stat-card expense">
+                            <div class="stat-label">
+                                <i class="fas fa-arrow-up" style="color: #D4AF37;"></i> <span style="color: #D4AF37; font-weight: 600;">Ukupni troškovi</span>
+                            </div>
+                            <div class="stat-value" id="totalExpenses">0 RSD</div>
+                            <div class="stat-change" id="expenseChange">
+                                <i class="fas fa-arrow-up"></i> 0% u odnosu na prošli mesec
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-wallet" style="color: #D4AF37;"></i> <span style="color: #D4AF37; font-weight: 600;">Trenutno stanje</span>
+                            </div>
+                            <div class="stat-value" id="currentBalance">0 RSD</div>
+                            <div class="stat-change" id="balanceChange">
+                                <i class="fas fa-arrow-up"></i> 0% u odnosu na prošli mesec
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Praćenje proračuna -->                 
+                    <style>
+                        .budget-planner {
+                            margin-top: 2.5rem;
+                        }
+                        
+                        .section-title {
+                            font-size: 1.5rem;
+                            font-weight: 600;
+                            margin: 0 0 1.5rem 0;
+                            color: var(--light-text);
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                        }
+                        
+                        .section-title i {
+                            color: var(--gold-bright);
+                        }
+                        
+                        .income-section {
+                            background: rgba(22, 22, 26, 0.7);
+                            backdrop-filter: blur(10px);
+                            border-radius: 12px;
+                            padding: 1.75rem;
+                            border: 1px solid var(--border-light);
+                            margin-bottom: 2rem;
+                        }
+                        
+                        .section-subtitle {
+                            font-size: 1.1rem;
+                            color: var(--muted-text);
+                            margin: 0.5rem 0 2rem 0;
+                            line-height: 1.6;
+                        }
+                        
+                        .form-group {
+                            margin-bottom: 1.5rem;
+                        }
+                        
+                        .form-label {
+                            display: block;
+                            margin-bottom: 0.5rem;
+                            font-weight: 500;
+                            color: var(--light-text);
+                        }
+                        
+                        .input-group {
+                            display: flex;
+                            gap: 1rem;
+                        }
+                        
+                        .form-control {
+                            flex: 1;
+                            padding: 0.9rem 1.25rem;
+                            background: rgba(16, 16, 18, 0.7);
+                            border: 1px solid var(--border-light);
+                            border-radius: 8px;
+                            color: var(--light-text);
+                            font-size: 1rem;
+                            transition: all 0.2s ease;
+                        }
+                        
+                        .form-control:focus {
+                            outline: none;
+                            border-color: var(--gold-bright);
+                            box-shadow: 0 0 0 3px rgba(245, 193, 39, 0.2);
+                        }
+                        
+                        .btn {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5rem;
+                            padding: 0.9rem 1.75rem;
+                            font-weight: 600;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            border: none;
+                            font-size: 1rem;
+                        }
+                        
+                        .btn-primary {
+                            background: var(--gradient-gold);
+                            color: #000;
+                        }
+                        
+                        .btn-primary:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(245, 193, 39, 0.2);
+                        }
+                        
+                        .input-hint {
+                            font-size: 0.85rem;
+                            color: var(--muted-text);
+                            margin-top: 0.5rem;
+                            line-height: 1.5;
+                        }
+                    </style>
+                    
+                    <div class="budget-planner">
+                        <h3 class="section-title" style="color: #D4AF37; font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem;">
+                            <i class="fas fa-chart-pie" style="color: #D4AF37;"></i> Praćenje proračuna
+                        </h3>
+                        <p class="section-subtitle" style="color: #000000; font-size: 1.1rem; margin-bottom: 2rem;">
+                            Unesite svoje mesečne prihode i prilagodite kategorije troškova prema vašim potrebama.
+                        </p>
+                        
+                        <div class="income-section">
+                            <h4 style="font-size: 1.25rem; margin: 0 0 1.5rem 0; color: #000000;">
+                                <i class="fas fa-money-bill-wave" style="margin-right: 0.5rem; color: #000000;"></i> Mesečni prihodi
+                            </h4>
+                            
+                            <div class="form-group">
+                                <label for="monthlyIncome" class="form-label">Ukupni mesečni prihod (RSD)</label>                                <div class="input-group">
+                                    <input 
+                                        type="number" 
+                                        id="monthlyIncome" 
+                                        class="form-control" 
+                                        placeholder="npr. 150000"
+                                        min="0"
+                                        step="1000"
+                                    >
+                                    <button type="button" id="calculateBudget" class="btn btn-primary" onclick="calculateBudget()">
+                                        <i class="fas fa-calculator"></i> Izračunaj raspodelu
+                                    </button>
+                                    <button type="button" id="createTestData" class="btn btn-outline" onclick="createTestData()" style="margin-left: 0.5rem;">
+                                        <i class="fas fa-database"></i> Kreiraj test podatke
+                                    </button>
+                                </div>
+                                <p class="input-hint">
+                                    Unesite vaš ukupan mesečni prihod kako bismo vam pomogli sa planiranjem budžeta.
+                                    Preporučeno je da uključite sve izvore prihoda za tačniju analizu.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <style>
+                            .budget-categories {
+                                display: grid;
+                                gap: 1.5rem;
+                                margin-bottom: 2.5rem;
+                            }
+                            
+                            .category-card {
+                                background: rgba(22, 22, 26, 0.7);
+                                backdrop-filter: blur(10px);
+                                border-radius: 12px;
+                                padding: 1.75rem;
+                                border: 1px solid var(--border-light);
+                                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                position: relative;
+                                overflow: hidden;
+                            }
+                            
+                            .category-card::before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 4px;
+                                height: 100%;
+                            }
+                            
+                            #necessitiesCard::before { background: #3b82f6; }
+                            #hobbyCard::before { background: #8b5cf6; }
+                            #savingsCard::before { background: #10b981; }
+                            
+                            .category-card:hover {
+                                transform: translateY(-3px);
+                                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+                            }
+                            
+                            .category-header {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin-bottom: 1rem;
+                            }
+                            
+                            .category-header h4 {
+                                margin: 0;
+                                font-size: 1.1rem;
+                                font-weight: 600;
+                                color: var(--gold-bright);
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            }
+                            
+                            .category-header h4 i {
+                                width: 32px;
+                                height: 32px;
+                                background: rgba(212, 175, 55, 0.1);
+                                border-radius: 8px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: var(--gold-bright);
+                            }
+                            
+                            #hobbyCard .category-header h4 i {
+                                background: rgba(212, 175, 55, 0.1);
+                                color: var(--gold-bright);
+                            }
+                            
+                            #savingsCard .category-header h4 i {
+                                background: rgba(212, 175, 55, 0.1);
+                                color: var(--gold-bright);
+                            }
+                            
+                            .category-percent {
+                                font-size: 1.25rem;
+                                font-weight: 700;
+                                color: var(--gold-bright);
+                            }
+                            
+                            .category-amount {
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                                margin: 0.5rem 0;
+                                color: var(--light-text);
+                            }
+                            
+                            .category-desc {
+                                font-size: 0.9rem;
+                                color: var(--muted-text);
+                                margin-bottom: 1.5rem;
+                                line-height: 1.5;
+                            }
+                            
+                            .category-progress {
+                                height: 8px;
+                                background: rgba(255, 255, 255, 0.05);
+                                border-radius: 4px;
+                                margin-bottom: 1.5rem;
+                                overflow: hidden;
+                            }
+                            
+                            .progress-bar {
+                                height: 100%;
+                                border-radius: 4px;
+                                transition: width 0.3s ease;
+                            }
+                            
+                            #necessitiesCard .progress-bar { background: #3b82f6; }
+                            #hobbyCard .progress-bar { background: #8b5cf6; }
+                            #savingsCard .progress-bar { background: #10b981; }
+                            
+                            .category-control {
+                                margin-top: 1.5rem;
+                            }
+                            
+                            .category-control label {
+                                display: block;
+                                margin-bottom: 0.5rem;
+                                font-size: 0.9rem;
+                                color: var(--muted-text);
+                            }
+                            
+                            .percent-slider {
+                                width: 100%;
+                                height: 6px;
+                                -webkit-appearance: none;
+                                appearance: none;
+                                background: rgba(255, 255, 255, 0.1);
+                                border-radius: 3px;
+                                outline: none;
+                                margin: 0;
+                                padding: 0;
+                            }
+                            
+                            .percent-slider::-webkit-slider-thumb {
+                                -webkit-appearance: none;
+                                appearance: none;
+                                width: 18px;
+                                height: 18px;
+                                border-radius: 50%;
+                                background: var(--gold-bright);
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                            }
+                            
+                            .percent-slider::-moz-range-thumb {
+                                width: 18px;
+                                height: 18px;
+                                border-radius: 50%;
+                                background: var(--gold-bright);
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                                border: none;
+                            }
+                            
+                            .percent-slider:hover::-webkit-slider-thumb {
+                                transform: scale(1.1);
+                                box-shadow: 0 0 0 4px rgba(245, 193, 39, 0.2);
+                            }
+                            
+                            .percent-slider:active::-webkit-slider-thumb {
+                                transform: scale(0.95);
+                            }
+                            
+                            .slider-value {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-top: 0.5rem;
+                                font-size: 0.8rem;
+                                color: var(--muted-text);
+                            }
+                        </style>
+                        
+                        <div id="budgetCategories" style="display: none;">                            <h3 class="section-title" style="margin-bottom: 1.5rem; color: var(--gold-bright);">
+                                <i class="fas fa-sliders-h"></i> Podešavanje kategorija
+                            </h3>
+                            <p class="section-subtitle" style="margin-top: -1rem; color: #000000;">
+                                Prilagodite procente za svaku kategoriju prema vašim potrebama. Ukupan zbir mora biti 100%.
+                            </p>
+                            
+                            <div class="budget-categories">
+                                <!-- Glavne potrebe -->
+                                <div class="category-card" id="necessitiesCard">
+                                    <div class="category-header">
+                                        <h4><i class="fas fa-shopping-basket"></i> Glavne potrebe</h4>
+                                        <span class="category-percent" id="necessitiesPercentValue">50%</span>
+                                    </div>
+                                    <div class="category-amount" id="necessitiesAmount">0 RSD</div>
+                                    <div class="category-desc">
+                                        Hrana, računi, stanarina, gorivo i ostale osnovne životne potrebe. 
+                                        Preporučeni iznos je 50-60% vaših prihoda.
+                                    </div>
+                                    <div class="category-progress">
+                                        <div class="progress-bar" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="category-control">
+                                        <label for="necessitiesPercent">Podešavanje procenta</label>
+                                        <input type="range" id="necessitiesPercent" min="10" max="80" value="50" class="percent-slider">
+                                        <div class="slider-value">
+                                            <span>10%</span>
+                                            <span>80%</span>
+                                        </div>
+                                    </div>
+                                    <div class="category-stats" style="margin-top: 0.5rem;">
+                                        <span class="stat-change" id="necessitiesChange"><i class="fas fa-minus"></i> 0% u odnosu na prošli mesec</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hobi i zabava -->
+                                <div class="category-card" id="hobbyCard">
+                                    <div class="category-header">
+                                        <h4><i class="fas fa-gamepad"></i> Hobi i zabava</h4>
+                                        <span class="category-percent" id="hobbyPercentValue">30%</span>
+                                    </div>
+                                    <div class="category-amount" id="hobbyAmount">0 RSD</div>
+                                    <div class="category-desc">
+                                        Treninzi, restorani, dostava, izlasci, kupovina i ostale aktivnosti za zabavu. 
+                                        Preporučeno je da ne prelazite 30% vaših prihoda.
+                                    </div>
+                                    <div class="category-progress">
+                                        <div class="progress-bar" style="width: 30%;"></div>
+                                    </div>
+                                    <div class="category-control">
+                                        <label for="hobbyPercent">Podešavanje procenta</label>
+                                        <input type="range" id="hobbyPercent" min="10" max="60" value="30" class="percent-slider">
+                                        <div class="slider-value">
+                                            <span>10%</span>
+                                            <span>60%</span>
+                                        </div>
+                                    </div>
+                                    <div class="category-stats" style="margin-top: 0.5rem;">
+                                        <span class="stat-change" id="hobbyChange"><i class="fas fa-minus"></i> 0% u odnosu na prošli mesec</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Štednja i ulaganja -->
+                                <div class="category-card" id="savingsCard">
+                                    <div class="category-header">
+                                        <h4><i class="fas fa-piggy-bank"></i> Štednja i ulaganja</h4>
+                                        <span class="category-percent" id="savingsPercentValue">20%</span>
+                                    </div>
+                                    <div class="category-amount" id="savingsAmount">0 RSD</div>
+                                    <div class="category-desc">
+                                        Ušteđevina i ulaganja za budućnost. Preporučeno je da štedite najmanje 10-20% vaših prihoda 
+                                        kako biste obezbedili finansijsku sigurnost i ostvarili dugoročne ciljeve.
+                                    </div>
+                                    <div class="category-progress">
+                                        <div class="progress-bar" style="width: 20%;"></div>
+                                    </div>
+                                    <div class="category-control">
+                                        <label for="savingsPercent">Podešavanje procenta</label>
+                                        <input type="range" id="savingsPercent" min="10" max="40" value="20" class="percent-slider">
+                                        <div class="slider-value">
+                                            <span>10%</span>
+                                            <span>40%</span>
+                                        </div>
+                                    </div>
+                                    <div class="category-stats" style="margin-top: 0.5rem;">
+                                        <span class="stat-change" id="savingsChange"><i class="fas fa-minus"></i> 0% u odnosu na prošli mesec</span>
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="budget-actions" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <div class="budget-note" style="margin-bottom: 2rem;">
+                                    <div style="background: #f3f4f6; padding: 1.5rem; border-radius: 12px;">
+                                        <i class="fas fa-info-circle" style="color: var(--gold-bright); font-size: 1.5rem;"></i>
+                                        <div>
+                                            <p style="margin: 0 0 0.75rem 0; font-weight: 600; font-size: 1.2rem; color: var(--gold-bright);">Savet za dobru finansijsku praksu</p>
+                                            <p style="margin: 0; font-size: 1rem; color: #000000; font-weight: 500; line-height: 1.6;">
+                                                Pravilna raspodela budžeta ključna je za finansijsku stabilnost. Pokušajte da se držite preporučenih vrednosti:
+                                                <span style="color: #000000; font-weight: 600;">50-60% osnovne potrebe</span>, 
+                                                <span style="color: #000000; font-weight: 600;">20-30% lična zadovoljstva</span> i 
+                                                <span style="color: #000000; font-weight: 600;">10-20% štednja/ulaganja</span>.
+                                            </p>
+                                        </div>
+                                    </div>                                </div>
+                                  <div style="display: flex; align-items: center; justify-content: center; gap: 1.5rem;">
+                                    <div class="budget-summary" style="width: 250px; background: rgba(22, 22, 26, 0.7); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span style="color: var(--muted-text); font-size: 0.9rem;">Ukupno:</span>
+                                            <span id="totalPercentage" style="font-weight: 700; font-size: 1.1rem;">100%</span>
+                                        </div>
+                                        <div style="height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; margin-bottom: 0.5rem; overflow: hidden;">
+                                            <div id="totalPercentageBar" style="height: 100%; width: 100%; background: var(--gradient-gold);"></div>
+                                        </div>
+                                        <div id="percentageStatus" style="text-align: right; font-size: 0.8rem; color: #10b981;">
+                                            <i class="fas fa-check-circle"></i> Savršena raspodela
+                                        </div>
+                                    </div>
+                                    
+                                    <button id="saveBudgetPlan" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Sačuvaj plan budžeta
+                                    </button>
+                                </div>
+                            </div>
+                              <!-- Tabele za unos troškova po kategorijama -->                            <div id="expenseTrackerSection" class="expenses-tracker">
+                                <h3 class="section-title" style="font-size: 1.25rem; margin-top: 2rem; color: var(--gold-bright);">
+                                    <i class="fas fa-list-alt"></i> Unos i praćenje troškova
+                                </h3>
+                                
+                                <!-- Tabs za kategorije -->
+                                <div class="expense-tabs">
+                                    <button class="expense-tab active" data-tab="necessities">
+                                        <i class="fas fa-shopping-basket"></i> Glavne potrebe
+                                    </button>
+                                    <button class="expense-tab" data-tab="hobby">
+                                        <i class="fas fa-gamepad"></i> Hobi
+                                    </button>
+                                    <button class="expense-tab" data-tab="savings">
+                                        <i class="fas fa-piggy-bank"></i> Štednja
+                                    </button>
+                                </div>
+                                
+                                <!-- Tabela za Glavne potrebe -->
+                                <div class="expense-tab-content active" id="necessitiesTab">
+                                    <div class="expense-form">
+                                        <h4>Dodaj novi trošak - Glavne potrebe</h4>
+                                        <div class="expense-form-row">
+                                            <div class="expense-form-col">
+                                                <label for="necessities-name">Naziv</label>
+                                                <input type="text" id="necessities-name" placeholder="npr. Račun za struju">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="necessities-amount">Iznos (RSD)</label>
+                                                <input type="number" id="necessities-amount" placeholder="npr. 5000">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="necessities-date">Datum</label>
+                                                <input type="date" id="necessities-date">
+                                            </div>
+                                            <div class="expense-form-col expense-form-button">
+                                                <button type="button" id="necessities-add" class="btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Dodaj
+                                                </button>                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tabela za Hobi -->
+                                <div class="expense-tab-content" id="hobbyTab">
+                                    <div class="expense-form">
+                                        <h4>Dodaj novi trošak - Hobi</h4>
+                                        <div class="expense-form-row">
+                                            <div class="expense-form-col">
+                                                <label for="hobby-name">Naziv</label>
+                                                <input type="text" id="hobby-name" placeholder="npr. Teretana">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="hobby-amount">Iznos (RSD)</label>
+                                                <input type="number" id="hobby-amount" placeholder="npr. 3000">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="hobby-date">Datum</label>
+                                                <input type="date" id="hobby-date">
+                                            </div>
+                                            <div class="expense-form-col expense-form-button">
+                                                <button type="button" id="hobby-add" class="btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Dodaj
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tabela za Štednju -->
+                                <div class="expense-tab-content" id="savingsTab">
+                                    <div class="expense-form">
+                                        <h4>Dodaj novu štednju</h4>
+                                        <div class="expense-form-row">
+                                            <div class="expense-form-col">
+                                                <label for="savings-name">Naziv</label>
+                                                <input type="text" id="savings-name" placeholder="npr. Štedni račun">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="savings-amount">Iznos (RSD)</label>
+                                                <input type="number" id="savings-amount" placeholder="npr. 10000">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="savings-date">Datum</label>
+                                                <input type="date" id="savings-date">
+                                            </div>
+                                            <div class="expense-form-col expense-form-button">
+                                                <button type="button" id="savings-add" class="btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Dodaj
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Pregled ukupnih troškova po kategorijama -->
+                                <div class="category-totals" style="margin-top: 2rem; padding: 1.5rem; background: rgba(22, 22, 26, 0.7); border-radius: 12px; border: 1px solid var(--border-light);">
+                                    <h4 style="margin: 0 0 1rem 0; color: var(--gold-bright); text-align: center;">
+                                        <i class="fas fa-chart-bar"></i> Ukupni troškovi po kategorijama
+                                    </h4>
+                                    <div class="totals-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                        <div class="total-card" style="background: rgba(59, 130, 246, 0.1); border: 1px solid #3b82f6; border-radius: 8px; padding: 1rem; text-align: center;">
+                                            <div style="color: #3b82f6; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                                <i class="fas fa-shopping-basket"></i> Glavne potrebe
+                                            </div>
+                                            <div id="necessities-category-total" style="font-size: 1.25rem; font-weight: 700; color: var(--light-text);">0 RSD</div>
+                                        </div>
+                                        <div class="total-card" style="background: rgba(139, 92, 246, 0.1); border: 1px solid #8b5cf6; border-radius: 8px; padding: 1rem; text-align: center;">
+                                            <div style="color: #8b5cf6; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                                <i class="fas fa-gamepad"></i> Hobi
+                                            </div>
+                                            <div id="hobby-category-total" style="font-size: 1.25rem; font-weight: 700; color: var(--light-text);">0 RSD</div>
+                                        </div>
+                                        <div class="total-card" style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px; padding: 1rem; text-align: center;">
+                                            <div style="color: #10b981; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                                <i class="fas fa-piggy-bank"></i> Štednja
+                                            </div>
+                                            <div id="savings-category-total" style="font-size: 1.25rem; font-weight: 700; color: var(--light-text);">0 RSD</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><div class="transactions-list">
+                        <h3 class="section-title" style="font-size: 1.25rem; margin-top: 2rem; color: var(--gold-bright);">
+                            <i class="fas fa-exchange-alt"></i> Poslednje transakcije
+                        </h3>
+                        
+                        <div class="transactions-container" style="margin-top: 1rem;">
+                            <!-- Transakcije će biti dodane dinamički putem JavaScript-a -->
+                        </div>
+                        
+                        <style>
+                            .transactions-container {
+                                min-height: 200px;
+                                max-height: 400px;
+                                overflow-y: auto;
+                                background: rgba(22, 22, 26, 0.7);
+                                border-radius: 8px;
+                                padding: 1rem;
+                                border: 1px solid var(--border-light);
+                            }
+                            
+                            .transaction-item {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                padding: 0.75rem;
+                                background: rgba(255, 255, 255, 0.05);
+                                border-radius: 6px;
+                                margin-bottom: 0.5rem;
+                                transition: background-color 0.2s ease;
+                            }
+                            
+                            .transaction-item:hover {
+                                background: rgba(255, 255, 255, 0.08);
+                            }
+                            
+                            .transaction-item:last-child {
+                                margin-bottom: 0;
+                            }
+                            
+                            .transaction-info {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 0.25rem;
+                            }
+                            
+                            .transaction-title {
+                                font-weight: 600;
+                                color: var(--light-text);
+                                font-size: 0.95rem;
+                            }
+                            
+                            .transaction-category {
+                                font-size: 0.8rem;
+                                color: var(--muted-text);
+                                display: flex;
+                                align-items: center;
+                                gap: 0.25rem;
+                            }
+                            
+                            .transaction-amount {
+                                font-weight: 700;
+                                font-size: 1rem;
+                            }
+                            
+                            .transaction-amount.expense {
+                                color: #ef4444;
+                            }
+                            
+                            .transaction-amount.income {
+                                color: #10b981;
+                            }
+                            
+                            .no-transactions {
+                                text-align: center;
+                                color: var(--muted-text);
+                                padding: 2rem;
+                                font-style: italic;
+                            }
+                        </style>
+                    </div>
+
+                    <!-- Troškovi po mesecima -->
+                    <div class="monthly-expenses-section" style="margin-top: 2.5rem;">
+                        <h3 class="section-title" style="font-size: 1.25rem; color: var(--gold-bright);">
+                            <i class="fas fa-calendar-alt"></i> Troškovi po mesecima
+                        </h3>
+                        
+                        <div class="month-navigation" style="margin: 1.5rem 0;">
+                            <button id="prevMonthBtn" class="btn btn-outline" style="margin-right: 1rem;">
+                                <i class="fas fa-chevron-left"></i> Prethodni mesec
+                            </button>
+                            <span id="currentMonthDisplay" style="font-weight: 600; font-size: 1.1rem; color: var(--gold-bright);">
+                                <!-- Trenutni mesec će biti prikazan ovde -->
+                            </span>
+                            <button id="nextMonthBtn" class="btn btn-outline" style="margin-left: 1rem;">
+                                Sledeći mesec <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="month-expenses-card" style="background: rgba(22, 22, 26, 0.7); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-light);">
+                            <div class="month-summary" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                                <div class="summary-card" style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                                    <div style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 0.5rem;">Ukupno troškova</div>
+                                    <div id="monthTotalExpenses" style="font-size: 1.5rem; font-weight: 700; color: #ef4444;">0 RSD</div>
+                                </div>
+                                <div class="summary-card" style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                                    <div style="color: var(--muted-text); font-size: 0.9rem; margin-bottom: 0.5rem;">Broj transakcija</div>
+                                    <div id="monthTransactionCount" style="font-size: 1.5rem; font-weight: 700; color: var(--gold-bright);">0</div>
+                                </div>
+                            </div>
+                            
+                            <table class="expense-table" id="monthlyExpensesTable" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Datum</th>
+                                        <th>Naziv</th>
+                                        <th>Kategorija</th>
+                                        <th>Iznos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Troškovi će biti dodani dinamički -->
+                                </tbody>
+                            </table>
+                            
+                            <div id="noExpensesMessage" style="text-align: center; color: var(--muted-text); padding: 2rem; display: none;">
+                                <i class="fas fa-receipt" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                                <p>Nema troškova za prikazani mesec</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Settings Section (initially hidden) -->
+                <section id="settingsSection" style="display: none;">
+                    <h2 class="section-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-cog"></i> Podešavanja naloga
+                    </h2>
+                    
+                    <div class="form-group">
+                        <h3>Promena lozinke</h3>
+                        <form id="changePasswordForm">
+                            <div class="form-group">
+                                <label for="currentPassword" class="form-label">Trenutna lozinka</label>
+                                <input type="password" id="currentPassword" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">Nova lozinka</label>
+                                <input type="password" id="newPassword" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmNewPassword" class="form-label">Potvrdite novu lozinku</label>
+                                <input type="password" id="confirmNewPassword" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key"></i> Promeni lozinku
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Opasna zona</h3>
+                        <p>Brisanjem naloga trajno se brišu svi vaši podaci. Ova radnja se ne može poništiti.</p>
+                        <button id="deleteAccountBtn" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Obriši nalog
+                        </button>
+                    </div>                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Potvrda brisanja naloga</h2>
+            <p>Da li ste sigurni da želite da obrišete svoj nalog? Svi vaši podaci će biti trajno izbrisani i neće biti moguće ih vratiti.</p>
+            <div class="modal-buttons">
+                <button id="confirmDeleteBtn" class="btn btn-danger">Obriši nalog</button>
+                <button id="cancelDeleteBtn" class="btn">Otkaži</button>
+            </div>
+        </div>
+    </div>    <!-- Chat Support -->
+    <div id="supportChat" class="support-chat collapsed">
+        <div class="chat-header">
+            <div class="chat-title">
+                <i class="fas fa-headset"></i> Tehnička Podrška
+            </div>
+            <div class="chat-actions">
+                <button class="btn" aria-label="Minimize">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="btn" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-body">
+            <div class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" placeholder="Unesite vašu poruku..." id="chatInput">
+                <button class="send-message">
+                    <i class="fas fa-paper-plane"></i>                </button>
+            </div>
+        </div>
+    </div>
+    <script src="js/support-kb.js"></script>
+    <script src="js/chat.js"></script>
+    <script>
+        // Enhanced function to handle budget tab activation
+        function handleBudgetTabFromExternal() {
+            const urlHash = window.location.hash;
+            const activeTab = sessionStorage.getItem('activeTab');
+            
+            // Check if coming from external link to budget
+            if (urlHash === '#budget' || activeTab === 'budget') {
+                setTimeout(() => {
+                    // Remove active from all nav links
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    
+                    // Find and activate budget link
+                    const budgetLink = document.querySelector('[data-section="budget"]');
+                    if (budgetLink) {
+                        budgetLink.classList.add('active');
+                        
+                        // Hide all sections
+                        document.querySelectorAll('section').forEach(section => {
+                            section.style.display = 'none';
+                        });
+                        
+                        // Show budget section
+                        const budgetSection = document.querySelector('#budgetSection');
+                        if (budgetSection) {
+                            budgetSection.style.display = 'block';
+                        }
+                    }
+                    
+                    // Clean up sessionStorage
+                    sessionStorage.removeItem('activeTab');
+                }, 100);
+            }
+        }
+        
+        // Load user profile data into sidebar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfileData();
+            setupNavigationButtons();
+            setupLogoutButton();
+            handleSmartNavigation();
+            handleBudgetTabFromExternal(); // Add this function call
+        });
+
+        // Function to load user profile data from localStorage
+        function loadUserProfileData() {
+            // Get current user data from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+            // Update profile image
+            const userProfilePic = document.getElementById('userProfilePic');
+            if (userProfilePic) {
+                // Check for profile image in user data
+                const profileImageUrl = userData.profileImageUrl || currentUser.profileImageUrl || currentUser.profileImage;
+                
+                if (profileImageUrl && currentUser.email) {
+                    // Try to load the custom profile image
+                    const tempImg = new Image();
+                    tempImg.onload = function() {
+                        userProfilePic.src = profileImageUrl;
+                    };
+                    tempImg.onerror = function() {
+                        // Fallback to generated avatar
+                        const fullName = userData.firstName && userData.lastName 
+                            ? `${userData.firstName} ${userData.lastName}`
+                            : currentUser.name || 'Korisnik';
+                        userProfilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=D4AF37&color=0E0E10&size=128&font-size=0.5`;
+                    };
+                    tempImg.src = profileImageUrl;
+                } else {
+                    // Generate avatar based on user's name
+                    const fullName = userData.firstName && userData.lastName 
+                        ? `${userData.firstName} ${userData.lastName}`
+                        : currentUser.name || 'Korisnik';
+                    userProfilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=D4AF37&color=0E0E10&size=128&font-size=0.5`;
+                }
+            }
+
+            // Update user name
+            const userName = document.getElementById('userName');
+            if (userName) {
+                const fullName = userData.firstName && userData.lastName 
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : currentUser.name || 'Korisničko Ime';
+                userName.textContent = fullName;
+            }
+
+            // Update user email
+            const userEmail = document.getElementById('userEmail');
+            if (userEmail) {
+                userEmail.textContent = currentUser.email || 'korisnik@example.com';
+            }
+
+            // Load profile data into form fields if on profile section
+            loadProfileFormData(userData, currentUser);
+        }
+
+        // Function to load data into profile form
+        function loadProfileFormData(userData, currentUser) {
+            // Load data into form fields
+            if (userData.firstName) document.getElementById('firstName').value = userData.firstName;
+            if (userData.lastName) document.getElementById('lastName').value = userData.lastName;
+            if (currentUser.email) document.getElementById('email').value = currentUser.email;
+            if (userData.phone) document.getElementById('phone').value = userData.phone;
+            if (userData.address) document.getElementById('address').value = userData.address;
+            if (userData.city) document.getElementById('city').value = userData.city;
+            if (userData.postalCode) document.getElementById('postalCode').value = userData.postalCode;
+            if (userData.profileImageUrl) document.getElementById('profileImageUrl').value = userData.profileImageUrl;
+        }
+
+        // Function to setup navigation buttons
+        function setupNavigationButtons() {
+            const navLinks = document.querySelectorAll('.nav-link:not(#logoutBtn)');
+            const sections = document.querySelectorAll('section');
+
+            // Function to hide all sections
+            function hideAllSections() {
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+            }
+
+            // Function to show specific section
+            function showSection(sectionId) {
+                hideAllSections();
+                const section = document.querySelector('#' + sectionId + 'Section');
+                if (section) {
+                    section.style.display = 'block';
+                }
+            }
+
+            // Event listener for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.dataset.section;
+                    
+                    if (sectionId) {
+                        // Remove active class from all links
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        
+                        // Add active class to clicked link
+                        this.classList.add('active');
+                        
+                        showSection(sectionId);
+                    }
+                });
+            });
+
+            // Check URL hash on page load to show correct section
+            if (window.location.hash) {
+                const sectionId = window.location.hash.substring(1); // Remove # from hash
+                const link = document.querySelector(`[data-section="${sectionId}"]`);
+                if (link) {
+                    link.click();
+                } else {
+                    // If hash doesn't match any section, show profile by default
+                    showSection('profile');
+                }
+            }
+
+            // Check sessionStorage for active tab (from other pages)
+            const activeTab = sessionStorage.getItem('activeTab');
+            if (activeTab) {
+                const tabLink = document.querySelector(`[data-section="${activeTab.replace('-tab', '')}"]`);
+                if (tabLink) {
+                    tabLink.click();
+                }
+                sessionStorage.removeItem('activeTab'); // Clean up after use
+            }
+        }
+
+        // Function to setup logout button
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Confirm logout
+                    if (confirm('Da li ste sigurni da se želite odjaviti?')) {
+                        // Clear user data from localStorage
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('admin_logged_in');
+                        localStorage.removeItem('userData');
+                        
+                        // Redirect to login page
+                        window.location.href = 'preview.html';
+                    }
+                });
+            }
+        }
+
+        // Function to save profile data
+        function saveProfileData() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // Collect form data
+            const userData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                postalCode: document.getElementById('postalCode').value.trim(),
+                profileImageUrl: document.getElementById('profileImageUrl').value.trim()
+            };
+
+            // Update currentUser with new name if changed
+            if (userData.firstName && userData.lastName) {
+                currentUser.name = `${userData.firstName} ${userData.lastName}`;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+
+            // Save user data
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Reload profile data in sidebar
+            loadUserProfileData();
+            
+            alert('Profil je uspešno ažuriran!');
+        }
+    </script>
+    <script src="js/support-kb.js"></script>
+    <script>
+        // Load user profile data into sidebar on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfileData();
+            setupNavigationButtons();
+            setupLogoutButton();
+        });
+
+        // Function to load user profile data from localStorage
+        function loadUserProfileData() {
+            // Get current user data from localStorage
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+
+            // Update profile image
+            const userProfilePic = document.getElementById('userProfilePic');
+            if (userProfilePic) {
+                // Check for profile image in user data
+                const profileImageUrl = userData.profileImageUrl || currentUser.profileImageUrl || currentUser.profileImage;
+                
+                if (profileImageUrl && currentUser.email) {
+                    // Try to load the custom profile image
+                    const tempImg = new Image();
+                    tempImg.onload = function() {
+                        userProfilePic.src = profileImageUrl;
+                    };
+                    tempImg.onerror = function() {
+                        // Fallback to generated avatar
+                        const fullName = userData.firstName && userData.lastName 
+                            ? `${userData.firstName} ${userData.lastName}`
+                            : currentUser.name || 'Korisnik';
+                        userProfilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=D4AF37&color=0E0E10&size=128&font-size=0.5`;
+                    };
+                    tempImg.src = profileImageUrl;
+                } else {
+                    // Generate avatar based on user's name
+                    const fullName = userData.firstName && userData.lastName 
+                        ? `${userData.firstName} ${userData.lastName}`
+                        : currentUser.name || 'Korisnik';
+                    userProfilePic.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=D4AF37&color=0E0E10&size=128&font-size=0.5`;
+                }
+            }
+
+            // Update user name
+            const userName = document.getElementById('userName');
+            if (userName) {
+                const fullName = userData.firstName && userData.lastName 
+                    ? `${userData.firstName} ${userData.lastName}`
+                    : currentUser.name || 'Korisničko Ime';
+                userName.textContent = fullName;
+            }
+
+            // Update user email
+            const userEmail = document.getElementById('userEmail');
+            if (userEmail) {
+                userEmail.textContent = currentUser.email || 'korisnik@example.com';
+            }
+
+            // Load profile data into form fields if on profile section
+            loadProfileFormData(userData, currentUser);
+        }
+
+        // Function to load data into profile form
+        function loadProfileFormData(userData, currentUser) {
+            // Load data into form fields
+            if (userData.firstName) document.getElementById('firstName').value = userData.firstName;
+            if (userData.lastName) document.getElementById('lastName').value = userData.lastName;
+            if (currentUser.email) document.getElementById('email').value = currentUser.email;
+            if (userData.phone) document.getElementById('phone').value = userData.phone;
+            if (userData.address) document.getElementById('address').value = userData.address;
+            if (userData.city) document.getElementById('city').value = userData.city;
+            if (userData.postalCode) document.getElementById('postalCode').value = userData.postalCode;
+            if (userData.profileImageUrl) document.getElementById('profileImageUrl').value = userData.profileImageUrl;
+        }
+
+        // Function to setup navigation buttons
+        function setupNavigationButtons() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            // Function to hide all sections
+            function hideAllSections() {
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+            }
+
+            // Function to show specific section
+            function showSection(sectionId) {
+                hideAllSections();
+                const section = document.querySelector('#' + sectionId + 'Section');
+                if (section) {
+                    section.style.display = 'block';
+                }
+            }
+
+            // Event listener for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.dataset.section;
+                    
+                    if (sectionId) {
+                        // Remove active class from all links
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        
+                        // Add active class to clicked link
+                        this.classList.add('active');
+                        
+                        showSection(sectionId);
+                    }
+                });
+            });
+
+            // Check URL hash on page load to show correct section
+            if (window.location.hash) {
+                const sectionId = window.location.hash.substring(1); // Remove # from hash
+                const link = document.querySelector(`[data-section="${sectionId}"]`);
+                if (link) {
+                    link.click();
+                } else {
+                    // If hash doesn't match any section, show profile by default
+                    showSection('profile');
+                }
+            }
+
+            // Check sessionStorage for active tab (from other pages)
+            const activeTab = sessionStorage.getItem('activeTab');
+            if (activeTab) {
+                const tabLink = document.querySelector(`[data-section="${activeTab.replace('-tab', '')}"]`);
+                if (tabLink) {
+                    tabLink.click();
+                }
+                sessionStorage.removeItem('activeTab'); // Clean up after use
+            }
+        }
+
+        // Function to setup logout button
+        function setupLogoutButton() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Confirm logout
+                    if (confirm('Da li ste sigurni da se želite odjaviti?')) {
+                        // Clear user data from localStorage
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('admin_logged_in');
+                        localStorage.removeItem('userData');
+                        
+                        // Redirect to login page
+                        window.location.href = 'preview.html';
+                    }
+                });
+            }
+        }
+
+        // Function to save profile data
+        function saveProfileData() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            // Collect form data
+            const userData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                address: document.getElementById('address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                postalCode: document.getElementById('postalCode').value.trim(),
+                profileImageUrl: document.getElementById('profileImageUrl').value.trim()
+            };
+
+            // Update currentUser with new name if changed
+            if (userData.firstName && userData.lastName) {
+                currentUser.name = `${userData.firstName} ${userData.lastName}`;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            }
+
+            // Save user data
+            localStorage.setItem('userData', JSON.stringify(userData));
+            
+            // Reload profile data in sidebar
+            loadUserProfileData();
+            
+            alert('Profil je uspešno ažuriran!');        }
+        
+        // Chat support is now handled by chat.js
+        
+        // Funkcija za prikazivanje budžet sekcije iz drugih delova aplikacije
+        function showBudgetSection() {
+            const budgetLink = document.querySelector('#budgetLink');
+            if (budgetLink) {
+                budgetLink.click();
+            }
+        }// Funkcija za izračun budžeta po pravilu 50/30/20
+        function calculateBudget() {
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncome').value);
+            if (isNaN(monthlyIncome) || monthlyIncome <= 0) {
+                alert('Molimo unesite validan mesečni prihod (mora biti pozitivan broj)');
+                document.getElementById('monthlyIncome').focus();
+                return;
+            }
+
+            // Izračun prema pravilu 50/30/20
+            const necessities = monthlyIncome * 0.5;  // 50% za osnovne potrebe
+            const wants = monthlyIncome * 0.3;       // 30% za lične potrebe
+            const savings = monthlyIncome * 0.2;     // 20% za štednju
+
+            // Ažuriranje vrednosti na kartici za osnovne potrebe
+            document.getElementById('necessitiesAmount').textContent = necessities.toFixed(0) + ' RSD';
+            document.getElementById('necessitiesPercentValue').textContent = '50%';
+
+            // Ažuriranje vrednosti na kartici za lične potrebe
+            document.getElementById('hobbyAmount').textContent = wants.toFixed(0) + ' RSD';
+            document.getElementById('hobbyPercentValue').textContent = '30%';
+
+            // Ažuriranje vrednosti na kartici za štednju
+            document.getElementById('savingsAmount').textContent = savings.toFixed(0) + ' RSD';
+            document.getElementById('savingsPercentValue').textContent = '20%';
+
+            // Prikazivanje sekcije sa kategorijama
+            document.getElementById('budgetCategories').style.display = 'block';            // Ažuriranje ukupnog procenta
+            document.getElementById('totalPercentage').textContent = '100%';
+            document.getElementById('totalPercentageBar').style.width = '100%';
+            document.getElementById('percentageStatus').innerHTML = '<i class="fas fa-check-circle"></i> Savršena raspodela';
+            document.getElementById('percentageStatus').style.color = '#10b981';
+            
+            // Update budget cards with new income
+            updateBudgetCards();
+        }
+        
+        // --- TROŠKOVI PO KATEGORIJA (LOCALSTORAGE) ---
+        // Helper za čitanje i upis troškova
+        function getExpenses(category) {
+            return JSON.parse(localStorage.getItem('expenses_' + category) || '[]');
+        }
+        function saveExpenses(category, expenses) {
+            localStorage.setItem('expenses_' + category, JSON.stringify(expenses));
+        }
+        function addExpenseToTable(category, expense) {
+            const tbody = document.getElementById(category + '-tbody');
+            if (!tbody) return;
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${expense.name}</td>
+                <td>${Number(expense.amount).toLocaleString('sr-RS')} RSD</td>
+                <td>${expense.date}</td>
+                <td><button class="btn btn-danger btn-sm" onclick="removeExpense('${category}', ${expense.id})"><i class="fas fa-trash"></i></button></td>
+            `;
+            tbody.appendChild(tr);
+        }
+        function updateExpensesTable(category) {
+            const tbody = document.getElementById(category + '-tbody');
+            const totalCell = document.getElementById(category + '-total');
+            if (!tbody || !totalCell) return;
+            tbody.innerHTML = '';
+            const expenses = getExpenses(category);
+            let total = 0;
+            expenses.forEach(exp => {
+                addExpenseToTable(category, exp);
+                total += Number(exp.amount) || 0;
+            });
+            totalCell.textContent = total.toLocaleString('sr-RS') + ' RSD';
+        }
+        function removeExpense(category, id) {
+            let expenses = getExpenses(category);
+            expenses = expenses.filter(e => e.id !== id);
+            saveExpenses(category, expenses);
+            updateExpensesTable(category);
+        }
+        // --- TABOVI ZA KATEGORIJE ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab dugmad
+            const tabButtons = document.querySelectorAll('.expense-tab');
+            const tabContents = document.querySelectorAll('.expense-tab-content');
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Aktiviraj samo kliknut tab
+                    tabButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // Prikaži odgovarajući sadržaj
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    const tab = this.getAttribute('data-tab');
+                    document.getElementById(tab + 'Tab').classList.add('active');
+                });
+            });
+            // Glavne potrebe
+            const necessitiesAdd = document.getElementById('necessities-add');
+            if (necessitiesAdd) {
+                necessitiesAdd.addEventListener('click', function() {
+                    const name = document.getElementById('necessities-name').value.trim();
+                    const amount = document.getElementById('necessities-amount').value;
+                    const date = document.getElementById('necessities-date').value;
+                    if (!name || !amount || !date) {
+                        alert('Popunite sva polja za unos troška!');
+                        return;
+                    }
+                    const expenses = getExpenses('necessities');
+                    expenses.push({ id: Date.now(), name, amount, date });
+                    saveExpenses('necessities', expenses);
+                    updateExpensesTable('necessities');
+                    document.getElementById('necessities-name').value = '';
+                    document.getElementById('necessities-amount').value = '';
+                    document.getElementById('necessities-date').value = '';
+                });
+                updateExpensesTable('necessities');
+            }
+            // Hobi
+            const hobbyAdd = document.getElementById('hobby-add');
+            if (hobbyAdd) {
+                hobbyAdd.addEventListener('click', function() {
+                    const name = document.getElementById('hobby-name').value.trim();
+                    const amount = document.getElementById('hobby-amount').value;
+                    const date = document.getElementById('hobby-date').value;
+                    if (!name || !amount || !date) {
+                        alert('Popunite sva polja za unos troška!');
+                        return;
+                    }
+                    const expenses = getExpenses('hobby');
+                    expenses.push({ id: Date.now(), name, amount, date });
+                    saveExpenses('hobby', expenses);
+                    updateExpensesTable('hobby');
+                    document.getElementById('hobby-name').value = '';
+                    document.getElementById('hobby-amount').value = '';
+                    document.getElementById('hobby-date').value = '';
+                });
+                updateExpensesTable('hobby');
+            }
+            // Štednja
+            const savingsAdd = document.getElementById('savings-add');
+            if (savingsAdd) {
+                savingsAdd.addEventListener('click', function() {
+                    const name = document.getElementById('savings-name').value.trim();
+                    const amount = document.getElementById('savings-amount').value;
+                    const date = document.getElementById('savings-date').value;
+                    if (!name || !amount || !date) {
+                        alert('Popunite sva polja za unos štednje!');
+                        return;
+                    }
+                    const expenses = getExpenses('savings');
+                    expenses.push({ id: Date.now(), name, amount, date });
+                    saveExpenses('savings', expenses);
+                    updateExpensesTable('savings');
+                    document.getElementById('savings-name').value = '';
+                    document.getElementById('savings-amount').value = '';
+                    document.getElementById('savings-date').value = '';
+                });
+                updateExpensesTable('savings');
+            }
+        });
+        
+        // === BUDŽET PLAN: PRIHODI, RASHODI, STANJE ===
+        function getBudgetPlan() {
+            return JSON.parse(localStorage.getItem('budgetPlan') || '{"income":0,"expenses":0,"balance":0}');
+        }
+        function saveBudgetPlan(income, expenses, balance) {
+            localStorage.setItem('budgetPlan', JSON.stringify({ income, expenses, balance }));
+        }
+        function sumAllExpenses() {
+            const categories = ['necessities', 'hobby', 'savings'];
+            let total = 0;
+            categories.forEach(cat => {
+                const arr = JSON.parse(localStorage.getItem('expenses_' + cat) || '[]');
+                arr.forEach(e => { total += Number(e.amount) || 0; });
+            });
+            return total;        }
+        
+        // Dugme "Sačuvaj plan budžeta"
+        document.addEventListener('DOMContentLoaded', function() {
+            // Učitaj sačuvani prihod u input polje
+            const monthlyIncomeInput = document.getElementById('monthlyIncome');
+            if (monthlyIncomeInput) {
+                const savedPlan = getBudgetPlan();
+                if (savedPlan.income > 0) {
+                    monthlyIncomeInput.value = savedPlan.income;
+                    // Automatski prikaži kategorije ako je prikazana budžet sekcija
+                    if (document.getElementById('budgetCategories') && savedPlan.income > 0) {
+                        calculateBudget(); // Izračunaj kategorije na osnovu sačuvanog prihoda
+                    }
+                }
+            }
+              const saveBtn = document.getElementById('saveBudgetPlan');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function() {
+                    const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+                    const expenses = sumAllExpenses();
+                    const balance = income - expenses;
+                    
+                    // Save budget plan
+                    saveBudgetPlan(income, expenses, balance);
+                    
+                    // Save income to history for comparison
+                    const now = new Date();
+                    const currentMonthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+                    const incomeHistory = JSON.parse(localStorage.getItem('incomeHistory') || '{}');
+                    incomeHistory[currentMonthKey] = income;
+                    localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
+                    
+                    // Update cards
+                    updateBudgetCards();
+                    
+                    // Obavesti korisnika
+                    saveBtn.innerHTML = '<i class="fas fa-check"></i> Sačuvano!';
+                    setTimeout(() => { saveBtn.innerHTML = '<i class="fas fa-save"></i> Sačuvaj plan budžeta'; }, 1500);
+                });
+            }
+            // Prikaz kartica na učitavanju
+            updateBudgetCards();
+        });
+        // Automatsko ažuriranje kartica kad se menja trošak u bilo kojoj kategoriji
+        ['necessities','hobby','savings'].forEach(cat => {
+            const orig = window['updateExpensesTable'];
+            window['updateExpensesTable'] = function(category) {
+                if (orig) orig.apply(this, arguments);
+                if (category === cat) {
+                    // Ažuriraj kartice i stanje
+                    const plan = getBudgetPlan();
+                    const expenses = sumAllExpenses();
+                    const income = parseFloat(document.getElementById('monthlyIncome').value) || plan.income || 0;
+                    const balance = income - expenses;
+                    saveBudgetPlan(income, expenses, balance);
+                    updateBudgetCards();
+                }
+            }
+        });
+        
+        // === TRANSAKCIJE (PRIHODI I TROŠKOVI) ===
+        function getCurrentUser() {
+            return JSON.parse(localStorage.getItem('currentUser') || '{}');
+        }
+        function getTransactions() {
+            const user = getCurrentUser();
+            if (!user.email) return [];
+            return JSON.parse(localStorage.getItem('transactions_' + user.email) || '[]');
+        }
+        function saveTransactions(arr) {
+            const user = getCurrentUser();
+            if (!user.email) return;
+            localStorage.setItem('transactions_' + user.email, JSON.stringify(arr));
+        }
+        function addTransaction(tr) {
+            const arr = getTransactions();
+            arr.push(tr);
+            saveTransactions(arr);
+        }
+        function renderLastTransactions() {
+            const user = getCurrentUser();
+            if (!user.email) return;
+            const container = document.querySelector('.transactions-list');
+            if (!container) return;
+            // Remove all .transaction-item
+            container.querySelectorAll('.transaction-item').forEach(e => e.remove());
+            // Get only expense transactions, sort desc by date/id
+            const all = getTransactions()
+                .filter(t => t.type === 'expense')
+                .sort((a, b) => b.id - a.id)
+                .slice(0, 5); // last 5
+            if (all.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'transaction-item';
+                empty.innerHTML = '<div class="transaction-info"><div class="transaction-title">Nema troškova</div></div>';
+                container.appendChild(empty);
+                return;
+            }
+            all.forEach(tr => {
+                const div = document.createElement('div');
+                div.className = 'transaction-item';
+                div.innerHTML = `
+                    <div class="transaction-info">
+                        <div class="transaction-title">${tr.name}</div>
+                        <div class="transaction-category">${tr.categoryLabel || tr.category}</div>
+                    </div>
+                    <div class="transaction-amount expense">- ${Number(tr.amount).toLocaleString('sr-RS')} RSD</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        // --- IZMENJENI UNOS PRIHODA ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const saveBtn = document.getElementById('saveBudgetPlan');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function() {
+                    const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+                    if (income > 0) {
+                        // Dodaj kao transakciju (prihod)
+                        addTransaction({
+                            id: Date.now(),
+                            type: 'income',
+                            name: 'Prihod',
+                            amount: income,
+                            date: new Date().toISOString().slice(0, 10),
+                            category: 'income',
+                            categoryLabel: 'Prihodi',
+                            user: getCurrentUser().email
+                        });
+                    }
+                    setTimeout(renderLastTransactions, 100);
+                });
+            }
+            // --- IZMENJENI UNOS TROŠKOVA ---
+            const addExpenseWithTransaction = function(category, label) {
+                const addBtn = document.getElementById(category + '-add');
+                if (addBtn) {
+                    addBtn.addEventListener('click', function() {
+                        const name = document.getElementById(category + '-name').value.trim();
+                        const amount = document.getElementById(category + '-amount').value;
+                        const date = document.getElementById(category + '-date').value;
+                        if (!name || !amount || !date) return;
+                        addTransaction({
+                            id: Date.now(),
+                            type: 'expense',
+                            name,
+                            amount,
+                            date,
+                            category,
+                            categoryLabel: label,
+                            user: getCurrentUser().email
+                        });
+                        setTimeout(renderLastTransactions, 100);
+                    });
+                }
+            };
+            addExpenseWithTransaction('necessities', 'Glavne potrebe');
+            addExpenseWithTransaction('hobby', 'Hobi');
+            addExpenseWithTransaction('savings', 'Štednja');
+            // Prikaz na učitavanju
+            renderLastTransactions();
+        });
+        
+        // --- Troškovi po mesecima ---
+        function getAllExpensesByMonth() {
+            const user = getCurrentUser();
+            if (!user.email) return [];
+            const categories = ['necessities','hobby','savings'];
+            let all = [];
+            categories.forEach(cat => {
+                const arr = JSON.parse(localStorage.getItem('expenses_' + cat) || '[]');
+                arr.forEach(e => {
+                    // Prikaži sve stare (bez user) i sve za ovog korisnika
+                    if (!e.user || e.user === user.email) {
+                        all.push({...e, category: cat});
+                    }
+                });
+            });
+            return all;
+        }
+        function groupExpensesByMonth() {
+            const all = getAllExpensesByMonth();
+            const map = {};
+            all.forEach(e => {
+                const d = new Date(e.date);
+                if (isNaN(d)) return;
+                const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+                if (!map[key]) map[key] = [];
+                map[key].push(e);
+            });
+            return map;
+        }
+        function renderMonthlyExpensesTable() {
+            const tbody = document.querySelector('#monthlyExpensesTable tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            const map = groupExpensesByMonth();
+            const months = Object.keys(map).sort().reverse();
+            if (months.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">Nema troškova za prikaz</td></tr>';
+                return;
+            }
+            months.forEach(month => {
+                const sum = map[month].reduce((a,b)=>a+Number(b.amount||0),0);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${month}</td>
+                    <td>${sum.toLocaleString('sr-RS')} RSD</td>
+                    <td><button class="btn btn-sm btn-primary" onclick="showMonthlyDetails('${month}')">Detalji</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }        // Prikaz samo troškova za tekući mesec u ukupnim troškovima
+        function sumCurrentMonthExpenses() {
+            const now = new Date();
+            const thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+            
+            // Use new expense tracker data for current user
+            const expenses = getUserExpenses();
+            let total = 0;
+            
+            expenses.forEach(expense => {
+                const expenseDate = new Date(expense.date);
+                const expenseMonth = expenseDate.getFullYear() + '-' + String(expenseDate.getMonth()+1).padStart(2,'0');
+                
+                if (expenseMonth === thisMonth) {
+                    total += Number(expense.amount) || 0;
+                }
+            });
+            
+            return total;
+        }
+          // Calculate current month income for budget cards
+        function getCurrentMonthIncome() {
+            const now = new Date();
+            const currentMonthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+            
+            // Get input value first (highest priority)
+            const monthlyIncome = document.getElementById('monthlyIncome');
+            if (monthlyIncome && monthlyIncome.value) {
+                return parseFloat(monthlyIncome.value) || 0;
+            }
+            
+            // Try income history for current month
+            const incomeHistory = JSON.parse(localStorage.getItem('incomeHistory') || '{}');
+            if (incomeHistory[currentMonthKey]) {
+                return Number(incomeHistory[currentMonthKey]) || 0;
+            }
+            
+            // Fallback to budget plan
+            const plan = getBudgetPlan();
+            return Number(plan.income) || 0;
+        }
+          function updateBudgetCards() {
+            const currentIncome = getCurrentMonthIncome();
+            const currentExpenses = sumCurrentMonthExpenses();
+            const currentBalance = currentIncome - currentExpenses;
+            
+            // Debug information
+            console.log('Budget Cards Update:', {
+                income: currentIncome,
+                expenses: currentExpenses,
+                balance: currentBalance
+            });
+            
+            // Update cards with current month data
+            document.getElementById('totalIncome').textContent = currentIncome.toLocaleString('sr-RS') + ' RSD';
+            document.getElementById('totalExpenses').textContent = currentExpenses.toLocaleString('sr-RS') + ' RSD';
+            document.getElementById('currentBalance').textContent = currentBalance.toLocaleString('sr-RS') + ' RSD';
+            
+            // Update balance color based on positive/negative
+            const balanceElement = document.getElementById('currentBalance');
+            const balanceCard = balanceElement.closest('.stat-card');
+            
+            if (currentBalance >= 0) {
+                balanceElement.style.background = 'var(--gradient-gold)';
+                balanceElement.style.webkitBackgroundClip = 'text';
+                balanceElement.style.webkitTextFillColor = 'transparent';
+                balanceElement.style.backgroundClip = 'text';
+                if (balanceCard) {
+                    balanceCard.style.borderColor = 'var(--gold-bright)';
+                }
+            } else {
+                balanceElement.style.background = 'linear-gradient(90deg, #ef4444, #f87171)';
+                balanceElement.style.webkitBackgroundClip = 'text';
+                balanceElement.style.webkitTextFillColor = 'transparent';
+                balanceElement.style.backgroundClip = 'text';
+                if (balanceCard) {
+                    balanceCard.style.borderColor = '#ef4444';
+                }
+            }
+            
+            // Update percentage changes (placeholder for now - can be enhanced later)
+            updateBudgetChanges(currentIncome, currentExpenses, currentBalance);
+        }
+          // Update budget change indicators
+        function updateBudgetChanges(income, expenses, balance) {
+            // Get previous month data for comparison
+            const now = new Date();
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const lastMonthKey = lastMonth.getFullYear() + '-' + String(lastMonth.getMonth()+1).padStart(2,'0');
+            const currentMonthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+            
+            const userExpenses = getUserExpenses();
+            
+            // Calculate last month expenses
+            const lastMonthExpenses = userExpenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                const expenseMonth = expenseDate.getFullYear() + '-' + String(expenseDate.getMonth()+1).padStart(2,'0');
+                return expenseMonth === lastMonthKey;
+            }).reduce((sum, exp) => sum + (Number(exp.amount) || 0), 0);
+            
+            // Get last month income from localStorage history
+            const incomeHistory = JSON.parse(localStorage.getItem('incomeHistory') || '{}');
+            const lastMonthIncome = incomeHistory[lastMonthKey] || 0;
+            const lastMonthBalance = lastMonthIncome - lastMonthExpenses;
+            
+            // Save current month income to history
+            incomeHistory[currentMonthKey] = income;
+            localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
+            
+            // =================================================================
+            // INCOME CHANGE CALCULATION
+            // =================================================================
+            let incomeChange = 0;
+            let incomeDirection = 'fas fa-minus';
+            let incomeColor = '#6b7280';
+            let incomeText = '0% u odnosu na prošli mesec';
+            
+            if (lastMonthIncome > 0) {
+                incomeChange = ((income - lastMonthIncome) / lastMonthIncome * 100);
+                if (incomeChange > 0) {
+                    incomeDirection = 'fas fa-arrow-up';
+                    incomeColor = '#10b981';
+                    incomeText = `+${incomeChange.toFixed(1)}% u odnosu na prošli mesec`;
+                } else if (incomeChange < 0) {
+                    incomeDirection = 'fas fa-arrow-down';
+                    incomeColor = '#ef4444';
+                    incomeText = `${incomeChange.toFixed(1)}% u odnosu na prošli mesec`;
+                } else {
+                    incomeText = 'Isti kao prošli mesec';
+                    incomeColor = '#10b981';
+                }
+            } else if (income > 0) {
+                incomeDirection = 'fas fa-plus';
+                incomeColor = '#10b981';
+                incomeText = 'Prvi unos prihoda';
+            }
+            
+            // Update income change indicator
+            const incomeChangeElement = document.getElementById('incomeChange');
+            if (incomeChangeElement) {
+                incomeChangeElement.innerHTML = `
+                    <i class="${incomeDirection}" style="color: ${incomeColor};"></i> 
+                    ${incomeText}
+                `;
+                incomeChangeElement.style.color = incomeColor;
+            }
+            
+            // =================================================================
+            // EXPENSE CHANGE CALCULATION
+            // =================================================================
+            let expenseChange = 0;
+            let expenseDirection = 'fas fa-minus';
+            let expenseColor = '#6b7280';
+            let expenseText = '0% u odnosu na prošli mesec';
+            
+            if (lastMonthExpenses > 0) {
+                expenseChange = ((expenses - lastMonthExpenses) / lastMonthExpenses * 100);
+                if (expenseChange > 0) {
+                    expenseDirection = 'fas fa-arrow-up';
+                    expenseColor = '#ef4444'; // Red for increased expenses (bad)
+                    expenseText = `+${expenseChange.toFixed(1)}% u odnosu na prošli mesec`;
+                } else if (expenseChange < 0) {
+                    expenseDirection = 'fas fa-arrow-down';
+                    expenseColor = '#10b981'; // Green for decreased expenses (good)
+                    expenseText = `${expenseChange.toFixed(1)}% u odnosu na prošli mesec`;
+                } else {
+                    expenseText = 'Isti kao prošli mesec';
+                    expenseColor = '#10b981';
+                }
+            } else if (expenses > 0) {
+                expenseDirection = 'fas fa-exclamation-triangle';
+                expenseColor = '#f59e0b';
+                expenseText = 'Prvo beleženje troškova';
+            }
+            
+            // Update expense change indicator
+            const expenseChangeElement = document.getElementById('expenseChange');
+            if (expenseChangeElement) {
+                expenseChangeElement.innerHTML = `
+                    <i class="${expenseDirection}" style="color: ${expenseColor};"></i> 
+                    ${expenseText}
+                `;
+                expenseChangeElement.style.color = expenseColor;
+            }
+            
+            // =================================================================
+            // BALANCE CHANGE CALCULATION
+            // =================================================================
+            let balanceChange = 0;
+            let balanceDirection = 'fas fa-minus';
+            let balanceColor = '#6b7280';
+            let balanceText = '0% u odnosu na prošli mesec';
+            
+            if (lastMonthBalance !== 0) {
+                balanceChange = ((balance - lastMonthBalance) / Math.abs(lastMonthBalance) * 100);
+                if (balanceChange > 0) {
+                    balanceDirection = 'fas fa-arrow-up';
+                    balanceColor = '#10b981';
+                    balanceText = `+${balanceChange.toFixed(1)}% u odnosu na prošli mesec`;
+                } else if (balanceChange < 0) {
+                    balanceDirection = 'fas fa-arrow-down';
+                    balanceColor = '#ef4444';
+                    balanceText = `${balanceChange.toFixed(1)}% u odnosu na prošli mesec`;
+                } else {
+                    balanceText = 'Isto stanje kao prošli mesec';
+                    balanceColor = '#10b981';
+                }
+            } else {
+                // Show balance as percentage of income
+                if (income > 0) {
+                    const balancePercentage = (balance / income * 100);
+                    if (balancePercentage > 0) {
+                        balanceDirection = 'fas fa-chart-line';
+                        balanceColor = '#10b981';
+                        balanceText = `${balancePercentage.toFixed(1)}% od ukupnih prihoda`;
+                    } else {
+                        balanceDirection = 'fas fa-exclamation-triangle';
+                        balanceColor = '#ef4444';
+                        balanceText = `${Math.abs(balancePercentage).toFixed(1)}% deficita`;
+                    }
+                }
+            }
+            
+            // Update balance change indicator
+            const balanceChangeElement = document.getElementById('balanceChange');
+            if (balanceChangeElement) {
+                balanceChangeElement.innerHTML = `
+                    <i class="${balanceDirection}" style="color: ${balanceColor};"></i> 
+                    ${balanceText}
+                `;
+                balanceChangeElement.style.color = balanceColor;
+            }
+        }
+
+        // =================================================================
+        // EXPENSE TRACKER FUNCTIONALITY - Funkcionalnost praćenja troškova
+        // =================================================================
+
+        // Initialize expense tracker when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExpenseTracker();
+            initializeMonthlyExpensesCalendar();
+            loadRecentTransactions();
+        });
+
+        // Initialize expense tracker functionality
+        function initializeExpenseTracker() {
+            // Setup tab switching
+            document.querySelectorAll('.expense-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    switchExpenseTab(this.dataset.tab);
+                });
+            });
+
+            // Setup add expense buttons
+            setupExpenseButtons();
+            
+            // Load existing expenses
+            loadExpensesIntoTables();
+            
+            // Set default dates to today
+            setDefaultDates();
+        }
+
+        // Switch between expense tabs
+        function switchExpenseTab(tabName) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.expense-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.expense-tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to selected tab and content
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.getElementById(`${tabName}Tab`).classList.add('active');
+        }
+
+        // Setup add expense button event listeners
+        function setupExpenseButtons() {
+            document.getElementById('necessities-add').addEventListener('click', () => addExpense('necessities'));
+            document.getElementById('hobby-add').addEventListener('click', () => addExpense('hobby'));
+            document.getElementById('savings-add').addEventListener('click', () => addExpense('savings'));
+        }
+
+        // Set default dates to today
+        function setDefaultDates() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('necessities-date').value = today;
+            document.getElementById('hobby-date').value = today;
+            document.getElementById('savings-date').value = today;
+        }
+
+        // Add expense to specified category
+        function addExpense(category) {
+            const nameInput = document.getElementById(`${category}-name`);
+            const amountInput = document.getElementById(`${category}-amount`);
+            const dateInput = document.getElementById(`${category}-date`);
+
+            const name = nameInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const date = dateInput.value;
+
+            // Validation
+            if (!name) {
+                alert('Molim unesite naziv troška');
+                nameInput.focus();
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                alert('Molim unesite valjan iznos');
+                amountInput.focus();
+                return;
+            }
+
+            if (!date) {
+                alert('Molim izaberite datum');
+                dateInput.focus();
+                return;
+            }
+
+            // Create expense object
+            const expense = {
+                id: Date.now().toString(),
+                name: name,
+                amount: amount,
+                date: date,
+                category: category,
+                timestamp: new Date().toISOString()
+            };            // Save expense
+            saveExpense(expense);
+
+            // Update totals
+            updateCategoryTotal(category);
+
+            // Update monthly calendar
+            updateMonthlyExpensesDisplay();
+
+            // Update recent transactions
+            loadRecentTransactions();
+
+            // Update budget cards
+            updateBudgetCards();
+
+            // Clear form
+            nameInput.value = '';
+            amountInput.value = '';
+            dateInput.value = new Date().toISOString().split('T')[0];
+
+            // Show success message
+            showSuccessMessage(`Trošak "${name}" je uspešno dodat!`);
+        }
+
+        // Save expense to localStorage
+        function saveExpense(expense) {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userEmail = currentUser.email;
+
+            if (!userEmail) {
+                alert('Greška: Korisnik nije ulogovan');
+                return;
+            }
+
+            // Get existing expenses for this user
+            const userExpensesKey = `expenses_${userEmail}`;
+            const expenses = JSON.parse(localStorage.getItem(userExpensesKey) || '[]');
+
+            // Add new expense
+            expenses.push(expense);
+
+            // Save back to localStorage
+            localStorage.setItem(userExpensesKey, JSON.stringify(expenses));
+        }
+
+        // Get all expenses for current user
+        function getUserExpenses() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userEmail = currentUser.email;
+
+            if (!userEmail) return [];
+
+            const userExpensesKey = `expenses_${userEmail}`;
+            return JSON.parse(localStorage.getItem(userExpensesKey) || '[]');
+        }        // Load all expenses and update totals
+        function loadExpensesIntoTables() {
+            // Update totals for all categories
+            ['necessities', 'hobby', 'savings'].forEach(category => {
+                updateCategoryTotal(category);
+            });
+        }// Update category total
+        function updateCategoryTotal(category) {
+            const expenses = getUserExpenses().filter(exp => exp.category === category);
+            const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            
+            document.getElementById(`${category}-category-total`).textContent = `${total.toLocaleString('sr-RS')} RSD`;
+        }
+
+        // Delete expense
+        function deleteExpense(expenseId, category) {
+            if (!confirm('Da li ste sigurni da želite da obrišete ovaj trošak?')) {
+                return;
+            }
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            const userEmail = currentUser.email;
+
+            if (!userEmail) return;
+
+            const userExpensesKey = `expenses_${userEmail}`;
+            let expenses = JSON.parse(localStorage.getItem(userExpensesKey) || '[]');
+
+            // Remove expense
+            expenses = expenses.filter(exp => exp.id !== expenseId);
+
+            // Save back to localStorage
+            localStorage.setItem(userExpensesKey, JSON.stringify(expenses));
+
+            // Reload tables
+            loadExpensesIntoTables();
+
+            // Update monthly calendar
+            updateMonthlyExpensesDisplay();
+
+            // Update recent transactions
+            loadRecentTransactions();
+
+            // Update budget cards
+            updateBudgetCards();
+
+            showSuccessMessage('Trošak je uspešno obrisan!');
+        }
+
+        // =================================================================
+        // MONTHLY EXPENSES CALENDAR - Kalendar mesečnih troškova
+        // =================================================================
+
+        let currentDisplayMonth = new Date();
+
+        // Initialize monthly expenses calendar
+        function initializeMonthlyExpensesCalendar() {
+            // Setup month navigation buttons
+            document.getElementById('prevMonthBtn').addEventListener('click', () => {
+                currentDisplayMonth.setMonth(currentDisplayMonth.getMonth() - 1);
+                updateMonthlyExpensesDisplay();
+            });
+
+            document.getElementById('nextMonthBtn').addEventListener('click', () => {
+                currentDisplayMonth.setMonth(currentDisplayMonth.getMonth() + 1);
+                updateMonthlyExpensesDisplay();
+            });
+
+            // Initial display
+            updateMonthlyExpensesDisplay();
+        }
+
+        // Update monthly expenses display
+        function updateMonthlyExpensesDisplay() {
+            const expenses = getUserExpenses();
+            const year = currentDisplayMonth.getFullYear();
+            const month = currentDisplayMonth.getMonth();
+
+            // Update month display
+            const monthNames = [
+                'Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun',
+                'Jul', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar'
+            ];
+            document.getElementById('currentMonthDisplay').textContent = `${monthNames[month]} ${year}`;
+
+            // Filter expenses for current month
+            const monthExpenses = expenses.filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getFullYear() === year && expenseDate.getMonth() === month;
+            });
+
+            // Update summary cards
+            const totalExpenses = monthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            document.getElementById('monthTotalExpenses').textContent = `${totalExpenses.toLocaleString('sr-RS')} RSD`;
+            document.getElementById('monthTransactionCount').textContent = monthExpenses.length;
+
+            // Update table
+            const tbody = document.querySelector('#monthlyExpensesTable tbody');
+            tbody.innerHTML = '';
+
+            if (monthExpenses.length === 0) {
+                document.getElementById('noExpensesMessage').style.display = 'block';
+                document.getElementById('monthlyExpensesTable').style.display = 'none';
+            } else {
+                document.getElementById('noExpensesMessage').style.display = 'none';
+                document.getElementById('monthlyExpensesTable').style.display = 'table';
+
+                // Sort expenses by date (newest first)
+                monthExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                monthExpenses.forEach(expense => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${formatDate(expense.date)}</td>
+                        <td>${expense.name}</td>
+                        <td><span class="category-badge ${expense.category}">${getCategoryDisplayName(expense.category)}</span></td>
+                        <td class="amount-cell expense">${expense.amount.toLocaleString('sr-RS')} RSD</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+        }
+
+        // =================================================================
+        // RECENT TRANSACTIONS - Poslednje transakcije
+        // =================================================================
+
+        // Load recent transactions
+        function loadRecentTransactions() {
+            const expenses = getUserExpenses();
+            const container = document.querySelector('.transactions-container');
+
+            if (expenses.length === 0) {
+                container.innerHTML = '<div class="no-transactions">Nema unetih transakcija</div>';
+                return;
+            }
+
+            // Sort by date (newest first) and take last 10
+            const recentExpenses = expenses
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 10);
+
+            container.innerHTML = '';
+
+            recentExpenses.forEach(expense => {
+                const transactionItem = document.createElement('div');
+                transactionItem.className = 'transaction-item';
+                
+                transactionItem.innerHTML = `
+                    <div class="transaction-info">
+                        <div class="transaction-title">${expense.name}</div>
+                        <div class="transaction-category">
+                            <i class="fas fa-tag"></i>
+                            ${getCategoryDisplayName(expense.category)} • ${formatDate(expense.date)}
+                        </div>
+                    </div>
+                    <div class="transaction-amount expense">-${expense.amount.toLocaleString('sr-RS')} RSD</div>
+                `;
+
+                container.appendChild(transactionItem);
+            });
+        }
+
+        // =================================================================
+        // UTILITY FUNCTIONS - Pomoćne funkcije
+        // =================================================================
+
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('sr-RS');
+        }
+
+        // Get category display name
+        function getCategoryDisplayName(category) {
+            const categoryNames = {
+                'necessities': 'Glavne potrebe',
+                'hobby': 'Hobi i zabava',
+                'savings': 'Štednja'
+            };
+            return categoryNames[category] || category;
+        }
+
+        // Show success message
+        function showSuccessMessage(message) {
+            // Create temporary success message
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 500;
+            `;
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Add CSS for category badges and styling
+        const additionalStyles = document.createElement('style');
+        additionalStyles.textContent = `
+            .category-badge {
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+            
+            .category-badge.necessities {
+                background: rgba(59, 130, 246, 0.2);
+                color: #3b82f6;
+            }
+            
+            .category-badge.hobby {
+                background: rgba(139, 92, 246, 0.2);
+                color: #8b5cf6;
+            }
+              .category-badge.savings {
+                background: rgba(16, 185, 129, 0.2);
+                color: #10b981;
+            }
+            
+            /* Ensure category badges are visible in monthly expenses table */
+            #monthlyExpensesTable .category-badge {
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+            
+            #monthlyExpensesTable .category-badge.necessities {
+                background: rgba(59, 130, 246, 0.3);
+                color: #93c5fd;
+                border-color: #3b82f6;
+            }
+            
+            #monthlyExpensesTable .category-badge.hobby {
+                background: rgba(139, 92, 246, 0.3);
+                color: #c4b5fd;
+                border-color: #8b5cf6;
+            }
+              #monthlyExpensesTable .category-badge.savings {
+                background: rgba(16, 185, 129, 0.3);
+                color: #6ee7b7;
+                border-color: #10b981;
+            }
+            
+            /* Monthly expenses table specific styling */
+            #monthlyExpensesTable tbody td {
+                color: var(--light-text);
+                background: rgba(22, 22, 26, 0.4);
+            }
+            
+            #monthlyExpensesTable tbody tr:hover td {
+                background: rgba(255, 255, 255, 0.1);
+            }
+              #monthlyExpensesTable .amount-cell {
+                font-weight: 600;
+                color: #ef4444;
+            }
+            
+            /* Ensure all expense tables have proper text visibility */
+            .expense-table tbody tr {
+                background: rgba(22, 22, 26, 0.4);
+            }
+            
+            .expense-table tbody tr:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            
+            .expense-table td,
+            .expense-table th {
+                color: var(--light-text) !important;
+            }
+            
+            .expense-table th {
+                background: rgba(22, 22, 26, 0.8) !important;
+                color: var(--gold-bright) !important;
+            }
+              .expense-table tfoot td {
+                background: rgba(22, 22, 26, 0.6) !important;
+                color: var(--gold-bright) !important;
+                font-weight: 600;
+            }
+            
+            /* Button styling improvements */
+            .btn {
+                font-weight: 600;
+                border-radius: 6px;
+                transition: all 0.2s ease;
+                border: none;
+                cursor: pointer;
+            }
+            
+            .btn:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            
+            /* Success message styling */
+            .success-message {
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                z-index: 1000;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+                font-weight: 500;
+                border-left: 4px solid #34d399;
+            }
+            
+            .amount-cell.expense {
+                color: #ef4444;
+                font-weight: 600;
+            }
+            
+            .btn-sm {
+                padding: 0.25rem 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .btn-danger {
+                background: #ef4444;
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-danger:hover {
+                background: #dc2626;
+                transform: translateY(-1px);
+            }
+            
+            .btn-outline {
+                background: transparent;
+                border: 1px solid var(--border-light);
+                color: var(--light-text);
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-outline:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--gold-bright);
+            }
+            
+            .expense-tabs {
+                display: flex;
+                gap: 0.5rem;
+                margin-bottom: 1.5rem;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .expense-tab {
+                background: transparent;
+                border: none;
+                padding: 0.75rem 1.5rem;
+                color: var(--muted-text);
+                cursor: pointer;
+                border-bottom: 2px solid transparent;
+                transition: all 0.2s ease;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .expense-tab:hover {
+                color: var(--light-text);
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .expense-tab.active {
+                color: var(--gold-bright);
+                border-bottom-color: var(--gold-bright);
+            }
+            
+            .expense-tab-content {
+                display: none;
+            }
+            
+            .expense-tab-content.active {
+                display: block;
+            }
+            
+            .expense-form {
+                background: rgba(255, 255, 255, 0.05);
+                padding: 1.5rem;
+                border-radius: 8px;
+                margin-bottom: 1.5rem;
+            }
+            
+            .expense-form h4 {
+                margin: 0 0 1rem 0;
+                color: var(--gold-bright);
+            }
+            
+            .expense-form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr auto;
+                gap: 1rem;
+                align-items: end;
+            }
+            
+            .expense-form-col label {
+                display: block;
+                margin-bottom: 0.5rem;
+                color: var(--light-text);
+                font-size: 0.9rem;
+            }
+            
+            .expense-form-col input {
+                width: 100%;
+                padding: 0.75rem;
+                background: rgba(16, 16, 18, 0.7);
+                border: 1px solid var(--border-light);
+                border-radius: 6px;
+                color: var(--light-text);
+            }
+            
+            .expense-form-col input:focus {
+                outline: none;
+                border-color: var(--gold-bright);
+                box-shadow: 0 0 0 2px rgba(245, 193, 39, 0.2);
+            }
+            
+            .expense-table-container {
+                background: rgba(22, 22, 26, 0.7);
+                border-radius: 8px;
+                overflow: hidden;
+                border: 1px solid var(--border-light);
+            }
+            
+            .expense-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            .expense-table th,
+            .expense-table td {
+                padding: 0.75rem;
+                text-align: left;
+                border-bottom: 1px solid var(--border-light);
+            }
+            
+            .expense-table th {
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--gold-bright);
+                font-weight: 600;
+            }
+            
+            .expense-table td {
+                color: var(--light-text);
+            }
+            
+            .expense-table tfoot td {
+                background: rgba(255, 255, 255, 0.05);
+                font-weight: 600;
+                border-bottom: none;
+            }        `;
+        document.head.appendChild(additionalStyles);
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {            // Prikaz poslednje unetog prihoda u input polju za ulogovanog korisnika
+            const incomeInput = document.getElementById('monthlyIncome');
+            if (incomeInput) {
+                // Get current month
+                const now = new Date();
+                const currentMonthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+                
+                // Try to load income from multiple sources (priority order)
+                const incomeHistory = JSON.parse(localStorage.getItem('incomeHistory') || '{}');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                const plan = JSON.parse(localStorage.getItem('budgetPlan') || '{}');
+                
+                // 1. First try current month from income history
+                if (incomeHistory[currentMonthKey]) {
+                    incomeInput.value = incomeHistory[currentMonthKey];
+                }
+                // 2. Then try from currentUser
+                else if (currentUser && typeof currentUser.income !== 'undefined') {
+                    incomeInput.value = currentUser.income;
+                    // Save to history for future reference
+                    incomeHistory[currentMonthKey] = currentUser.income;
+                    localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
+                }
+                // 3. Finally fallback to budgetPlan
+                else if (plan.income) {
+                    incomeInput.value = plan.income;
+                    // Save to history for future reference
+                    incomeHistory[currentMonthKey] = plan.income;
+                    localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
+                }                // Kada korisnik izmeni i sačuva novi prihod, ažuriraj i currentUser i budgetPlan
+                incomeInput.addEventListener('change', function() {
+                    const newIncome = parseFloat(this.value) || 0;
+                    
+                    // Save to current month history
+                    const now = new Date();
+                    const currentMonthKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+                    const incomeHistory = JSON.parse(localStorage.getItem('incomeHistory') || '{}');
+                    incomeHistory[currentMonthKey] = newIncome;
+                    localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
+                    
+                    // Ažuriraj currentUser
+                    let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                    currentUser.income = newIncome;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // (Opcionalno) ažuriraj i budgetPlan radi kompatibilnosti sa starim kodom
+                    const plan = JSON.parse(localStorage.getItem('budgetPlan') || '{}');
+                    plan.income = newIncome;
+                    localStorage.setItem('budgetPlan', JSON.stringify(plan));
+                    
+                    // Update budget cards immediately
+                    updateBudgetCards();
+                });
+                
+                // Also listen for input events for real-time updates
+                incomeInput.addEventListener('input', function() {
+                    // Debounce the updates to avoid too frequent calls
+                    clearTimeout(incomeInput.updateTimeout);
+                    incomeInput.updateTimeout = setTimeout(() => {                        updateBudgetCards();
+                    }, 500);
+                });
+            }            
+            // Initialize budget cards on page load
+            updateBudgetCards();
+        });
+
+        // =================================================================
+        // TEST DATA CREATION - Kreiranje test podataka za demonstraciju
+        // =================================================================
+        function createTestData() {
+            if (!confirm('Da li želite da kreirate test podatke? Ovo će dodati testne prihode i troškove za prethodne mesece.')) {
+                return;
+            }
+
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (!currentUser.email) {
+                alert('Prvo se ulogujte da biste kreirali test podatke.');
+                return;
+            }
+
+            // Create test expenses for current user
+            const userExpensesKey = `expenses_${currentUser.email}`;
+            const testExpenses = [];
+
+            // Current month data
+            const now = new Date();
+            const thisMonth = now.getMonth();
+            const thisYear = now.getFullYear();
+
+            // Previous month data  
+            const lastMonth = thisMonth === 0 ? 11 : thisMonth - 1;
+            const lastMonthYear = thisMonth === 0 ? thisYear - 1 : thisYear;
+
+            // Add some current month expenses
+            testExpenses.push(
+                {
+                    id: Date.now().toString() + '-1',
+                    name: 'Supermarket',
+                    amount: 8500,
+                    date: `${thisYear}-${String(thisMonth + 1).padStart(2, '0')}-05`,
+                    category: 'necessities',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: Date.now().toString() + '-2',
+                    name: 'Struja',
+                    amount: 4200,
+                    date: `${thisYear}-${String(thisMonth + 1).padStart(2, '0')}-10`,
+                    category: 'necessities',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: Date.now().toString() + '-3',
+                    name: 'Bioskop',
+                    amount: 1800,
+                    date: `${thisYear}-${String(thisMonth + 1).padStart(2, '0')}-15`,
+                    category: 'hobby',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: Date.now().toString() + '-4',
+                    name: 'Štedni račun',
+                    amount: 15000,
+                    date: `${thisYear}-${String(thisMonth + 1).padStart(2, '0')}-01`,
+                    category: 'savings',
+                    timestamp: new Date().toISOString()
+                }
+            );
+
+            // Add some previous month expenses (different amounts for comparison)
+            testExpenses.push(
+                {
+                    id: Date.now().toString() + '-5',
+                    name: 'Supermarket prošli mesec',
+                    amount: 7200,
+                    date: `${lastMonthYear}-${String(lastMonth + 1).padStart(2, '0')}-05`,
+                    category: 'necessities',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: Date.now().toString() + '-6',
+                    name: 'Struja prošli mesec',
+                    amount: 3800,
+                    date: `${lastMonthYear}-${String(lastMonth + 1).padStart(2, '0')}-10`,
+                    category: 'necessities',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: Date.now().toString() + '-7',
+                    name: 'Restoran prošli mesec',
+                    amount: 2500,
+                    date: `${lastMonthYear}-${String(lastMonth + 1).padStart(2, '0')}-15`,
+                    category: 'hobby',
+                    timestamp: new Date().toISOString()
+                },
+                {
+                    id: Date.now().toString() + '-8',
+                    name: 'Štednja prošli mesec',
+                    amount: 12000,
+                    date: `${lastMonthYear}-${String(lastMonth + 1).padStart(2, '0')}-01`,
+                    category: 'savings',
+                    timestamp: new Date().toISOString()
+                }
+            );
+
+            // Save test expenses
+            localStorage.setItem(userExpensesKey, JSON.stringify(testExpenses));
+
+            // Create test income history
+            const incomeHistory = {};
+            const currentMonthKey = `${thisYear}-${String(thisMonth + 1).padStart(2, '0')}`;
+            const lastMonthKey = `${lastMonthYear}-${String(lastMonth + 1).padStart(2, '0')}`;
+            
+            incomeHistory[currentMonthKey] = 120000; // Current month income
+            incomeHistory[lastMonthKey] = 100000;    // Previous month income (lower for comparison)
+
+            localStorage.setItem('incomeHistory', JSON.stringify(incomeHistory));
+
+            // Set current income in input field
+            document.getElementById('monthlyIncome').value = 120000;
+
+            // Refresh all displays
+            loadExpensesIntoTables();
+            updateMonthlyExpensesDisplay();            loadRecentTransactions();
+            updateBudgetCards();
+
+            alert('Test podaci su uspešno kreirani! Možete videti percentage promene u budget karticama.');
+        }        // Function to handle smart navigation from preview.html
+        function handleSmartNavigation() {
+            const budgetSection = sessionStorage.getItem('budgetSection');
+            const showIncomeAlert = sessionStorage.getItem('showIncomeAlert');
+            
+            if (budgetSection) {
+                if (budgetSection === 'income' && showIncomeAlert === 'true') {
+                    // Show income setup alert and navigate to income section
+                    showIncomeSetupAlert();
+                    sessionStorage.removeItem('showIncomeAlert');
+                } else if (budgetSection === 'expenses') {
+                    // Navigate directly to expense tracking forms
+                    setTimeout(() => {
+                        const budgetLink = document.querySelector('[data-section="budget"]');
+                        if (budgetLink) {
+                            budgetLink.click();
+                            // Give some time for the section to load, then scroll to expense forms
+                            setTimeout(() => {
+                                const expenseSection = document.getElementById('expenseTrackerSection');
+                                if (expenseSection) {
+                                    expenseSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    
+                                    // Optional: Show a brief informational message
+                                    setTimeout(() => {
+                                        // Highlight the expense tracker section briefly
+                                        expenseSection.style.border = '2px solid #D4AF37';
+                                        expenseSection.style.borderRadius = '8px';
+                                        expenseSection.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                                        
+                                        // Remove highlight after 3 seconds
+                                        setTimeout(() => {
+                                            expenseSection.style.border = '';
+                                            expenseSection.style.backgroundColor = '';
+                                        }, 3000);
+                                    }, 500);
+                                }
+                            }, 300);
+                        }
+                    }, 100);
+                }
+                
+                // Clean up sessionStorage
+                sessionStorage.removeItem('budgetSection');
+            }
+        }// Function to show income setup alert
+        function showIncomeSetupAlert() {
+            // Navigate to budget section first
+            setTimeout(() => {
+                const budgetLink = document.querySelector('[data-section="budget"]');
+                if (budgetLink) {
+                    budgetLink.click();
+                    
+                    // Show alert after section loads
+                    setTimeout(() => {
+                        alert('Dobrodošli u praćenje budžeta! Prvo unesite svoj mesečni prihod da bismo mogli da nastavimo sa planiranjem troškova.');
+                        
+                        // Scroll specifically to the income section (Mesečni prihodi)
+                        const incomeSection = document.querySelector('.income-section');
+                        if (incomeSection) {
+                            incomeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        
+                        // Focus and highlight the income input field
+                        const incomeInput = document.getElementById('monthlyIncome');
+                        if (incomeInput) {
+                            setTimeout(() => {
+                                incomeInput.focus();
+                                
+                                // Add a stronger highlight to draw attention to the income section
+                                incomeInput.style.border = '3px solid #D4AF37';
+                                incomeInput.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.5)';
+                                incomeInput.style.backgroundColor = '#fffdf7';
+                                
+                                // Also highlight the income section header
+                                const incomeHeader = incomeSection.querySelector('h4');
+                                if (incomeHeader) {
+                                    incomeHeader.style.background = 'linear-gradient(135deg, #D4AF37 0%, #F7E98E 100%)';
+                                    incomeHeader.style.color = '#000';
+                                    incomeHeader.style.padding = '0.5rem 1rem';
+                                    incomeHeader.style.borderRadius = '8px';
+                                    incomeHeader.style.marginBottom = '1rem';
+                                }
+                                
+                                // Remove highlights after 5 seconds
+                                setTimeout(() => {
+                                    incomeInput.style.border = '';
+                                    incomeInput.style.boxShadow = '';
+                                    incomeInput.style.backgroundColor = '';
+                                    
+                                    if (incomeHeader) {
+                                        incomeHeader.style.background = '';
+                                        incomeHeader.style.color = '#000000';
+                                        incomeHeader.style.padding = '';
+                                        incomeHeader.style.borderRadius = '';
+                                    }
+                                }, 5000);
+                            }, 200);
+                        }
+                    }, 300);
+                }
+            }, 100);
+        }
+    </script>
+</body>
+>>>>>>> 69e334d60ad284f627eadbc621254280f9553042
 </html>
