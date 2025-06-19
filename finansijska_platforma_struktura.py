@@ -169,6 +169,5 @@
 
     <!-- Chat Support Scripts -->
     <script src="js/support-kb.js"></script>
-    <script src="js/chat-working.js"></script>
 </body>
 </html>
