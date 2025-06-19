@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Balance - Finansijska Aplikacija</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #0A0A0A;
+            --dark-secondary: #1A1A1C;
+            --dark-card: rgba(26, 26, 28, 0.8);
+            --gold-bright: #D4AF37;
+            --gold-medium: #B8860B;
+            --gold-dark: #8B7355;
+            --light-text: #F5F5F5;
+            --muted-text: #CCCCCC;
+            --border-light: rgba(212, 175, 55, 0.2);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #B8860B 50%, #8B7355 100%);
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-gold);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--light-text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--gold-bright);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light-text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glass Card Effect */
+        .glass-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Card Styles */
+        .card {
+            padding: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--light-text);
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold-bright);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-subtitle {
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--gradient-gold);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Page Specific Styles */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, rgba(16, 16, 18, 0.95) 0%, rgba(24, 24, 27, 0.95) 100%);
+            border-radius: var(--border-radius);
+            margin-bottom: 3rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--muted-text);
+            margin-bottom: 2rem;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .data-table th {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-bright);
+            font-weight: 600;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+        }
+
+        .badge-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+        }
+
+        .badge-warning {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--warning);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(26, 26, 28, 0.8);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            color: var(--light-text);
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--gold-bright);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(10, 10, 12, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 2rem;
+                transition: left 0.3s ease;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+                margin-top: 70px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .card-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            margin-bottom: 2rem;
+        }
+
+        .tab-list {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            color: var(--muted-text);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab:hover,
+        .tab.active {
+            color: var(--gold-bright);
+            border-bottom-color: var(--gold-bright);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">GB</div>
+                <span class="logo-text">Golden Balance</span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" onclick="showPage('dashboard')" class="nav-link active">Početna</a></li>
+                <li><a href="#" onclick="showPage('preview')" class="nav-link">Pregled</a></li>
+                <li><a href="#" onclick="showPage('admin')" class="nav-link">Admin</a></li>
+                <li><a href="#" onclick="showPage('profile')" class="nav-link">Profil</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <section id="dashboard" class="page-section active">
+            <div class="hero-section">
+                <h1 class="hero-title">Dobrodošli u Golden Balance</h1>
+                <p class="hero-subtitle">Upravljajte vašim finansijama jednostavno i efikasno</p>
+                <button class="btn" onclick="showPage('preview')">
+                    <i class="fas fa-chart-line"></i> Pogledaj Pregled
+                </button>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-title">Ukupni Prihodi</div>
+                    </div>
+                    <div class="card-value">€54,000</div>
+                    <div class="card-subtitle">
+                        <i class="fas fa-arrow-up" style="color: var(--success);"></i>
+                        23.36% u odnosu na prošli mesec
+                    </div>
+                </div>
+
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="card-title">Ukupni Rashodi</div>
+                    </div>
+                    <div class="card-value">€22,500</div>
+                    <div class="card-subtitle">
+                        <i class="fas fa-arrow-down" style="color: var(--error);"></i>
+                        9.05% smanjenje
+                    </div>
+                </div>
+
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="card-title">Neto Bilans</div>
+                    </div>
+                    <div class="card-value">€31,500</div>
+                    <div class="card-subtitle">
+                        <i class="fas fa-arrow-up" style="color: var(--success);"></i>
+                        14.31% rast
+                    </div>
+                </div>
+
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-target"></i>
+                        </div>
+                        <div class="card-title">Budžet za Mesec</div>
+                    </div>
+                    <div class="card-value">€18,000</div>
+                    <div class="card-subtitle">
+                        Preostalo: €12,500
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dashboard-grid">
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="card-title">Dodaj Transakciju</div>
+                    </div>
+                    <p class="card-subtitle" style="margin-bottom: 1rem;">Brzo dodavanje novih prihoda ili rashoda</p>
+                    <button class="btn" onclick="alert('Funkcionalnost će biti dodana!')">Dodaj</button>
+                </div>
+
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="card-title">Pregled Budžeta</div>
+                    </div>
+                    <p class="card-subtitle" style="margin-bottom: 1rem;">Pogledajte stanje vašeg budžeta</p>
+                    <button class="btn" onclick="showPage('preview')">Pogledaj</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preview Page -->
+        <section id="preview" class="page-section">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Finansijski Pregled
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--muted-text); margin-bottom: 3rem;">
+                Detaljni pregled vaših finansija sa grafikonima i statistikama
+            </p>
+
+            <!-- Tabs for different views -->
+            <div class="tabs">
+                <div class="tab-list">
+                    <button class="tab active" onclick="showTab('overview')">Pregled</button>
+                    <button class="tab" onclick="showTab('charts')">Grafikoni</button>
+                    <button class="tab" onclick="showTab('transactions')">Transakcije</button>
+                    <button class="tab" onclick="showTab('budget')">Budžet</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div id="overview" class="tab-content active">
+                    <div class="dashboard-grid">
+                        <div class="glass-card card">
+                            <h3 style="color: var(--gold-bright); margin-bottom: 1rem;">Mesečni Pregled</h3>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Ukupni prihodi:</strong> <span style="color: var(--success);">€5,400</span>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Ukupni rashodi:</strong> <span style="color: var(--error);">€2,250</span>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Neto štednja:</strong> <span style="color: var(--gold-bright);">€3,150</span>
+                            </div>
+                            <div style="width: 100%; height: 10px; background: rgba(239, 68, 68, 0.2); border-radius: 5px; margin: 1rem 0;">
+                                <div style="width: 58%; height: 100%; background: var(--gradient-gold); border-radius: 5px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card card">
+                            <h3 style="color: var(--gold-bright); margin-bottom: 1rem;">Kategorije Troškova</h3>
+                            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                                <span>Stanovanje</span>
+                                <span style="color: var(--gold-bright);">30%</span>
+                            </div>
+                            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                                <span>Hrana</span>
+                                <span style="color: var(--gold-bright);">20%</span>
+                            </div>
+                            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                                <span>Transport</span>
+                                <span style="color: var(--gold-bright);">15%</span>
+                            </div>
+                            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                                <span>Zabava</span>
+                                <span style="color: var(--gold-bright);">10%</span>
+                            </div>
+                            <div style="margin-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                                <span>Ostalo</span>
+                                <span style="color: var(--gold-bright);">25%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Tab -->
+                <div id="charts" class="tab-content">
+                    <div class="glass-card card">
+                        <h3 style="color: var(--gold-bright); margin-bottom: 1rem;">Grafički Prikaz Finansija</h3>
+                        <div style="height: 300px; display: flex; align-items: center; justify-content: center; background: rgba(212, 175, 55, 0.1); border-radius: 8px; margin-top: 1rem;">
+                            <p style="color: var(--muted-text);">Grafikon će biti implementiran ovde</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Tab -->
+                <div id="transactions" class="tab-content">
+                    <div class="table-container">
+                        <h3 style="margin-bottom: 1.5rem; color: var(--gold-bright);">Poslednje Transakcije</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Opis</th>
+                                    <th>Kategorija</th>
+                                    <th>Iznos</th>
+                                    <th>Tip</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15.06.2025</td>
+                                    <td>Plata</td>
+                                    <td>Prihod</td>
+                                    <td>€2,500.00</td>
+                                    <td><span class="badge badge-success">Prihod</span></td>
+                                </tr>
+                                <tr>
+                                    <td>12.06.2025</td>
+                                    <td>Najam</td>
+                                    <td>Stanovanje</td>
+                                    <td>€500.00</td>
+                                    <td><span class="badge badge-error">Rashod</span></td>
+                                </tr>
+                                <tr>
+                                    <td>10.06.2025</td>
+                                    <td>Kupovina namirnica</td>
+                                    <td>Hrana</td>
+                                    <td>€120.00</td>
+                                    <td><span class="badge badge-error">Rashod</span></td>
+                                </tr>
+                                <tr>
+                                    <td>05.06.2025</td>
+                                    <td>Gorivo</td>
+                                    <td>Transport</td>
+                                    <td>€70.00</td>
+                                    <td><span class="badge badge-error">Rashod</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Budget Tab -->
+                <div id="budget" class="tab-content">
+                    <div class="dashboard-grid">
+                        <div class="glass-card card">
+                            <h3 style="color: var(--gold-bright); margin-bottom: 1rem;">Budžet Analiza</h3>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Mesečni budžet:</strong> <span style="color: var(--gold-bright);">€3,000</span>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Potrošeno:</strong> <span style="color: var(--error);">€2,250</span>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Preostalo:</strong> <span style="color: var(--success);">€750</span>
+                            </div>
+                            <div style="width: 100%; height: 10px; background: rgba(239, 68, 68, 0.2); border-radius: 5px; margin: 1rem 0;">
+                                <div style="width: 75%; height: 100%; background: var(--gradient-gold); border-radius: 5px;"></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card card">
+                            <h3 style="color: var(--gold-bright); margin-bottom: 1rem;">Preporuke</h3>
+                            <div style="margin-bottom: 0.5rem;">
+                                <i class="fas fa-lightbulb" style="color: var(--gold-bright); margin-right: 0.5rem;"></i>
+                                Razmislite o smanjenju troškova za zabavu
+                            </div>
+                            <div style="margin-bottom: 0.5rem;">
+                                <i class="fas fa-lightbulb" style="color: var(--gold-bright); margin-right: 0.5rem;"></i>
+                                Vaša štedna stopa je odlična!
+                            </div>
+                            <div style="margin-bottom: 0.5rem;">
+                                <i class="fas fa-lightbulb" style="color: var(--gold-bright); margin-right: 0.5rem;"></i>
+                                Možete povećati budžet za investicije
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Page -->
+        <section id="admin" class="page-section">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Admin Panel
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--muted-text); margin-bottom: 3rem;">
+                Upravljanje korisnicima i sistemskim podešavanjima
+            </p>
+
+            <!-- Users Management -->
+            <div class="table-container">
+                <h3 style="margin-bottom: 1.5rem; color: var(--gold-bright);">Upravljanje Korisnicima</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ime</th>
+                            <th>Email</th>
+                            <th>Uloga</th>
+                            <th>Status</th>
+                            <th>Akcije</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Marko Marković</td>
+                            <td>marko@example.com</td>
+                            <td>Admin</td>
+                            <td><span class="badge badge-success">Aktivan</span></td>
+                            <td>
+                                <button class="btn" style="padding: 0.5rem; margin-right: 0.5rem; font-size: 0.8rem;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn" style="padding: 0.5rem; background: var(--error); font-size: 0.8rem;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Ana Anić</td>
+                            <td>ana@example.com</td>
+                            <td>Korisnik</td>
+                            <td><span class="badge badge-success">Aktivan</span></td>
+                            <td>
+                                <button class="btn" style="padding: 0.5rem; margin-right: 0.5rem; font-size: 0.8rem;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn" style="padding: 0.5rem; background: var(--error); font-size: 0.8rem;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- System Settings -->
+            <div class="dashboard-grid" style="margin-top: 2rem;">
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="card-title">Sistemska Podešavanja</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Naziv Aplikacije</label>
+                        <input type="text" class="form-input" value="Golden Balance" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email za Obaveštenja</label>
+                        <input type="email" class="form-input" value="admin@example.com" readonly>
+                    </div>
+                    <button class="btn">Sačuvaj Podešavanja</button>
+                </div>
+
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="card-title">Statistika Sistema</div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Broj korisnika:</strong> <span style="color: var(--gold-bright);">132</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Veličina baze:</strong> <span style="color: var(--gold-bright);">24.5 MB</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Poslednji backup:</strong> <span style="color: var(--gold-bright);">15.06.2025 12:45</span>
+                    </div>
+                    <button class="btn">Kreiraj Backup</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Page -->
+        <section id="profile" class="page-section">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Korisnički Profil
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--muted-text); margin-bottom: 3rem;">
+                Upravljajte vašim profilom i podešavanjima
+            </p>
+
+            <div class="dashboard-grid">
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="card-title">Lični Podaci</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ime</label>
+                        <input type="text" class="form-input" value="Marko" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Prezime</label>
+                        <input type="text" class="form-input" value="Marković" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-input" value="marko@example.com" readonly>
+                    </div>
+                    <button class="btn">Sačuvaj Promene</button>
+                </div>
+
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="card-title">Budžet Planer</div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Mesečni budžet:</strong> <span style="color: var(--gold-bright);">€3,000</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Potrošeno:</strong> <span style="color: var(--error);">€2,250</span>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <strong>Preostalo:</strong> <span style="color: var(--success);">€750</span>
+                    </div>
+                    <div style="width: 100%; height: 10px; background: rgba(239, 68, 68, 0.2); border-radius: 5px; margin: 1rem 0;">
+                        <div style="width: 75%; height: 100%; background: var(--gradient-gold); border-radius: 5px;"></div>
+                    </div>
+                    <button class="btn">Uredi Budžet</button>
+                </div>
+            </div>
+
+            <!-- Account Settings -->
+            <div class="glass-card card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="card-title">Podešavanja Naloga</div>
+                </div>
+                <div class="dashboard-grid">
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Jezik</label>
+                            <select class="form-input">
+                                <option>Srpski</option>
+                                <option>English</option>
+                                <option>Deutsch</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Valuta</label>
+                            <select class="form-input">
+                                <option>EUR (€)</option>
+                                <option>USD ($)</option>
+                                <option>RSD (din)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <label class="form-label">Vremenska Zona</label>
+                            <select class="form-input">
+                                <option>(GMT+01:00) Beograd</option>
+                                <option>(GMT+00:00) London</option>
+                                <option>(GMT-05:00) New York</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Format Datuma</label>
+                            <select class="form-input">
+                                <option>DD.MM.YYYY</option>
+                                <option>MM/DD/YYYY</option>
+                                <option>YYYY-MM-DD</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn">Sačuvaj Podešavanja</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Close mobile menu if open
+            document.getElementById('navMenu').classList.remove('active');
+        }
+
+        // Tab functionality for preview page
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            
+            if (!navMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+
+        // Add smooth scrolling and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add fade-in animation to cards
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

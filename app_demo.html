@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShootMaster Finansijska Platforma - Demo</title>
+    <style>
+        .instructions {
+            background-color: #f0f8ff;
+            border: 1px solid #4f46e5;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px;
+            font-family: 'Inter', sans-serif;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #4f46e5;
+        }
+        .instructions code {
+            background: #eef2ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            display: block;
+            margin: 10px 0;
+            user-select: all;
+            white-space: nowrap;
+            overflow: auto;
+        }
+        .instructions button {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            margin-top: 10px;
+        }
+        .instructions button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --secondary: #10b981;
+            --secondary-light: #34d399;
+            --secondary-dark: #059669;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-bottom: 1px solid #eaeaea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            padding: 5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .nav-button:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .heading {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .heading h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .heading p {
+            color: var(--text-secondary);
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .chart-container {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .chart-placeholder svg {
+            width: 100px;
+            height: 100px;
+            color: var(--primary-light);
+        }
+
+        .transactions {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .transactions h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+
+        thead {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        tbody tr:hover {
+            background-color: #f9fafb;
+        }
+
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-green {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-red {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid #e5e7eb;
+            margin-top: 2rem;
+        }
+
+        /* Chart bars simulation */
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 80%;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        .bar-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .bar {
+            width: 30px;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bar-income {
+            background-color: var(--secondary-light);
+        }
+
+        .bar-expense {
+            background-color: #f87171;
+        }
+
+        .bar-label {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* Tabs content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Donut chart simulation */
+        .donut-chart {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .donut-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 50%, 100% 0, 100% 100%, 0 100%, 0 0);
+            transform-origin: center;
+        }
+
+        .segment-1 {
+            background-color: #10b981;
+            clip-path: polygon(50% 50%, 100% 0, 100% 35%);
+        }
+
+        .segment-2 {
+            background-color: #f59e0b;
+            clip-path: polygon(50% 50%, 100% 35%, 100% 70%);
+        }
+
+        .segment-3 {
+            background-color: #3b82f6;
+            clip-path: polygon(50% 50%, 100% 70%, 100% 100%, 70% 100%);
+        }
+
+        .segment-4 {
+            background-color: #ec4899;
+            clip-path: polygon(50% 50%, 70% 100%, 30% 100%);
+        }
+
+        .segment-5 {
+            background-color: #8b5cf6;
+            clip-path: polygon(50% 50%, 30% 100%, 0 100%, 0 50%);
+        }
+
+        .segment-6 {
+            background-color: #f43f5e;
+            clip-path: polygon(50% 50%, 0 50%, 0 0, 50% 0);
+        }
+
+        .donut-hole {
+            position: absolute;
+            width: 60%;
+            height: 60%;
+            background-color: white;
+            border-radius: 50%;
+            top: 20%;
+            left: 20%;
+        }
+
+        .donut-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        /* Line chart simulation */
+        .line-chart {
+            position: relative;
+            height: 80%;
+            width: 80%;
+            margin: 0 auto;
+            padding-bottom: 1.5rem;
+        }
+
+        .chart-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-rows: repeat(5, 1fr);
+            border-left: 1px dashed #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .grid-line {
+            border-top: 1px dashed #e5e7eb;
+        }
+
+        .line-path {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .line-income {
+            stroke: var(--secondary);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .line-expense {
+            stroke: #f87171;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .chart-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .dot-income {
+            background-color: var(--secondary);
+            border: 2px solid white;
+        }
+
+        .dot-expense {
+            background-color: #f87171;
+            border: 2px solid white;
+        }
+
+        .x-axis-labels {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .x-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Sidebar panel */
+        .layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: white;
+            border-right: 1px solid #eaeaea;
+            padding: 2rem 1rem;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: none;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-logo {
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            padding: 4px;
+        }
+
+        .sidebar-brand {
+            font-weight: 600;
+            font-size: 1.25rem;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: var(--bg-secondary);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .logo-container {
+                margin-bottom: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+
+            .bar {
+                width: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h3>Kako otvoriti ovu demo stranicu:</h3>
+        <p>1. Pritisnite desni klik na ovaj fajl i izaberite "Otvori sa" > "Chrome" ili neki drugi browser.</p>
+        <p>2. Ili kopirajte sledeći link i zalepite ga u adresnu liniju browsera:</p>
+        <code>file:///C:/Users/Korisnik/Desktop/KNJIGE/finansijska-aplikacija-main/app_demo.html</code>
+        <p>3. Nakon što otvorite stranicu, kliknite na hamburger ikonu (☰) da prikažete sidebar.</p>
+        <p>4. Kliknite na tabove "Prihodi vs. Rashodi", "Kategorije troškova", i "Trendovi" da vidite različite grafikone.</p>
+        <button onclick="hideInstructions()">Sakrij ove instrukcije</button>
+    </div>
+
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+    <div class="layout">
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                </div>
+                <div class="sidebar-brand">ShootMaster</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" class="sidebar-link active">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    Analitika
+                </a>
+                <a href="#" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    Transakcije
+                </a>
+                <a href="#" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M16 12h-6"></path>
+                        <path d="M10 16V8"></path>
+                        <path d="M14 12h6"></path>
+                    </svg>
+                    Budžet
+                </a>
+                <a href="#" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    Planiranje
+                </a>
+                <a href="#" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+                        <rect x="9" y="9" width="6" height="6"></rect>
+                        <line x1="9" y1="1" x2="9" y2="4"></line>
+                        <line x1="15" y1="1" x2="15" y2="4"></line>
+                        <line x1="9" y1="20" x2="9" y2="23"></line>
+                        <line x1="15" y1="20" x2="15" y2="23"></line>
+                        <line x1="20" y1="9" x2="23" y2="9"></line>
+                        <line x1="20" y1="14" x2="23" y2="14"></line>
+                        <line x1="1" y1="9" x2="4" y2="9"></line>
+                        <line x1="1" y1="14" x2="4" y2="14"></line>
+                    </svg>
+                    Izveštaji
+                </a>
+                <a href="#" class="sidebar-link">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    Podešavanja
+                </a>
+            </div>
+        </div>
+
+        <div class="main-content" style="width: 100%;">
+            <div class="navbar">
+                <div class="logo-container">
+                    <div class="logo">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </div>
+                    <h2>ShootMaster Finansijska Platforma</h2>
+                </div>
+                <div class="nav-links">
+                    <button class="nav-button">Početna</button>
+                    <button class="nav-button" style="background-color: var(--bg-secondary);">Preview</button>
+                    <button class="nav-button">Admin</button>
+                    <button class="nav-button">Profil</button>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="heading">
+                    <h1>Finansijski pregled</h1>
+                    <p>Detaljni pregled vaših finansija</p>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('tab1')">Prihodi vs. Rashodi</div>
+                    <div class="tab" onclick="showTab('tab2')">Kategorije troškova</div>
+                    <div class="tab" onclick="showTab('tab3')">Trendovi</div>
+                </div>
+
+                <div id="tab1" class="tab-content active">
+                    <div class="chart-container">
+                        <div class="chart-bars">
+                            <div>
+                                <div class="bar-group">
+                                    <div class="bar bar-income" style="height: 120px;"></div>
+                                    <div class="bar bar-expense" style="height: 80px;"></div>
+                                </div>
+                                <div class="bar-label">Jan</div>
+                            </div>
+                            <div>
+                                <div class="bar-group">
+                                    <div class="bar bar-income" style="height: 150px;"></div>
+                                    <div class="bar bar-expense" style="height: 100px;"></div>
+                                </div>
+                                <div class="bar-label">Feb</div>
+                            </div>
+                            <div>
+                                <div class="bar-group">
+                                    <div class="bar bar-income" style="height: 100px;"></div>
+                                    <div class="bar bar-expense" style="height: 90px;"></div>
+                                </div>
+                                <div class="bar-label">Mar</div>
+                            </div>
+                            <div>
+                                <div class="bar-group">
+                                    <div class="bar bar-income" style="height: 180px;"></div>
+                                    <div class="bar bar-expense" style="height: 110px;"></div>
+                                </div>
+                                <div class="bar-label">Apr</div>
+                            </div>
+                            <div>
+                                <div class="bar-group">
+                                    <div class="bar bar-income" style="height: 140px;"></div>
+                                    <div class="bar bar-expense" style="height: 70px;"></div>
+                                </div>
+                                <div class="bar-label">Maj</div>
+                            </div>
+                            <div>
+                                <div class="bar-group">
+                                    <div class="bar bar-income" style="height: 170px;"></div>
+                                    <div class="bar bar-expense" style="height: 120px;"></div>
+                                </div>
+                                <div class="bar-label">Jun</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab2" class="tab-content">
+                    <div class="chart-container">
+                        <div class="donut-chart">
+                            <div class="donut-segment segment-1"></div>
+                            <div class="donut-segment segment-2"></div>
+                            <div class="donut-segment segment-3"></div>
+                            <div class="donut-segment segment-4"></div>
+                            <div class="donut-segment segment-5"></div>
+                            <div class="donut-segment segment-6"></div>
+                            <div class="donut-hole">
+                                <div class="donut-label">€22,500</div>
+                            </div>
+                        </div>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #10b981;"></div>
+                                <div>Stanovanje (35%)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #f59e0b;"></div>
+                                <div>Hrana (25%)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #3b82f6;"></div>
+                                <div>Transport (15%)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #ec4899;"></div>
+                                <div>Zabava (10%)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #8b5cf6;"></div>
+                                <div>Zdravlje (8%)</div>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background-color: #f43f5e;"></div>
+                                <div>Ostalo (7%)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab3" class="tab-content">
+                    <div class="chart-container">
+                        <div class="line-chart">
+                            <div class="chart-grid">
+                                <div class="grid-line"></div>
+                                <div class="grid-line"></div>
+                                <div class="grid-line"></div>
+                                <div class="grid-line"></div>
+                            </div>
+                            
+                            <svg class="line-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <path class="line-income" d="M0,80 L16.6,60 L33.3,70 L50,30 L66.6,40 L83.3,20 L100,30"></path>
+                                <path class="line-expense" d="M0,85 L16.6,75 L33.3,80 L50,70 L66.6,60 L83.3,65 L100,55"></path>
+                            </svg>
+                            
+                            <div class="chart-dot dot-income" style="left: 0%; top: 80%;"></div>
+                            <div class="chart-dot dot-income" style="left: 16.6%; top: 60%;"></div>
+                            <div class="chart-dot dot-income" style="left: 33.3%; top: 70%;"></div>
+                            <div class="chart-dot dot-income" style="left: 50%; top: 30%;"></div>
+                            <div class="chart-dot dot-income" style="left: 66.6%; top: 40%;"></div>
+                            <div class="chart-dot dot-income" style="left: 83.3%; top: 20%;"></div>
+                            <div class="chart-dot dot-income" style="left: 100%; top: 30%;"></div>
+                            
+                            <div class="chart-dot dot-expense" style="left: 0%; top: 85%;"></div>
+                            <div class="chart-dot dot-expense" style="left: 16.6%; top: 75%;"></div>
+                            <div class="chart-dot dot-expense" style="left: 33.3%; top: 80%;"></div>
+                            <div class="chart-dot dot-expense" style="left: 50%; top: 70%;"></div>
+                            <div class="chart-dot dot-expense" style="left: 66.6%; top: 60%;"></div>
+                            <div class="chart-dot dot-expense" style="left: 83.3%; top: 65%;"></div>
+                            <div class="chart-dot dot-expense" style="left: 100%; top: 55%;"></div>
+                            
+                            <div class="x-axis-labels">
+                                <div class="x-label">Jan</div>
+                                <div class="x-label">Feb</div>
+                                <div class="x-label">Mar</div>
+                                <div class="x-label">Apr</div>
+                                <div class="x-label">Maj</div>
+                                <div class="x-label">Jun</div>
+                                <div class="x-label">Jul</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transactions">
+                    <h2>Poslednje transakcije</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Opis</th>
+                                <th>Kategorija</th>
+                                <th>Iznos</th>
+                                <th>Tip</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>15.06.2025</td>
+                                <td>Plata</td>
+                                <td>Prihod</td>
+                                <td>€2,500.00</td>
+                                <td><span class="badge badge-green">Prihod</span></td>
+                            </tr>
+                            <tr>
+                                <td>12.06.2025</td>
+                                <td>Najam</td>
+                                <td>Stanovanje</td>
+                                <td>€500.00</td>
+                                <td><span class="badge badge-red">Rashod</span></td>
+                            </tr>
+                            <tr>
+                                <td>10.06.2025</td>
+                                <td>Kupovina namirnica</td>
+                                <td>Hrana</td>
+                                <td>€120.00</td>
+                                <td><span class="badge badge-red">Rashod</span></td>
+                            </tr>
+                            <tr>
+                                <td>05.06.2025</td>
+                                <td>Gorivo</td>
+                                <td>Transport</td>
+                                <td>€70.00</td>
+                                <td><span class="badge badge-red">Rashod</span></td>
+                            </tr>
+                            <tr>
+                                <td>01.06.2025</td>
+                                <td>Bonus</td>
+                                <td>Prihod</td>
+                                <td>€300.00</td>
+                                <td><span class="badge badge-green">Prihod</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="footer">
+                <p>© 2025 ShootMaster Finansijska Platforma. Sva prava zadržana.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hideInstructions() {
+            const instructions = document.querySelector('.instructions');
+            if (instructions) {
+                instructions.style.display = 'none';
+            }
+        }
+        
+        function showTab(tabId) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => tab.classList.remove('active'));
+            
+            // Deactivate all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Activate selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Activate clicked tab button
+            const clickedTab = Array.from(tabs).find(tab => tab.getAttribute('onclick').includes(tabId));
+            if (clickedTab) {
+                clickedTab.classList.add('active');
+            }
+        }
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.style.display === 'block') {
+                sidebar.style.display = 'none';
+            } else {
+                sidebar.style.display = 'block';
+            }
+        }
+    </script>
+
+    <div class="instructions">
+        <h3>Kako otvoriti ovu stranicu</h3>
+        <p>Da biste otvorili ovu HTML stranicu u vašem pregledaču, pratite sledeće korake:</p>
+        <ol>
+            <li>Preuzmite ovaj fajl na vaše računalo.</li>
+            <li>Otvorite vaš pregledač (Chrome, Firefox, Edge, itd.).</li>
+            <li>Povucite i ispustite fajl u prozor pregledača ili koristite opciju "Otvorite fajl" u meniju pregledača.</li>
+            <li>Uživajte u korišćenju ShootMaster Finansijske Platforme!</li>
+        </ol>
+        <p>Napomena: Ova stranica je optimizovana za moderni pregledač. Molimo vas da ne koristite zastarele verzije pregledača.</p>
+        <button onclick="window.print()">Štampaj ovu instrukciju</button>
+    </div>
+</body>
+</html>

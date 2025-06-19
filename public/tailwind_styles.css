@@ -1,0 +1,222 @@
+/* CSS stilovi za finansijsku aplikaciju prema originalnim HTML kompas stranicama */
+
+:root {
+  /* Enhanced Gold Palette */
+  --gold-bright: #FFD700; /* Svetlija zlatna */
+  --gold-medium: #D4AF37; /* Osnovna zlatna */
+  --gold-dark: #B8860B; /* Tamnija zlatna */
+  --gold-pale: #F0E68C; /* Bleda zlatna */
+  --gold-glow: rgba(255, 215, 0, 0.3); /* Zlatni sjaj za efekte */
+  
+  /* Gradijenti */
+  --gradient-gold: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B);
+  --gradient-gold-light: linear-gradient(135deg, #F0E68C, #FFD700);
+  --gradient-gold-dark: linear-gradient(135deg, #B8860B, #8B6914);
+  
+  /* Tamna paleta */
+  --dark-bg: #0A0A0A; /* Tamnija pozadina */
+  --dark-card: #121212; /* Tamnija kartica */
+  --dark-accent: #1E1E1E; /* Tamni akcent */
+  
+  /* Tekst */
+  --light-text: #FFFFFF; /* Čist beli tekst za bolji kontrast */
+  --muted-text: #CCCCCC; /* Svetliji sivi za bolju čitljivost */
+  
+  /* Dodatni efekti */
+  --border-light: rgba(212, 175, 55, 0.3);
+  --glass-effect: rgba(255, 215, 0, 0.05);
+  --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.2);
+  --box-shadow-hover: 0 8px 30px rgba(255, 215, 0, 0.15);
+  
+  /* Dimenzije i razmaci */
+  --border-radius: 0.75rem;
+  --border-radius-lg: 1.25rem;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1.25rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Tranzicije */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Globalni stilovi */
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--light-text);
+  line-height: 1.7;
+  background: var(--dark-bg);
+  background-image: 
+      radial-gradient(at 20% 20%, rgba(255, 215, 0, 0.05) 0%, transparent 40%),
+      radial-gradient(at 80% 80%, rgba(184, 134, 11, 0.05) 0%, transparent 40%);
+  position: relative;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animacije */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Stilovi za zlatne kartice */
+.gold-card {
+  background: var(--dark-card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-light);
+  transition: var(--transition);
+  overflow: hidden;
+  position: relative;
+}
+
+.gold-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--glass-effect), transparent);
+  pointer-events: none;
+}
+
+.gold-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow-hover);
+  border-color: var(--gold-medium);
+}
+
+/* Stilovi za zlatna dugmad */
+.gold-button {
+  background: var(--gradient-gold);
+  color: var(--light-text);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: var(--transition);
+}
+
+.gold-button:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--box-shadow-hover);
+}
+
+.gold-button:hover::before {
+  left: 100%;
+}
+
+/* Stilovi za zlatne naslove */
+.gold-heading {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Stilovi za tabele */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  background: var(--dark-accent);
+  padding: 1rem;
+  text-align: left;
+  color: var(--gold-medium);
+  font-weight: 600;
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.data-table tbody tr:hover {
+  background: var(--dark-accent);
+}
+
+/* Stilovi za grafikone */
+.chart-container {
+  background: var(--dark-card);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-light);
+  margin-bottom: 2rem;
+}
+
+/* Stilovi za dashboard */
+.dashboard-widget {
+  background: var(--dark-card);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--border-light);
+  transition: var(--transition);
+}
+
+.dashboard-widget:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow-hover);
+  border-color: var(--gold-medium);
+}
+
+/* Stilovi za navigaciju */
+.nav-link {
+  color: var(--muted-text);
+  text-decoration: none;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-link:hover, .nav-link.active {
+  background: var(--gradient-gold);
+  color: var(--light-text);
+}
+
+/* Stilovi za profile */
+.profile-container {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+  }
+}
