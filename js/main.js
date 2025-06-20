@@ -9,6 +9,11 @@ class MainApplication {
             role: 'admin',
             isAdmin: true
         };
+        this.budget = JSON.parse(localStorage.getItem('userBudget')) || {
+            monthly: 3000,
+            spent: 2250,
+            categories: []
+        };
         this.init();
     }
 
@@ -386,7 +391,386 @@ document.addEventListener('DOMContentLoaded', () => {
     mainApp.exportToGlobal();
     
     // Debug informacije u konzoli
-    console.log('%c🏦 Golden Balance', 'color: #D4AF37; font-size: 24px; font-weight: bold;');
-    console.log('%cFinancijska aplikacija uspešno pokrenuta!', 'color: #22c55e; font-size: 14px;');
-    console.log('%cKoristite window.mainApp za pristup aplikacijskim funkcijama', 'color: #6b7280; font-size: 12px;');
+    console.log('Golden Balance - Finansijska platforma uspešno pokrenuta! 🎉');
+});
+
+// ===== BUDGET MANAGEMENT FUNCTIONS =====
+var budgetCategories = [];
+
+function openBudgetModal() {
+    var modal = document.getElementById('budgetModal');
+    if (modal) {
+        // Učitavamo trenutne podatke
+        var savedBudget = JSON.parse(localStorage.getItem('userBudget')) || {
+            monthly: 3000,
+            spent: 2250,
+            categories: [
+                { name: 'Hrana', amount: 800 },
+                { name: 'Transport', amount: 300 },
+                { name: 'Stan', amount: 1200 }
+            ]
+        };
+        
+        document.getElementById('monthlyBudget').value = savedBudget.monthly;
+        document.getElementById('spentAmount').value = savedBudget.spent;
+        budgetCategories = savedBudget.categories || [];
+        
+        loadBudgetCategories();
+        updateBudgetSummary();
+        modal.style.display = 'flex';
+        
+        // Setup form submission
+        var form = document.getElementById('budgetForm');
+        form.onsubmit = function(e) {
+            e.preventDefault();
+            saveBudgetChanges();
+        };
+        
+        // Setup real-time updates
+        document.getElementById('monthlyBudget').addEventListener('input', updateBudgetSummary);
+        document.getElementById('spentAmount').addEventListener('input', updateBudgetSummary);
+    }
+}
+
+function closeBudgetModal() {
+    var modal = document.getElementById('budgetModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function loadBudgetCategories() {
+    var container = document.getElementById('budgetCategories');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    budgetCategories.forEach(function(category, index) {
+        var categoryDiv = document.createElement('div');
+        categoryDiv.style.cssText = 'display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;';
+        categoryDiv.innerHTML = `
+            <input type="text" value="${category.name}" 
+                   onchange="updateCategoryName(${index}, this.value)" 
+                   class="form-input" style="flex: 2;" placeholder="Naziv kategorije">
+            <input type="number" value="${category.amount}" 
+                   onchange="updateCategoryAmount(${index}, this.value)" 
+                   class="form-input" style="flex: 1;" placeholder="Iznos" min="0" step="10">
+            <button type="button" onclick="removeBudgetCategory(${index})" 
+                    class="btn btn-secondary" style="padding: 0.4rem;">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        container.appendChild(categoryDiv);
+    });
+}
+
+function addBudgetCategory() {
+    budgetCategories.push({ name: '', amount: 0 });
+    loadBudgetCategories();
+    updateBudgetSummary();
+}
+
+function removeBudgetCategory(index) {
+    budgetCategories.splice(index, 1);
+    loadBudgetCategories();
+    updateBudgetSummary();
+}
+
+function updateCategoryName(index, name) {
+    if (budgetCategories[index]) {
+        budgetCategories[index].name = name;
+        updateBudgetSummary();
+    }
+}
+
+function updateCategoryAmount(index, amount) {
+    if (budgetCategories[index]) {
+        budgetCategories[index].amount = parseFloat(amount) || 0;
+        updateBudgetSummary();
+    }
+}
+
+function updateBudgetSummary() {
+    var monthlyBudget = parseFloat(document.getElementById('monthlyBudget').value) || 0;
+    var spentAmount = parseFloat(document.getElementById('spentAmount').value) || 0;
+    var remaining = monthlyBudget - spentAmount;
+    var percentage = monthlyBudget > 0 ? (spentAmount / monthlyBudget) * 100 : 0;
+    
+    document.getElementById('totalBudgetDisplay').textContent = '€' + monthlyBudget.toLocaleString();
+    document.getElementById('spentAmountDisplay').textContent = '€' + spentAmount.toLocaleString();
+    document.getElementById('remainingBudgetDisplay').textContent = '€' + remaining.toLocaleString();
+    document.getElementById('budgetProgressBar').style.width = Math.min(percentage, 100) + '%';
+    
+    // Color coding
+    var remainingElement = document.getElementById('remainingBudgetDisplay');
+    if (remaining < 0) {
+        remainingElement.style.color = 'var(--error)';
+    } else if (remaining < monthlyBudget * 0.2) {
+        remainingElement.style.color = '#ff9800';
+    } else {
+        remainingElement.style.color = 'var(--success)';
+    }
+}
+
+function saveBudgetChanges() {
+    var monthlyBudget = parseFloat(document.getElementById('monthlyBudget').value) || 0;
+    var spentAmount = parseFloat(document.getElementById('spentAmount').value) || 0;
+    
+    var budgetData = {
+        monthly: monthlyBudget,
+        spent: spentAmount,
+        categories: budgetCategories,
+        lastUpdated: new Date().toISOString()
+    };
+    
+    localStorage.setItem('userBudget', JSON.stringify(budgetData));
+    
+    // Ažuriramo prikaz na stranici
+    updateBudgetDisplay();
+    
+    // Prikazujemo obaveštenje
+    showNotification('Budžet je uspešno ažuriran!', 'success');
+    
+    closeBudgetModal();
+}
+
+function updateBudgetDisplay() {
+    var savedBudget = JSON.parse(localStorage.getItem('userBudget'));
+    if (!savedBudget) return;
+    
+    // Ažuriramo sve elemente na stranici koji prikazuju budžet
+    var monthlyBudgetElements = document.querySelectorAll('[data-budget="monthly"]');
+    var spentElements = document.querySelectorAll('[data-budget="spent"]');
+    var remainingElements = document.querySelectorAll('[data-budget="remaining"]');
+    
+    monthlyBudgetElements.forEach(function(el) {
+        el.textContent = '€' + savedBudget.monthly.toLocaleString();
+    });
+    
+    spentElements.forEach(function(el) {
+        el.textContent = '€' + savedBudget.spent.toLocaleString();
+    });
+    
+    var remaining = savedBudget.monthly - savedBudget.spent;
+    remainingElements.forEach(function(el) {
+        el.textContent = '€' + remaining.toLocaleString();
+    });
+    
+    // Ažuriramo progress bar
+    var progressBars = document.querySelectorAll('[data-budget="progress"]');
+    var percentage = savedBudget.monthly > 0 ? (savedBudget.spent / savedBudget.monthly) * 100 : 0;
+    progressBars.forEach(function(bar) {
+        bar.style.width = Math.min(percentage, 100) + '%';
+    });
+}
+
+// ===== PROFILE MANAGEMENT FUNCTIONS =====
+var isEditingProfile = false;
+
+function toggleProfileEdit() {
+    isEditingProfile = !isEditingProfile;
+    var form = document.getElementById('profileForm');
+    var btn = document.getElementById('editProfileBtn');
+    var actions = document.getElementById('profileEditActions');
+    var passwordGroup = document.getElementById('passwordGroup');
+    
+    if (isEditingProfile) {
+        // Enable editing
+        var inputs = form.querySelectorAll('input[readonly]');
+        inputs.forEach(function(input) {
+            input.removeAttribute('readonly');
+            input.style.background = 'var(--dark-card)';
+            input.style.border = '1px solid var(--gold-medium)';
+        });
+        
+        btn.innerHTML = '<i class="fas fa-times"></i> Otkaži';
+        actions.style.display = 'flex';
+        passwordGroup.style.display = 'block';
+    } else {
+        cancelProfileEdit();
+    }
+}
+
+function cancelProfileEdit() {
+    isEditingProfile = false;
+    var form = document.getElementById('profileForm');
+    var btn = document.getElementById('editProfileBtn');
+    var actions = document.getElementById('profileEditActions');
+    var passwordGroup = document.getElementById('passwordGroup');
+    
+    // Disable editing
+    var inputs = form.querySelectorAll('input:not([type="password"])');
+    inputs.forEach(function(input) {
+        input.setAttribute('readonly', true);
+        input.style.background = 'transparent';
+        input.style.border = '1px solid rgba(255,255,255,0.1)';
+    });
+    
+    btn.innerHTML = '<i class="fas fa-edit"></i> Uredi';
+    actions.style.display = 'none';
+    passwordGroup.style.display = 'none';
+    
+    // Reset password field
+    document.getElementById('profileNewPassword').value = '';
+    
+    // Reload original values
+    loadProfileData();
+}
+
+function loadProfileData() {
+    var userData = JSON.parse(localStorage.getItem('currentUser')) || {
+        name: 'Zoran Dostić',
+        email: 'zorandostica2@gmail.com',
+        phone: '0038765827710',
+        username: 'zoran.dostica'
+    };
+    
+    document.getElementById('profileName').value = userData.name;
+    document.getElementById('profileEmail').value = userData.email;
+    document.getElementById('profilePhone').value = userData.phone;
+    document.getElementById('profileUsername').value = userData.username;
+    
+    // Load avatar
+    var avatar = localStorage.getItem('userAvatar');
+    if (avatar) {
+        document.getElementById('profileAvatarDisplay').src = avatar;
+    }
+}
+
+function saveProfileChanges() {
+    var name = document.getElementById('profileName').value;
+    var email = document.getElementById('profileEmail').value;
+    var phone = document.getElementById('profilePhone').value;
+    var username = document.getElementById('profileUsername').value;
+    var newPassword = document.getElementById('profileNewPassword').value;
+    
+    // Validacija
+    if (!name || !email || !username) {
+        showNotification('Molimo unesite sva obavezna polja!', 'error');
+        return;
+    }
+    
+    // Email validacija
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showNotification('Molimo unesite valjan email!', 'error');
+        return;
+    }
+    
+    // Username validacija (provera jedinstvenosti)
+    var existingUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
+    var currentUser = JSON.parse(localStorage.getItem('currentUser')) || {};
+    var usernameExists = existingUsers.find(function(user) {
+        return user.username === username && user.id !== currentUser.id;
+    });
+    
+    if (usernameExists) {
+        showNotification('Korisničko ime već postoji!', 'error');
+        return;
+    }
+    
+    // Sačuvaj promene
+    var userData = {
+        id: currentUser.id || Date.now(),
+        name: name,
+        email: email,
+        phone: phone,
+        username: username,
+        lastUpdated: new Date().toISOString()
+    };
+    
+    if (newPassword) {
+        userData.password = newPassword; // U stvarnoj aplikaciji bi trebalo hash-ovati
+    }
+    
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    
+    // Ažuriraj listu svih korisnika
+    var allUsers = existingUsers.filter(function(user) {
+        return user.id !== userData.id;
+    });
+    allUsers.push(userData);
+    localStorage.setItem('allUsers', JSON.stringify(allUsers));
+    
+    showProfileNotification('Profil je uspešno ažuriran!', 'success');
+    cancelProfileEdit();
+}
+
+function showProfileNotification(message, type) {
+    // Kreiraj notification element
+    var notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? 'var(--success)' : 'var(--error)'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+        font-weight: 500;
+    `;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animacija pojavljivanja
+    setTimeout(function() {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto uklanjanje
+    setTimeout(function() {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(function() {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+function handleAvatarUpload(event) {
+    var file = event.target.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            showNotification('Slika je prevelika! Maksimalna veličina je 5MB.', 'error');
+            return;
+        }
+        
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var avatarSrc = e.target.result;
+            document.getElementById('profileAvatarDisplay').src = avatarSrc;
+            localStorage.setItem('userAvatar', avatarSrc);
+            showNotification('Profilna slika je uspešno ažurirana!', 'success');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function removeAvatar() {
+    var defaultAvatar = 'https://via.placeholder.com/150x150/667eea/ffffff?text=USER';
+    document.getElementById('profileAvatarDisplay').src = defaultAvatar;
+    localStorage.removeItem('userAvatar');
+    showNotification('Profilna slika je uklonjena!', 'success');
+}
+
+// Load data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.getElementById('profileForm')) {
+        loadProfileData();
+    }
+    if (document.querySelector('[data-budget]')) {
+        updateBudgetDisplay();
+    }
 });
