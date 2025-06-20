@@ -6,12 +6,23 @@ class TechnicalSupport {
         this.isTyping = false;
         this.knowledgeBase = this.initKnowledgeBase();
         this.init();
-    }
-
-    initKnowledgeBase() {
+    }    initKnowledgeBase() {
         return {
+            // Ključne reči koje zahtevaju konsultacije
+            investmentKeywords: [
+                'kako da kupim', 'kako kupiti', 'gde kupiti', 'gde da kupim',
+                'kako da uložim', 'kako uložiti', 'gde uložiti', 'gde da uložim',
+                'kako da investiram', 'kako investirati', 'gde investirati',
+                'najbolja investicija', 'preporučujem investiciju', 'savjet za investiranje',
+                'koji fond', 'koja akcija', 'koje akcije', 'koji ETF',
+                'da li da kupim', 'da li da investiram', 'vredi li investirati',
+                'koliko da uložim', 'koliko investirati', 'koliko novca',
+                'kada kupiti', 'kada investirati', 'najbolje vreme',
+                'broker preporuka', 'koja platforma', 'koja aplikacija za trgovanje'
+            ],
+            
             keywords: {
-                // Investicije
+                // Investicije - opšte informacije
                 'investicija': ['investiranje', 'investicije', 'portfolijo', 'portfolio', 'berza', 'akcije', 'obveznice', 'ETF', 'fondovi'],
                 'rizik': ['rizik', 'sigurnost', 'rizično', 'volatilnost', 'stabilnost'],
                 'profit': ['profit', 'prinos', 'zarada', 'dobit', 'kamata', 'dividenda'],
@@ -31,56 +42,86 @@ class TechnicalSupport {
                 'porez': ['porez', 'porezi', 'poreska', 'PDV', 'porez na dohodak', 'poreska prijava'],
                 
                 // Nekretnine
-                'nekretnina': ['nekretnina', 'stan', 'kuća', 'investiranje u nekretnine', 'hipoteka']
+                'nekretnina': ['nekretnina', 'stan', 'kuća', 'investiranje u nekretnine', 'hipoteka'],
+                
+                // Tehnička podrška
+                'tehnicka': ['ne radi', 'greška', 'bug', 'problem', 'ne mogu', 'ne funkcioniše', 'pomoć', 'kako da'],
+                'login': ['prijava', 'lozinka', 'login', 'password', 'zaboravio sam', 'ne mogu da se ulogujem'],
+                'aplikacija': ['aplikacija', 'sajt', 'web', 'stranica', 'sporo', 'ne učitava']
             },
             
             responses: {
-                'investicija': {
-                    message: `💼 **Investiranje - Vaš put ka finansijskoj nezavisnosti**
-                    
-Investiranje je ključni korak ka izgradnji bogatstva. Evo osnovnih principa:
+                'consultation_required': {
+                    message: `🎯 **Personalizovano finansijsko savetovanje**
 
-**🎯 Osnovni principi:**
-• **Diversifikacija** - Ne stavljajte "sva jaja u jednu korpu"
-• **Dugoročnost** - Vreme je vaš saveznik u investiranju
-• **Redovnost** - Konstantno investiranje kroz DCA (Dollar Cost Averaging)
-• **Edukacija** - Nikad ne investirajte u ono što ne razumete
+Za pitanja o konkretnim investicijama, kupovini finansijskih proizvoda ili investicionim strategijama, preporučujemo zakazivanje **BESPLATNE konsultacije** sa našim stručnjakom.
 
-**📊 Tipovi investicija:**
-1. **Akcije** - Udeli u kompanijama (veći rizik, veći potencijal)
-2. **Obveznice** - Zajmovi državama/kompanijama (manji rizik)
-3. **ETF fondovi** - Diversifikovani portfolio u jednom proizvodu
-4. **Nekretnine** - Fizička imovina koja donosi rentu
-5. **Zlato i dragoceni metali** - Zaštita od inflacije
+**👨‍💼 Naš finansijski savetnik:**
+- **Zoran Dostić** - Sertifikovani finansijski savetnik
+- **1 godina iskustva** uz podršku tima sa **20+ godina** rada u finansijskom sektoru
+- Specijalizovan za: investicije, štednju, planiranje budžeta
 
-**⚠️ Važno:** Nikad ne investirajte novac koji vam je potreban u narednih 5 godina!`,
+**🎁 Besplatna konsultacija uključuje:**
+• Analizu vaše trenutne finansijske situacije
+• Personalizovane preporuke za investiranje
+• Strategiju za postizanje vaših ciljeva
+• Odgovore na sva vaša specifična pitanja
+
+**📅 Zakažite konsultaciju direktno kroz našu platformu!**`,
                     action: 'consultation',
                     consultationType: 'investments'
                 },
                 
-                'štednja': {
-                    message: `💰 **Štednja - Osnova finansijske sigurnosti**
+                'investicija': {
+                    message: `💼 **Investiranje - Opšte informacije**
                     
-Štednja je temelj svakog finansijskog plana:
+**🎯 Osnovni principi investiranja:**
+• **Diversifikacija** - Rasporedite rizik kroz različite investicije
+• **Dugoročnost** - Investirajte za period od 5+ godina
+• **Redovnost** - Konstantno investiranje (DCA strategija)
+• **Edukacija** - Razumejte u šta investirate
 
+**📊 Tipovi investicija:**
+1. **Akcije** - Udeli u kompanijama (veći rizik/potencijal)
+2. **Obveznice** - Državni/korporativni dugovi (stabilnije)
+3. **ETF fondovi** - Diversifikovani portfoliji
+4. **Nekretnine** - Fizička imovina
+5. **Zlato** - Zaštita od inflacije
+
+**⚠️ Osnovni principi:**
+- Nikad ne investirajte novac koji vam je potreban u narednih 5 godina
+- Počnite sa malim iznosima dok učite
+- Ne ulagajte sve odjednom - koristite DCA strategiju
+
+**💡 Za konkretne savete o tome ŠTA i KADA da kupite/investirate, zakažite besplatnu konsultaciju!**`,
+                    action: 'general_info'
+                },
+                
+                'štednja': {
+                    message: `💰 **Štednja - Temelj finansijske sigurnosti**
+                    
 **🎯 Pravilo 50/30/20:**
-• 50% prihoda za osnovne potrebe
-• 30% za želje i zabavu  
-• 20% za štednju i investicije
+• 50% prihoda - osnovne potrebe (hrana, kirija, računi)
+• 30% prihoda - želje i zabava
+• 20% prihoda - štednja i investicije
 
 **💡 Strategije štednje:**
-1. **Rezervni fond** - 3-6 mesečnih plata za nepredviđene situacije
-2. **Ciljana štednja** - Za specifične ciljeve (odmor, auto, stan)
+1. **Rezervni fond** - 3-6 mesečnih plata za hitne slučajeve
+2. **Ciljana štednja** - Za specifične ciljeve (odmor, auto)
 3. **Automatska štednja** - Postavite automatski transfer
-4. **Štedni računi** - Koristite račune sa većom kamatom
+4. **Oročavanje** - Za novac koji ne trebate 1-3 godine
 
-**📈 Saveti:**
-• Štedite čim primite platu, ne čekajte kraj meseca
-• Koristite različite štedne račune za različite ciljeve
-• Razmotriti oročavanje za srednji nivo novca
-• Redovno reviziju troškove i pronađite mesta za uštedu`,
-                    action: 'budgeting',
-                    consultationType: 'savings'
+**📈 Praktični saveti:**
+• Štedite čim primite platu (plaćajte sebe prvo)
+• Koristite različite račune za različite ciljeve
+• Pratite troškove kroz aplikacije za budžetiranje
+• Redovno preispitajte svoje troškove
+
+**🏦 Gde čuvati novac:**
+- Tekući račun: novac za mesečne troškove
+- Štedni račun: rezervni fond (veća kamata)
+- Oročeni račun: srednjoročni ciljevi`,
+                    action: 'general_info'
                 },
                 
                 'budžet': {
@@ -154,9 +195,135 @@ Kredit može biti alat ili tereta - zavisi kako ga koristite:
 • Plaćajte više od minimuma kad god možete
 • Izbegavajte kartice sa velikim kamatama
 
-**📞 Problemi sa dugovima?** Kontaktirajte me za personalizovanu strategiju.`,
-                    action: 'consultation',
+**📞 Problemi sa dugovima?** Kontaktirajte me za personalizovanu strategiju.`,                    action: 'consultation',
                     consultationType: 'debt'
+                },
+                
+                'budžet': {
+                    message: `📊 **Budžetiranje - Kontrola nad vašim novcem**
+                    
+Budžet je plan koji vam pomaže da kontrolišete novac umesto da novac kontroliše vas:
+
+**📝 Koraci za kreiranje budžeta:**
+1. **Izračunajte ukupne prihode** (neto plata + dodatni prihodi)
+2. **Napravite listu svih troškova:**
+   - Fiksni (kirija, rate, osiguranje)
+   - Varijabilni (hrana, transport, zabava)
+3. **Kategorišite troškove** po važnosti
+4. **Postavite limite** za svaku kategoriju
+5. **Pratite troškove** tokom meseca
+
+**💡 Popularni metodi:**
+• **50/30/20 pravilo** - 50% potrebe, 30% želje, 20% štednja
+• **Zero-based budgeting** - Svaki dinar ima svrhu
+• **Envelope metod** - Fizički ili digitalni "koverat" za kategorije
+
+**📱 Alati za budžetiranje:**
+- Naš budžet tracker u aplikaciji
+- Excel/Google Sheets tabele
+- Mobilne aplikacije (YNAB, Mint)
+- Envelope sistem sa gotovinom`,
+                    action: 'general_info'
+                },
+                
+                'tehnicka': {
+                    message: `🔧 **Tehnička podrška**
+
+Razumem da imate tehnički problem. Evo najčešćih rešenja:
+
+**🚀 Osnovna rešenja:**
+1. **Osvežite stranicu** (F5 ili Ctrl+R)
+2. **Očistite cache** (Ctrl+Shift+Delete)
+3. **Proverite internet konekciju**
+4. **Probajte drugi browser** (Chrome, Firefox, Edge)
+
+**📱 Mobilni uređaji:**
+- Zatvorite i ponovo otvorite aplikaciju
+- Restartujte uređaj
+- Proverite ažuriranja aplikacije
+
+**💡 Ako problem i dalje postoji:**
+Kreirajte tiket sa detaljnim opisom problema i mi ćemo vam pomoći u najkraćem roku.`,
+                    action: 'general_info'
+                },
+                
+                'login': {
+                    message: `🔐 **Problemi sa prijavom**
+
+Evo kako možete rešiti probleme sa prijavom:
+
+**🔑 Zaboravljena lozinka:**
+1. Kliknite "Zaboravili ste lozinku?"
+2. Unesite svoj email
+3. Proverite email za link za reset
+4. Sledite instrukcije u email-u
+
+**👤 Zaboravljeno korisničko ime:**
+- Proverite email potvrde registracije
+- Kontaktirajte podršku sa email adresom
+
+**⚠️ Račun je zaključan:**
+- Sačekajte 15 minuta pa probajte ponovo
+- Ili kontaktirajte podršku za trenutno otključavanje
+
+**🔒 Sigurnosni saveti:**
+- Koristite jaku lozinku (8+ karaktera, brojevi, simboli)
+- Ne delite podatke za prijavu
+- Odjavite se kad završite rad`,
+                    action: 'general_info'
+                },
+                
+                'aplikacija': {
+                    message: `📱 **Problemi sa aplikacijom**
+
+Ako aplikacija radi sporo ili se ne učitava:
+
+**⚡ Brzina:**
+1. **Zatvorite nepotrebne tabove** u browseru
+2. **Restartujte browser**
+3. **Proverite brzinu interneta**
+4. **Koristite najnoviju verziju browsera**
+
+**🔄 Učitavanje:**
+- Osvežite stranicu (F5)
+- Očistite cache i cookies
+- Onemogućite ad-block za naš sajt
+- Probajte incognito/private mode
+
+**📊 Sistemski zahtevi:**
+- Modern browser (Chrome 90+, Firefox 88+, Safari 14+)
+- Stabilna internet konekcija (min 1 Mbps)
+- JavaScript mora biti omogućen
+
+**💻 Najbolje performanse:**
+Chrome ili Firefox na desktop računaru`,
+                    action: 'general_info'
+                },
+                
+                'default': {
+                    message: `👋 **Zdravo! Tu sam da pomognem.**
+
+Mogu da vam pomognem sa:
+
+**💰 Finansijska pitanja:**
+- Štednja i budžetiranje
+- Osnove investiranja  
+- Penziono planiranje
+- Upravljanje dugovima
+
+**🔧 Tehnička podrška:**
+- Problemi sa prijavom
+- Sporija aplikacija
+- Greške i bugovi
+
+**📞 Dodatna pomoć:**
+- Za specifične savete o investiranju → **besplatna konsultacija**
+- Za tehničke probleme → **kreirajte tiket**
+- Za hitne slučajeve → **pozovite +381 11 123 4567**
+
+Kako vam mogu pomoći danas? 😊`,
+                    action: 'general_info'
+                }
                 },
                 
                 'default': {
@@ -180,8 +347,8 @@ Mogu da vam pomognem sa:
 **💬 Kako mogu da pomognem?**
 Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i usmeriti vas ka najboljoj soluciji.
 
-*Za kompleksna finansijska pitanja, preporučujem zakazivanje besplatne konsultacije sa našim stručnjakom.*`,
-                    action: 'general'
+**Za kompleksna finansijska pitanja, preporučujem zakazivanje besplatne konsultacije sa našim stručnjakom.**`,
+                    action: 'general_info'
                 }
             }
         };
@@ -503,21 +670,15 @@ Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i us
             formattedResponse += `\n\n📊 **Koristite naš budžet tracker**\nProbajte naš [budžet alat](profile.html#budget) za lakše upravljanje troškovima.`;
         }
         
-        return formattedResponse;
-    }
+        return formattedResponse;    }
 
-    analyzeMessage(message) {
-        // Analiza ključnih reči
-        for (const [category, keywords] of Object.entries(this.knowledgeBase.keywords)) {
-            for (const keyword of keywords) {
-                if (message.includes(keyword.toLowerCase())) {
-                    return category;
-                }
-            }
-        }
-        
-        // Ako nema poklapanja, vrati default    generateResponse(userMessage) {
+    generateResponse(userMessage) {
         var message = userMessage.toLowerCase();
+        
+        // Prvo proveravamo da li je potrebna konsultacija
+        if (this.requiresConsultation(message)) {
+            return this.knowledgeBase.responses.consultation_required.message;
+        }
         
         // Analiza ključnih reči za finansijska pitanja
         var detectedCategory = this.analyzeMessage(message);
@@ -528,9 +689,9 @@ Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i us
         
         // Dodaj akcije na osnovu kategorije
         if (response.action === 'consultation') {
-            formattedResponse += '\n\n🗓️ **Preporučujem zakazivanje besplatne konsultacije**\n[Zakažite konsultaciju](javascript:openModal(\'consultationModal\')) za detaljno razmotravanje vaše situacije.';
+            formattedResponse += '\n\n🗓️ **Za personalizovane savete**\n[Zakažite besplatnu konsultaciju](javascript:showPage(\'consultation\')) sa našim stručnjakom.';
         } else if (response.action === 'budgeting') {
-            formattedResponse += '\n\n📊 **Koristite naš budžet tracker**\nProbajte naš [budžet alat](profile.html#budget) za lakše upravljanje troškovima.';
+            formattedResponse += '\n\n📊 **Koristite naš budžet alat**\nProbajte naš [budžet tracker](javascript:showPage(\'profile\')) za lakše upravljanje troškovima.';
         }
         
         return formattedResponse;
@@ -547,8 +708,31 @@ Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i us
             }
         }
         
+        // Specifična prepoznavanja
+        if (message.includes('ne radi') || message.includes('greška') || message.includes('problem')) {
+            return 'tehnicka';
+        }
+        
+        if (message.includes('lozinka') || message.includes('login') || message.includes('prijava')) {
+            return 'login';
+        }
+        
+        if (message.includes('sporo') || message.includes('ne učitava') || message.includes('aplikacija')) {
+            return 'aplikacija';
+        }
+        
         // Ako nema poklapanja, vrati default
-        return 'default';
+        return 'default';}
+
+    // Nova funkcija za prepoznavanje kada je potrebna konsultacija
+    requiresConsultation(message) {
+        // Proveravamo da li poruka sadrži ključne reči koje zahtevaju konsultaciju
+        for (var i = 0; i < this.knowledgeBase.investmentKeywords.length; i++) {
+            if (message.includes(this.knowledgeBase.investmentKeywords[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // FAQ System

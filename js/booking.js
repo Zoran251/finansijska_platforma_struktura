@@ -3,10 +3,11 @@ class ConsultationBooking {
     constructor() {        this.consultant = {
             id: 1,
             name: "Zoran Dostić",
-            title: "Certificirani finansijski konsultant",
+            title: "Finansijski savjetnik",
             specialty: "Besplatne finansijske konsultacije",
-            description: "Stručni savet za upravljanje ličnim finansijama, investicije, štednju i finansijsko planiranje",
-            experience: "10+ godina iskustva u finansijskom savetovanju",
+            description: "Zajedno sa timom iskusnijih kolega kreiramo najbolje riješenje za vas",
+            experience: "1 godina iskustva",
+            teamExperience: "Rad tima u finansijskom sektoru preko 20 godina",
             avatar: "https://via.placeholder.com/100/D4AF37/FFFFFF?text=ZD",
             zoomLink: "https://us05web.zoom.us/j/5031740065?pwd=VYHmLjM3CGXI4WxXgD8TOdC4mNuDLX.1",
             email: "zorandostica2@gmail.com",
@@ -55,11 +56,11 @@ class ConsultationBooking {
                         <img src="${this.consultant.avatar}" alt="${this.consultant.name}" />
                     </div>
                     <div class="consultant-details">
-                        <h2>${this.consultant.name}</h2>
-                        <p class="title">${this.consultant.title}</p>
+                        <h2>${this.consultant.name}</h2>                        <p class="title">${this.consultant.title}</p>
                         <p class="specialty">${this.consultant.specialty}</p>
                         <p class="description">${this.consultant.description}</p>
                         <p class="experience"><i class="fas fa-medal"></i> ${this.consultant.experience}</p>
+                        <p class="team-experience"><i class="fas fa-users"></i> ${this.consultant.teamExperience}</p>
                     </div>
                 </div>
                 
