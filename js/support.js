@@ -4,7 +4,187 @@ class TechnicalSupport {
         this.tickets = JSON.parse(localStorage.getItem('supportTickets') || '[]');
         this.chatMessages = [];
         this.isTyping = false;
+        this.knowledgeBase = this.initKnowledgeBase();
         this.init();
+    }
+
+    initKnowledgeBase() {
+        return {
+            keywords: {
+                // Investicije
+                'investicija': ['investiranje', 'investicije', 'portfolijo', 'portfolio', 'berza', 'akcije', 'obveznice', 'ETF', 'fondovi'],
+                'rizik': ['rizik', 'sigurnost', 'rizično', 'volatilnost', 'stabilnost'],
+                'profit': ['profit', 'prinos', 'zarada', 'dobit', 'kamata', 'dividenda'],
+                
+                // Štednja
+                'štednja': ['štednja', 'šteđenje', 'ušteda', 'štedni račun', 'oročavanje'],
+                'budžet': ['budžet', 'budzet', 'planiranje', 'troškovi', 'rashodi', 'prihodi'],
+                'kredit': ['kredit', 'zajam', 'dug', 'hipoteka', 'rata', 'kamata na kredit'],
+                
+                // Penzija
+                'penzija': ['penzija', 'penziono', 'starost', 'penzioni fond', 'treći stub'],
+                
+                // Osiguranje
+                'osiguranje': ['osiguranje', 'polisa', 'životno osiguranje', 'auto osiguranje'],
+                
+                // Porezi
+                'porez': ['porez', 'porezi', 'poreska', 'PDV', 'porez na dohodak', 'poreska prijava'],
+                
+                // Nekretnine
+                'nekretnina': ['nekretnina', 'stan', 'kuća', 'investiranje u nekretnine', 'hipoteka']
+            },
+            
+            responses: {
+                'investicija': {
+                    message: `💼 **Investiranje - Vaš put ka finansijskoj nezavisnosti**
+                    
+Investiranje je ključni korak ka izgradnji bogatstva. Evo osnovnih principa:
+
+**🎯 Osnovni principi:**
+• **Diversifikacija** - Ne stavljajte "sva jaja u jednu korpu"
+• **Dugoročnost** - Vreme je vaš saveznik u investiranju
+• **Redovnost** - Konstantno investiranje kroz DCA (Dollar Cost Averaging)
+• **Edukacija** - Nikad ne investirajte u ono što ne razumete
+
+**📊 Tipovi investicija:**
+1. **Akcije** - Udeli u kompanijama (veći rizik, veći potencijal)
+2. **Obveznice** - Zajmovi državama/kompanijama (manji rizik)
+3. **ETF fondovi** - Diversifikovani portfolio u jednom proizvodu
+4. **Nekretnine** - Fizička imovina koja donosi rentu
+5. **Zlato i dragoceni metali** - Zaštita od inflacije
+
+**⚠️ Važno:** Nikad ne investirajte novac koji vam je potreban u narednih 5 godina!`,
+                    action: 'consultation',
+                    consultationType: 'investments'
+                },
+                
+                'štednja': {
+                    message: `💰 **Štednja - Osnova finansijske sigurnosti**
+                    
+Štednja je temelj svakog finansijskog plana:
+
+**🎯 Pravilo 50/30/20:**
+• 50% prihoda za osnovne potrebe
+• 30% za želje i zabavu  
+• 20% za štednju i investicije
+
+**💡 Strategije štednje:**
+1. **Rezervni fond** - 3-6 mesečnih plata za nepredviđene situacije
+2. **Ciljana štednja** - Za specifične ciljeve (odmor, auto, stan)
+3. **Automatska štednja** - Postavite automatski transfer
+4. **Štedni računi** - Koristite račune sa većom kamatom
+
+**📈 Saveti:**
+• Štedite čim primite platu, ne čekajte kraj meseca
+• Koristite različite štedne račune za različite ciljeve
+• Razmotriti oročavanje za srednji nivo novca
+• Redovno reviziju troškove i pronađite mesta za uštedu`,
+                    action: 'budgeting',
+                    consultationType: 'savings'
+                },
+                
+                'budžet': {
+                    message: `📊 **Budžetiranje - Kontrola nad vašim novcem**
+                    
+Budžet je plan koji vam pomaže da kontrolišete novac umesto da novac kontroliše vas:
+
+**📝 Koraci za kreiranje budžeta:**
+1. **Izračunajte ukupne prihode** (neto plata + dodatni prihodi)
+2. **Napravite listu svih troškova:**
+   - Fiksni (kirija, rate, osiguranje)
+   - Varijabilni (hrana, transport, zabava)
+3. **Kategorišite troškove** po važnosti
+4. **Postavite limite** za svaku kategoriju
+5. **Pratite troškove** tokom meseca
+
+**💡 Popularni metodi:**
+• **Envelope metod** - Fizički novac u koverti za svaku kategoriju
+• **Zero-based budgeting** - Svaki dinar ima svrhu
+• **50/30/20 pravilo** - Jednostavna podela prihoda
+
+**📱 Alati za budžetiranje:**
+Koristite naš ugrađeni budžet tracker ili aplikacije poput YNAB, Mint.`,
+                    action: 'budgeting',
+                    consultationType: 'budgeting'
+                },
+                
+                'penzija': {
+                    message: `👴 **Penziono planiranje - Nikad nije prerano za početak**
+                    
+Što ranije počnete, to će vam biti lakše:
+
+**🏛️ Penzijski sistem u Srbiji:**
+1. **Prvi stub** - Obavezno penzijsko osiguranje
+2. **Drugi stub** - Dobrovoljni penzioni fond (trenutno ne radi)
+3. **Treći stub** - Lična štednja i investicije
+
+**💰 Strategije za penziju:**
+• **Počnite rano** - Vreme je najsnažniji faktor
+• **Investirajte u indeks fondove** - Dugoročni rast
+• **Diversifikujte** - Ne oslanjajte se samo na državnu penziju
+• **Redovni doprinosi** - Što god možete, koliko god možete
+
+**📊 Primer:** 
+Ako u 25. godini štedite 100€ mesečno (7% godišnji prinos), u 65. imate ~262.000€!
+Ako počnete u 35., imaće te ~122.000€.
+
+**🎯 Preporučeno:** 10-15% prihoda za penziju`,
+                    action: 'consultation',
+                    consultationType: 'retirement'
+                },
+                
+                'kredit': {
+                    message: `💳 **Upravljanje kreditima i dugovima**
+                    
+Kredit može biti alat ili tereta - zavisi kako ga koristite:
+
+**⚠️ Tipovi kamata:**
+• **Fiksna kamata** - Ista tokom celog perioda
+• **Varijabilna kamata** - Menja se sa tržištem
+• **EKS (Efektivna kamatna stopa)** - Ukupni trošak kredita
+
+**🎯 Strategije otplate:**
+1. **Snowball metoda** - Prvo najmanji dugovi (psihološki efekat)
+2. **Avalanche metoda** - Prvo najveće kamate (matematički bolje)
+3. **Refinansiranje** - Pregovaranje bojih uslova
+
+**💡 Saveti:**
+• Nikad ne uzimajte kredit za luksuz
+• Čitajte ugovor pre potpisivanja
+• Plaćajte više od minimuma kad god možete
+• Izbegavajte kartice sa velikim kamatama
+
+**📞 Problemi sa dugovima?** Kontaktirajte me za personalizovanu strategiju.`,
+                    action: 'consultation',
+                    consultationType: 'debt'
+                },
+                
+                'default': {
+                    message: `🤖 **Dobrodošli u Golden Balance podršku!**
+                    
+Mogu da vam pomognem sa:
+                    
+**💰 Finansijskim pitanjima:**
+• Investiranje i portfolio strategije
+• Štednja i budžetiranje  
+• Penziono planiranje
+• Upravljanje dugovima
+• Poreska pitanja
+• Osiguranje i zaštita
+
+**🔧 Tehničkim pitanjima:**
+• Korišćenje platforme
+• Problemi sa nalogom
+• Funkcionalnosti aplikacije
+
+**💬 Kako mogu da pomognem?**
+Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i usmeriti vas ka najboljoj soluciji.
+
+*Za kompleksna finansijska pitanja, preporučujem zakazivanje besplatne konsultacije sa našim stručnjakom.*`,
+                    action: 'general'
+                }
+            }
+        };
     }
 
     init() {
@@ -306,27 +486,69 @@ class TechnicalSupport {
     hideTypingIndicator() {
         const indicator = document.getElementById('typingIndicator');
         if (indicator) indicator.remove();
-    }
-
-    generateResponse(userMessage) {
-        const responses = {
-            'login': 'Za probleme sa prijavom, molimo resetujte vašu lozinku kroz link "Zaboravili ste lozinku?"',
-            'password': 'Za resetovanje lozinke, kliknite na "Zaboravili ste lozinku?" na stranici za prijavu.',
-            'error': 'Molimo vas da opišete grešku detaljnije. Možete mi poslati i screenshot ako je moguće.',
-            'account': 'Za probleme sa nalogom, molimo kontaktirajte nas preko support@goldenbalance.rs',
-            'payment': 'Za pitanja o plaćanju, molimo proverite sekciju "Billing" u vašem profilu.',
-            'default': 'Hvala vam na pitanju. Naš tim će vam odgovoriti uskoro. Da li možete da opišete problem detaljnije?'
-        };
-
+    }    generateResponse(userMessage) {
         const message = userMessage.toLowerCase();
         
-        for (const [key, response] of Object.entries(responses)) {
-            if (message.includes(key)) {
-                return response;
+        // Analiza ključnih reči za finansijska pitanja
+        const detectedCategory = this.analyzeMessage(message);
+        const response = this.knowledgeBase.responses[detectedCategory] || this.knowledgeBase.responses.default;
+        
+        // Formatiraj odgovor
+        let formattedResponse = response.message;
+        
+        // Dodaj akcije na osnovu kategorije
+        if (response.action === 'consultation') {
+            formattedResponse += `\n\n🗓️ **Preporučujem zakazivanje besplatne konsultacije**\n[Zakažite konsultaciju](javascript:openModal('consultationModal')) za detaljno razmotravanje vaše situacije.`;
+        } else if (response.action === 'budgeting') {
+            formattedResponse += `\n\n📊 **Koristite naš budžet tracker**\nProbajte naš [budžet alat](profile.html#budget) za lakše upravljanje troškovima.`;
+        }
+        
+        return formattedResponse;
+    }
+
+    analyzeMessage(message) {
+        // Analiza ključnih reči
+        for (const [category, keywords] of Object.entries(this.knowledgeBase.keywords)) {
+            for (const keyword of keywords) {
+                if (message.includes(keyword.toLowerCase())) {
+                    return category;
+                }
             }
         }
         
-        return responses.default;
+        // Ako nema poklapanja, vrati default    generateResponse(userMessage) {
+        var message = userMessage.toLowerCase();
+        
+        // Analiza ključnih reči za finansijska pitanja
+        var detectedCategory = this.analyzeMessage(message);
+        var response = this.knowledgeBase.responses[detectedCategory] || this.knowledgeBase.responses.default;
+        
+        // Formatiraj odgovor
+        var formattedResponse = response.message;
+        
+        // Dodaj akcije na osnovu kategorije
+        if (response.action === 'consultation') {
+            formattedResponse += '\n\n🗓️ **Preporučujem zakazivanje besplatne konsultacije**\n[Zakažite konsultaciju](javascript:openModal(\'consultationModal\')) za detaljno razmotravanje vaše situacije.';
+        } else if (response.action === 'budgeting') {
+            formattedResponse += '\n\n📊 **Koristite naš budžet tracker**\nProbajte naš [budžet alat](profile.html#budget) za lakše upravljanje troškovima.';
+        }
+        
+        return formattedResponse;
+    }
+
+    analyzeMessage(message) {
+        // Analiza ključnih reči
+        for (var category in this.knowledgeBase.keywords) {
+            var keywords = this.knowledgeBase.keywords[category];
+            for (var i = 0; i < keywords.length; i++) {
+                if (message.includes(keywords[i].toLowerCase())) {
+                    return category;
+                }
+            }
+        }
+        
+        // Ako nema poklapanja, vrati default
+        return 'default';
     }
 
     // FAQ System

@@ -228,17 +228,23 @@ class FinancialApp {
         // Data export
         this.setupDataExport();
     }
-    
-    setupModalControls() {
+      setupModalControls() {
         // Transaction modal
         document.getElementById('addTransactionBtn').addEventListener('click', () => {
             document.getElementById('transactionModal').style.display = 'block';
+            // Resetuj datum na danas
+            document.getElementById('transactionDate').value = new Date().toISOString().split('T')[0];
             this.updateCategoryOptions('expense'); // Default to expense
         });
         
         document.getElementById('cancelTransaction').addEventListener('click', () => {
             document.getElementById('transactionModal').style.display = 'none';
             document.getElementById('transactionForm').reset();
+        });
+        
+        // Transaction type change listener
+        document.getElementById('transactionType').addEventListener('change', (e) => {
+            this.updateCategoryOptions(e.target.value);
         });
         
         // Budget modal
@@ -256,13 +262,20 @@ class FinancialApp {
         window.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal')) {
                 e.target.style.display = 'none';
+                // Reset forms when modal is closed
+                const forms = e.target.querySelectorAll('form');
+                forms.forEach(form => form.reset());
             }
         });
         
         // Close buttons
         document.querySelectorAll('.close').forEach(closeBtn => {
             closeBtn.addEventListener('click', (e) => {
-                e.target.closest('.modal').style.display = 'none';
+                const modal = e.target.closest('.modal');
+                modal.style.display = 'none';
+                // Reset form when modal is closed
+                const form = modal.querySelector('form');
+                if (form) form.reset();
             });
         });
     }
@@ -313,22 +326,22 @@ class FinancialApp {
             categoryFilter.appendChild(option);
         });
     }
-    
-    updateCategoryOptions(type) {
+      updateCategoryOptions(type) {
         const categorySelect = document.getElementById('transactionCategory');
-        categorySelect.innerHTML = '';
+        categorySelect.innerHTML = '<option value="">Izaberite kategoriju</option>';
         
-        this.categories[type].forEach(category => {
-            const option = document.createElement('option');
-            option.value = category;
-            option.textContent = category;
-            categorySelect.appendChild(option);
-        });
+        if (type && this.categories[type]) {
+            this.categories[type].forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+        }
     }
-    
-    updateBudgetCategories() {
+      updateBudgetCategories() {
         const categorySelect = document.getElementById('budgetCategory');
-        categorySelect.innerHTML = '';
+        categorySelect.innerHTML = '<option value="">Izaberite kategoriju</option>';
         
         this.categories.expense.forEach(category => {
             const option = document.createElement('option');
@@ -337,18 +350,38 @@ class FinancialApp {
             categorySelect.appendChild(option);
         });
     }
-    
-    addTransaction() {
+      addTransaction() {
         const form = document.getElementById('transactionForm');
+        
+        // Validacija polja
+        const type = document.getElementById('transactionType').value;
+        const amount = parseFloat(document.getElementById('transactionAmount').value);
+        const category = document.getElementById('transactionCategory').value;
+        const description = document.getElementById('transactionDescription').value;
+        const date = document.getElementById('transactionDate').value;
+        
+        // Proverava da li su sva polja ispunjena
+        if (!type || !amount || amount <= 0 || !category || !date) {
+            this.showNotification('Molimo unesite sva obavezna polja!', 'error');
+            return;
+        }
+        
+        // Proverava da li je datum valjan
+        const transactionDate = new Date(date);
+        const today = new Date();
+        if (transactionDate > today) {
+            this.showNotification('Datum ne može biti u budućnosti!', 'error');
+            return;
+        }
         
         const transaction = {
             id: Date.now(),
             userId: this.currentUser.id,
-            type: document.getElementById('transactionType').value,
-            amount: parseFloat(document.getElementById('transactionAmount').value),
-            category: document.getElementById('transactionCategory').value,
-            description: document.getElementById('transactionDescription').value,
-            date: document.getElementById('transactionDate').value,
+            type: type,
+            amount: amount,
+            category: category,
+            description: description.trim(),
+            date: date,
             timestamp: new Date().toISOString()
         };
         
@@ -359,22 +392,44 @@ class FinancialApp {
         document.getElementById('transactionModal').style.display = 'none';
         form.reset();
         
+        // Reset kategorije na prazan select
+        document.getElementById('transactionCategory').innerHTML = '<option value="">Izaberite kategoriju</option>';
+        
         // Refresh displays
         this.updateDashboard();
         this.loadTransactions();
         this.updateUserInterface();
+        this.updateBudgetProgress();
         
-        this.showNotification('Transakcija je uspešno dodana!', 'success');
+        const typeText = type === 'income' ? 'prihod' : 'rashod';
+        this.showNotification(`${typeText.charAt(0).toUpperCase() + typeText.slice(1)} je uspešno dodat!`, 'success');
     }
-    
-    addBudget() {
+      addBudget() {
         const form = document.getElementById('budgetForm');
+        
+        // Validacija polja
+        const category = document.getElementById('budgetCategory').value;
+        const amount = parseFloat(document.getElementById('budgetAmount').value);
+        const period = document.getElementById('budgetPeriod').value;
+        
+        if (!category || !amount || amount <= 0 || !period) {
+            this.showNotification('Molimo unesite sva obavezna polja!', 'error');
+            return;
+        }
+        
+        // Provera da li već postoji budžet za ovu kategoriju
+        const existingBudget = this.budgets.find(b => b.category === category);
+        if (existingBudget) {
+            if (!confirm(`Već postoji budžet za kategoriju "${category}". Da li želite da ga zamenite?`)) {
+                return;
+            }
+        }
         
         const budget = {
             id: Date.now(),
-            category: document.getElementById('budgetCategory').value,
-            amount: parseFloat(document.getElementById('budgetAmount').value),
-            period: document.getElementById('budgetPeriod').value,
+            category: category,
+            amount: amount,
+            period: period,
             spent: 0,
             timestamp: new Date().toISOString()
         };
@@ -391,16 +446,17 @@ class FinancialApp {
         
         // Refresh display
         this.loadBudgets();
+        this.updateBudgetProgress();
         
         this.showNotification('Budžet je uspešno dodat!', 'success');
     }
-    
-    deleteTransaction(id) {
+      deleteTransaction(id) {
         if (confirm('Da li ste sigurni da želite da obrišete ovu transakciju?')) {
             this.transactions = this.transactions.filter(t => t.id !== id);
             this.saveTransactions();
             this.updateDashboard();
             this.loadTransactions();
+            this.updateBudgetProgress();
             this.showNotification('Transakcija je obrisana!', 'info');
         }
     }
@@ -858,6 +914,27 @@ class FinancialApp {
                 document.body.removeChild(notification);
             }, 300);
         }, 3000);
+    }
+    
+    updateBudgetProgress() {
+        // Ažuriraj spent amount za sve budžete na osnovu trenutnih transakcija
+        this.budgets.forEach(budget => {
+            const spent = this.transactions
+                .filter(t => t.type === 'expense' && t.category === budget.category)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            budget.spent = spent;
+            
+            // Proverava da li je budžet prekoračen
+            if (spent > budget.amount) {
+                this.showNotification(
+                    `Upozorenje: Prekoračili ste budžet za kategoriju "${budget.category}"!`, 
+                    'warning'
+                );
+            }
+        });
+        
+        this.saveBudgets();
     }
 }
 

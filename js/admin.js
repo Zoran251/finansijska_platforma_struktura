@@ -101,14 +101,15 @@ class AdminPanel {
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="admin-navigation">
+            </div>            <div class="admin-navigation">
                 <button class="admin-nav-btn active" onclick="admin.switchView('dashboard')">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </button>
                 <button class="admin-nav-btn" onclick="admin.switchView('users')">
                     <i class="fas fa-users"></i> Korisnici
+                </button>
+                <button class="admin-nav-btn" onclick="admin.switchView('consultations')">
+                    <i class="fas fa-calendar-check"></i> Konsultacije
                 </button>
                 <button class="admin-nav-btn" onclick="admin.switchView('transactions')">
                     <i class="fas fa-exchange-alt"></i> Transakcije
@@ -139,13 +140,15 @@ class AdminPanel {
         
         // Render view content
         const content = document.getElementById('adminViewContent');
-        
-        switch(view) {
+          switch(view) {
             case 'dashboard':
                 content.innerHTML = this.renderDashboardView();
                 break;
             case 'users':
                 content.innerHTML = this.renderUsersView();
+                break;
+            case 'consultations':
+                content.innerHTML = this.renderConsultationsView();
                 break;
             case 'transactions':
                 content.innerHTML = this.renderTransactionsView();
@@ -626,168 +629,400 @@ class AdminPanel {
         `;
     }
 
-    // User management methods
-    viewUser(userId) {
-        const user = this.users.find(u => u.id === userId);
-        if (!user) return;
+    renderConsultationsView() {
+        const consultations = JSON.parse(localStorage.getItem('consultationBookings') || '[]');
+        const pendingConsultations = consultations.filter(c => c.status === 'pending');
+        const confirmedConsultations = consultations.filter(c => c.status === 'confirmed');
+        const allConsultations = consultations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-        const modal = this.createUserModal(user);
-        document.body.appendChild(modal);
-    }
-
-    createUserModal(user) {
-        const modal = document.createElement('div');
-        modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal user-modal">
-                <div class="modal-header">
-                    <h3>Detalji korisnika - ${user.name}</h3>
-                    <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="user-details-grid">
-                        <div class="user-profile">
-                            <div class="profile-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="profile-info">
-                                <h4>${user.name}</h4>
-                                <p>${user.email}</p>
-                                <span class="status-badge status-${user.status}">${user.status}</span>
-                            </div>
+        return `
+            <div class="consultations-view">
+                <div class="view-header">
+                    <h2><i class="fas fa-calendar-check"></i> Upravljanje konsultacijama</h2>
+                    <div class="consultation-stats">
+                        <div class="stat-card">
+                            <span class="stat-number">${pendingConsultations.length}</span>
+                            <span class="stat-label">Čeka potvrdu</span>
                         </div>
-                        
-                        <div class="user-stats">
-                            <div class="stat-item">
-                                <label>Ukupne investicije:</label>
-                                <span>€${user.totalInvestments.toLocaleString()}</span>
-                            </div>
-                            <div class="stat-item">
-                                <label>Datum registracije:</label>
-                                <span>${this.formatDate(user.joinDate)}</span>
-                            </div>
-                            <div class="stat-item">
-                                <label>Poslednja aktivnost:</label>
-                                <span>${this.formatDate(user.lastLogin)}</span>
-                            </div>
-                            <div class="stat-item">
-                                <label>Tip naloga:</label>
-                                <span class="role-badge role-${user.role}">${user.role}</span>
-                            </div>
+                        <div class="stat-card">
+                            <span class="stat-number">${confirmedConsultations.length}</span>
+                            <span class="stat-label">Potvrđeno</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-number">${allConsultations.length}</span>
+                            <span class="stat-label">Ukupno</span>
                         </div>
                     </div>
-                    
-                    <div class="user-actions-section">
-                        <h4>Akcije</h4>
-                        <div class="action-buttons">
-                            <button class="btn btn-primary" onclick="admin.sendMessage(${user.id})">
-                                <i class="fas fa-envelope"></i> Pošalji poruku
-                            </button>
-                            <button class="btn btn-warning" onclick="admin.resetPassword(${user.id})">
-                                <i class="fas fa-key"></i> Resetuj lozinku
-                            </button>
-                            <button class="btn btn-secondary" onclick="admin.generateUserReport(${user.id})">
-                                <i class="fas fa-file-alt"></i> Generiši izveštaj
-                            </button>
-                            ${user.status === 'active' ? `
-                                <button class="btn btn-danger" onclick="admin.suspendUser(${user.id})">
-                                    <i class="fas fa-ban"></i> Suspenduj
-                                </button>
-                            ` : `
-                                <button class="btn btn-success" onclick="admin.activateUser(${user.id})">
-                                    <i class="fas fa-check"></i> Aktiviraj
-                                </button>
-                            `}
-                        </div>
+                </div>
+
+                <div class="consultations-filters">
+                    <button class="filter-btn active" onclick="admin.filterConsultations('all')">
+                        Sve konsultacije
+                    </button>
+                    <button class="filter-btn" onclick="admin.filterConsultations('pending')">
+                        Čeka potvrdu (${pendingConsultations.length})
+                    </button>
+                    <button class="filter-btn" onclick="admin.filterConsultations('confirmed')">
+                        Potvrđeno (${confirmedConsultations.length})
+                    </button>
+                    <button class="filter-btn" onclick="admin.filterConsultations('cancelled')">
+                        Otkazano
+                    </button>
+                </div>
+
+                <div class="consultations-table">
+                    <div class="table-header">
+                        <span>Korisnik</span>
+                        <span>Tip konsultacije</span>
+                        <span>Datum i vreme</span>
+                        <span>Status</span>
+                        <span>Zakazano</span>
+                        <span>Akcije</span>
+                    </div>
+                    <div id="consultationsTableBody">
+                        ${this.renderConsultationsTable(allConsultations)}
                     </div>
                 </div>
             </div>
         `;
-        return modal;
     }
 
-    suspendUser(userId) {
-        if (confirm('Da li ste sigurni da želite da suspendujeте ovog korisnika?')) {
-            const user = this.users.find(u => u.id === userId);
-            if (user) {
-                user.status = 'suspended';
-                this.updateUsersTable();
-                this.showNotification('Korisnik je uspešno suspendovan.', 'success');
-            }
-        }
-    }
-
-    activateUser(userId) {
-        const user = this.users.find(u => u.id === userId);
-        if (user) {
-            user.status = 'active';
-            this.updateUsersTable();
-            this.showNotification('Korisnik je uspešno aktiviran.', 'success');
-        }
-    }
-
-    // Transaction management
-    approveTransaction(transactionId) {
-        if (confirm('Da li ste sigurni da želite da odobrite ovu transakciju?')) {
-            this.showNotification(`Transakcija ${transactionId} je odobrena.`, 'success');
-            // Update transaction status in the UI
-        }
-    }
-
-    rejectTransaction(transactionId) {
-        const reason = prompt('Unesite razlog odbacivanja:');
-        if (reason) {
-            this.showNotification(`Transakcija ${transactionId} je odbaćena.`, 'error');
-            // Update transaction status in the UI
-        }
-    }
-
-    // Support management
-    assignTicket(ticketId) {
-        const agents = ['Admin', 'Support Agent 1', 'Support Agent 2', 'Support Agent 3'];
-        const agent = prompt(`Dodelite tiket sledećem agentu:\n${agents.join('\n')}\n\nUnesite ime:`);
+    renderConsultationsTable(consultations = null) {
+        const consultationsData = consultations || JSON.parse(localStorage.getItem('consultationBookings') || '[]');
         
-        if (agent && agents.includes(agent)) {
-            this.showNotification(`Tiket ${ticketId} je dodeljen agentu ${agent}.`, 'success');
+        if (consultationsData.length === 0) {
+            return `
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <h3>Nema zakazanih konsultacija</h3>
+                    <p>Kada korisnici zakažu konsultacije, ovde će biti prikazane.</p>
+                </div>
+            `;
         }
+
+        return consultationsData.map(consultation => `
+            <div class="table-row consultation-row" data-consultation-id="${consultation.id}">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <div class="user-name">${consultation.userInfo.name}</div>
+                        <div class="user-email">${consultation.userInfo.email}</div>
+                        ${consultation.userInfo.phone ? `<div class="user-phone">${consultation.userInfo.phone}</div>` : ''}
+                    </div>
+                </div>
+                <div class="consultation-type">
+                    <span class="type-badge">${this.getConsultationTypeText(consultation.userInfo.consultationType)}</span>
+                    ${consultation.userInfo.message ? `<small class="consultation-message">${consultation.userInfo.message.substring(0, 100)}${consultation.userInfo.message.length > 100 ? '...' : ''}</small>` : ''}
+                </div>
+                <div class="consultation-datetime">
+                    <div class="date">${this.formatDate(consultation.date)}</div>
+                    <div class="time">${consultation.time}</div>
+                </div>
+                <span class="status-badge status-${consultation.status}">
+                    ${this.getStatusText(consultation.status)}
+                </span>
+                <span class="created-date">${this.formatDateTime(consultation.createdAt)}</span>
+                <div class="consultation-actions">
+                    ${consultation.status === 'pending' ? `
+                        <button class="btn-sm btn-success" onclick="admin.confirmConsultation('${consultation.id}')" title="Potvrdi">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn-sm btn-warning" onclick="admin.rescheduleConsultation('${consultation.id}')" title="Premesti">
+                            <i class="fas fa-clock"></i>
+                        </button>
+                    ` : ''}
+                    <button class="btn-sm" onclick="admin.viewConsultationDetails('${consultation.id}')" title="Prikaži detalje">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn-sm btn-danger" onclick="admin.cancelConsultation('${consultation.id}')" title="Otkaži">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
     }
 
-    closeTicket(ticketId) {
-        if (confirm('Da li ste sigurni da želite da zatvorite ovaj tiket?')) {
-            this.showNotification(`Tiket ${ticketId} je zatvoren.`, 'success');
-        }
-    }
-
-    // Settings management
-    saveSettings() {
-        // Collect all form values
-        const settings = {
-            appName: document.getElementById('appName').value,
-            supportEmail: document.getElementById('supportEmail').value,
-            maxFileSize: document.getElementById('maxFileSize').value,
-            // Add more settings...
+    getConsultationTypeText(type) {
+        const types = {
+            'general': 'Opšte finansijsko savetovanje',
+            'budgeting': 'Upravljanje budžetom',
+            'savings': 'Planiranje štednje',
+            'investments': 'Investicije i portfolio',
+            'debt': 'Upravljanje dugovima',
+            'retirement': 'Penziono planiranje',
+            'taxes': 'Poresko savetovanje',
+            'insurance': 'Osiguranje'
         };
-
-        // Simulate saving to backend
-        setTimeout(() => {
-            this.showNotification('Podešavanja su uspešno sačuvana.', 'success');
-        }, 1000);
+        return types[type] || type;
     }
 
-    resetSettings() {
-        if (confirm('Da li ste sigurni da želite da vratite sva podešavanja na default vrednosti?')) {
-            this.showNotification('Podešavanja su vraćena na default vrednosti.', 'info');
-            // Reset all form values
+    getStatusText(status) {
+        const statuses = {
+            'pending': 'Čeka potvrdu',
+            'confirmed': 'Potvrđeno',
+            'cancelled': 'Otkazano',
+            'completed': 'Završeno'
+        };
+        return statuses[status] || status;
+    }
+
+    // Metode za upravljanje konsultacijama
+    confirmConsultation(consultationId) {
+        const consultations = JSON.parse(localStorage.getItem('consultationBookings') || '[]');
+        const consultation = consultations.find(c => c.id === consultationId);
+        
+        if (!consultation) {
+            alert('Konsultacija nije pronađena');
+            return;
+        }
+
+        // Potvrdi konsultaciju
+        consultation.status = 'confirmed';
+        consultation.confirmedAt = new Date().toISOString();
+        
+        // Sačuvaj izmene
+        localStorage.setItem('consultationBookings', JSON.stringify(consultations));
+        
+        // Kreiraj notifikaciju za korisnika
+        this.createConsultationNotification(consultation, 'confirmed');
+        
+        // Refresh view
+        this.switchView('consultations');
+        
+        // Prikaži poruku
+        this.showNotification(`Konsultacija za ${consultation.userInfo.name} je potvrđena`, 'success');
+    }
+
+    cancelConsultation(consultationId) {
+        if (!confirm('Da li ste sigurni da želite da otkažete ovu konsultaciju?')) {
+            return;
+        }
+
+        const consultations = JSON.parse(localStorage.getItem('consultationBookings') || '[]');
+        const consultation = consultations.find(c => c.id === consultationId);
+        
+        if (!consultation) {
+            alert('Konsultacija nije pronađena');
+            return;
+        }
+
+        // Otkaži konsultaciju
+        consultation.status = 'cancelled';
+        consultation.cancelledAt = new Date().toISOString();
+        
+        // Sačuvaj izmene
+        localStorage.setItem('consultationBookings', JSON.stringify(consultations));
+        
+        // Kreiraj notifikaciju za korisnika
+        this.createConsultationNotification(consultation, 'cancelled');
+        
+        // Refresh view
+        this.switchView('consultations');
+        
+        // Prikaži poruku
+        this.showNotification(`Konsultacija za ${consultation.userInfo.name} je otkazana`, 'warning');
+    }
+
+    viewConsultationDetails(consultationId) {
+        const consultations = JSON.parse(localStorage.getItem('consultationBookings') || '[]');
+        const consultation = consultations.find(c => c.id === consultationId);
+        
+        if (!consultation) {
+            alert('Konsultacija nije pronađena');
+            return;
+        }
+
+        // Kreiraj modal za detalje konsultacije
+        const modal = document.createElement('div');
+        modal.className = 'admin-modal';
+        modal.innerHTML = `
+            <div class="admin-modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-calendar-check"></i> Detalji konsultacije</h3>
+                    <button class="close-modal" onclick="this.closest('.admin-modal').remove()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="consultation-details">
+                        <div class="detail-section">
+                            <h4>Informacije o korisniku</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <label>Ime i prezime:</label>
+                                    <span>${consultation.userInfo.name}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Email:</label>
+                                    <span>${consultation.userInfo.email}</span>
+                                </div>
+                                ${consultation.userInfo.phone ? `
+                                <div class="detail-item">
+                                    <label>Telefon:</label>
+                                    <span>${consultation.userInfo.phone}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>Detalji konsultacije</h4>
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <label>ID konsultacije:</label>
+                                    <span>${consultation.id}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Tip konsultacije:</label>
+                                    <span>${this.getConsultationTypeText(consultation.userInfo.consultationType)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Datum:</label>
+                                    <span>${this.formatDate(consultation.date)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Vreme:</label>
+                                    <span>${consultation.time}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Status:</label>
+                                    <span class="status-badge status-${consultation.status}">${this.getStatusText(consultation.status)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Zakazano:</label>
+                                    <span>${this.formatDateTime(consultation.createdAt)}</span>
+                                </div>
+                                ${consultation.confirmedAt ? `
+                                <div class="detail-item">
+                                    <label>Potvrđeno:</label>
+                                    <span>${this.formatDateTime(consultation.confirmedAt)}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        ${consultation.userInfo.message ? `
+                        <div class="detail-section">
+                            <h4>Poruka korisnika</h4>
+                            <div class="message-content">
+                                ${consultation.userInfo.message}
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        ${consultation.status === 'confirmed' ? `
+                        <div class="detail-section zoom-section">
+                            <h4>Zoom link za konsultaciju</h4>
+                            <div class="zoom-link-container">
+                                <input type="text" value="${consultation.zoomLink}" readonly class="zoom-link-input">
+                                <button class="btn-copy" onclick="navigator.clipboard.writeText('${consultation.zoomLink}')">
+                                    <i class="fas fa-copy"></i> Kopiraj
+                                </button>
+                            </div>
+                            <small>Ovaj link je automatski poslat korisniku nakon potvrde.</small>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="detail-section">
+                            <h4>Beleške (interno)</h4>
+                            <textarea id="consultationNotes" placeholder="Dodajte beleške o konsultaciji..." rows="4">${consultation.notes || ''}</textarea>
+                            <button class="btn btn-primary" onclick="admin.saveConsultationNotes('${consultation.id}')">
+                                <i class="fas fa-save"></i> Sačuvaj beleške
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    ${consultation.status === 'pending' ? `
+                        <button class="btn btn-success" onclick="admin.confirmConsultation('${consultation.id}'); this.closest('.admin-modal').remove();">
+                            <i class="fas fa-check"></i> Potvrdi konsultaciju
+                        </button>
+                    ` : ''}
+                    <button class="btn btn-secondary" onclick="this.closest('.admin-modal').remove()">
+                        Zatvori
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+    }
+
+    saveConsultationNotes(consultationId) {
+        const notes = document.getElementById('consultationNotes').value;
+        const consultations = JSON.parse(localStorage.getItem('consultationBookings') || '[]');
+        const consultation = consultations.find(c => c.id === consultationId);
+        
+        if (consultation) {
+            consultation.notes = notes;
+            localStorage.setItem('consultationBookings', JSON.stringify(consultations));
+            this.showNotification('Beleške su sačuvane', 'success');
         }
     }
 
-    // Utility methods
-    updateUsersTable() {
-        const tbody = document.getElementById('usersTableBody');
-        if (tbody) {
-            tbody.innerHTML = this.renderUsersTable();
+    createConsultationNotification(consultation, action) {
+        const notifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
+        
+        let notification;
+        if (action === 'confirmed') {
+            notification = {
+                id: 'NOTIF-' + Date.now(),
+                type: 'consultation_confirmed',
+                title: 'Konsultacija potvrđena',
+                message: `Vaša konsultacija za ${this.formatDate(consultation.date)} u ${consultation.time} je potvrđena. Zoom link: ${consultation.zoomLink}`,
+                bookingId: consultation.id,
+                read: false,
+                createdAt: new Date().toISOString(),
+                zoomLink: consultation.zoomLink
+            };
+        } else if (action === 'cancelled') {
+            notification = {
+                id: 'NOTIF-' + Date.now(),
+                type: 'consultation_cancelled',
+                title: 'Konsultacija otkazana',
+                message: `Vaša konsultacija za ${this.formatDate(consultation.date)} u ${consultation.time} je otkazana. Molimo zakažite novi termin.`,
+                bookingId: consultation.id,
+                read: false,
+                createdAt: new Date().toISOString()
+            };
+        }
+        
+        if (notification) {
+            notifications.unshift(notification);
+            localStorage.setItem('userNotifications', JSON.stringify(notifications));
+        }
+    }
+
+    filterConsultations(filter) {
+        // Update filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        const consultations = JSON.parse(localStorage.getItem('consultationBookings') || '[]');
+        let filteredConsultations;
+        
+        switch(filter) {
+            case 'pending':
+                filteredConsultations = consultations.filter(c => c.status === 'pending');
+                break;
+            case 'confirmed':
+                filteredConsultations = consultations.filter(c => c.status === 'confirmed');
+                break;
+            case 'cancelled':
+                filteredConsultations = consultations.filter(c => c.status === 'cancelled');
+                break;
+            default:
+                filteredConsultations = consultations;
+        }
+        
+        // Update table
+        const tableBody = document.getElementById('consultationsTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = this.renderConsultationsTable(filteredConsultations);
         }
     }
 
@@ -795,15 +1030,13 @@ class AdminPanel {
         const notification = document.createElement('div');
         notification.className = `admin-notification notification-${type}`;
         notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}"></i>
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
             <span>${message}</span>
-            <button onclick="this.parentElement.remove()">
-                <i class="fas fa-times"></i>
-            </button>
+            <button onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>
         `;
-
+        
         document.body.appendChild(notification);
-
+        
         // Auto remove after 5 seconds
         setTimeout(() => {
             if (notification.parentElement) {
@@ -812,90 +1045,7 @@ class AdminPanel {
         }, 5000);
     }
 
-    startRealTimeUpdates() {
-        // Simulate real-time updates
-        setInterval(() => {
-            this.updateSystemStats();
-            this.updateActivityFeed();
-        }, 30000); // Update every 30 seconds
-    }
-
-    updateSystemStats() {
-        // Simulate changing stats
-        this.systemStats.activeUsers += Math.floor(Math.random() * 10) - 5;
-        this.systemStats.totalInvestments += Math.floor(Math.random() * 1000);
-        
-        // Update UI if on dashboard
-        if (this.currentView === 'dashboard') {
-            // Update stats in UI
-        }
-    }
-
-    updateActivityFeed() {
-        const activities = [
-            'Novi korisnik se registrovao',
-            'Nova investicija kreirana',
-            'Support tiket rešen',
-            'Withdrawal zahtev odobren',
-            'Sistem backup završen'
-        ];
-
-        const randomActivity = activities[Math.floor(Math.random() * activities.length)];
-        
-        // Add to activity feed if visible
-        const feed = document.getElementById('activityFeed');
-        if (feed) {
-            const newActivity = document.createElement('div');
-            newActivity.className = 'activity-item';
-            newActivity.innerHTML = `
-                <i class="fas fa-circle text-info"></i>
-                <span>${randomActivity}</span>
-                <time>upravo sada</time>
-            `;
-            feed.insertBefore(newActivity, feed.firstChild);
-
-            // Keep only last 10 activities
-            if (feed.children.length > 10) {
-                feed.removeChild(feed.lastChild);
-            }
-        }
-    }
-
-    formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('sr-RS');
-    }
-
-    formatDateTime(dateString) {
-        return new Date(dateString).toLocaleDateString('sr-RS', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-
-    getTransactionTypeText(type) {
-        const typeMap = {
-            'deposit': 'Depozit',
-            'withdrawal': 'Povlačenje',
-            'investment': 'Investicija'
-        };
-        return typeMap[type] || type;
-    }
-
-    getTransactionStatusText(status) {
-        const statusMap = {
-            'completed': 'Završeno',
-            'pending': 'Na čekanju',
-            'failed': 'Neuspešno'
-        };
-        return statusMap[status] || status;
-    }
-
-    setupEventListeners() {
-        // Add any global admin event listeners here
-    }
+    // ...existing code...
 }
 
 // Initialize admin panel
