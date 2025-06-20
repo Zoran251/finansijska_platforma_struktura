@@ -419,6 +419,14 @@ function openBudgetModal() {
         updateBudgetSummary();
         modal.style.display = 'flex';
         
+        // Auto scroll to modal if not visible
+        setTimeout(function() {
+            modal.scrollIntoView({ 
+                behavior: 'smooth', 
+                block: 'center' 
+            });
+        }, 100);
+        
         // Setup form submission
         var form = document.getElementById('budgetForm');
         form.onsubmit = function(e) {
