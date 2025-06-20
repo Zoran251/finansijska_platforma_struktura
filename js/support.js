@@ -6,7 +6,9 @@ class TechnicalSupport {
         this.isTyping = false;
         this.knowledgeBase = this.initKnowledgeBase();
         this.init();
-    }    initKnowledgeBase() {
+    }
+    
+    initKnowledgeBase() {
         return {
             // Ključne reči koje zahtevaju konsultacije
             investmentKeywords: [
@@ -645,15 +647,16 @@ Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i us
                     <span></span><span></span><span></span>
                 </div>
             </div>
-        `;
-        container.appendChild(typingDiv);
+        `;        container.appendChild(typingDiv);
         container.scrollTop = container.scrollHeight;
     }
-
+    
     hideTypingIndicator() {
         const indicator = document.getElementById('typingIndicator');
         if (indicator) indicator.remove();
-    }    generateResponse(userMessage) {
+    }
+    
+    generateResponse(userMessage) {
         const message = userMessage.toLowerCase();
         
         // Analiza ključnih reči za finansijska pitanja
@@ -669,32 +672,7 @@ Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i us
         } else if (response.action === 'budgeting') {
             formattedResponse += `\n\n📊 **Koristite naš budžet tracker**\nProbajte naš [budžet alat](profile.html#budget) za lakše upravljanje troškovima.`;
         }
-        
-        return formattedResponse;    }
-
-    generateResponse(userMessage) {
-        var message = userMessage.toLowerCase();
-        
-        // Prvo proveravamo da li je potrebna konsultacija
-        if (this.requiresConsultation(message)) {
-            return this.knowledgeBase.responses.consultation_required.message;
-        }
-        
-        // Analiza ključnih reči za finansijska pitanja
-        var detectedCategory = this.analyzeMessage(message);
-        var response = this.knowledgeBase.responses[detectedCategory] || this.knowledgeBase.responses.default;
-        
-        // Formatiraj odgovor
-        var formattedResponse = response.message;
-        
-        // Dodaj akcije na osnovu kategorije
-        if (response.action === 'consultation') {
-            formattedResponse += '\n\n🗓️ **Za personalizovane savete**\n[Zakažite besplatnu konsultaciju](javascript:showPage(\'consultation\')) sa našim stručnjakom.';
-        } else if (response.action === 'budgeting') {
-            formattedResponse += '\n\n📊 **Koristite naš budžet alat**\nProbajte naš [budžet tracker](javascript:showPage(\'profile\')) za lakše upravljanje troškovima.';
-        }
-        
-        return formattedResponse;
+          return formattedResponse;
     }
 
     analyzeMessage(message) {
@@ -722,7 +700,8 @@ Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i us
         }
         
         // Ako nema poklapanja, vrati default
-        return 'default';}
+        return 'default';
+    }
 
     // Nova funkcija za prepoznavanje kada je potrebna konsultacija
     requiresConsultation(message) {
