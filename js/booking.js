@@ -159,8 +159,7 @@ class ConsultationBooking {
             message: document.getElementById('consultationMessage').value.trim(),
             submittedAt: new Date().toISOString()
         };
-        
-        // Prikaži kalendar
+          // Prikaži kalendar
         this.showCalendarStep();
     }
 
@@ -173,7 +172,20 @@ class ConsultationBooking {
         // Ova metoda više nije potrebna jer imamo samo jednog konsultanta
         this.selectedConsultant = this.consultant;
         this.showCalendarStep();
-    }    showCalendarStep() {
+    }
+
+    // Utility method for smooth scrolling
+    smoothScrollToElement(element, offset = 0) {
+        if (!element) return;
+        
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+    }showCalendarStep() {
         const calendarContainer = document.getElementById('calendarContainer');
         if (!calendarContainer) return;
 
@@ -240,12 +252,12 @@ class ConsultationBooking {
                     </div>
                 </div>
             </div>
-        `;
-
-        calendarContainer.style.display = 'block';
+        `;        calendarContainer.style.display = 'block';
         
-        // Scroll to calendar
-        calendarContainer.scrollIntoView({ behavior: 'smooth' });
+        // Smooth scroll to calendar with some delay to ensure rendering
+        setTimeout(() => {
+            this.smoothScrollToElement(calendarContainer, 100);
+        }, 100);
     }
 
     getConsultationTypeText(type) {
@@ -286,9 +298,12 @@ class ConsultationBooking {
                 <small>45 min</small>
             </div>
         `).join('');
+          timeContainer.style.display = 'block';
         
-        timeContainer.style.display = 'block';
-        timeContainer.scrollIntoView({ behavior: 'smooth' });
+        // Smooth scroll to time slots with some delay
+        setTimeout(() => {
+            this.smoothScrollToElement(timeContainer, 100);
+        }, 100);
     }
 
     selectTime(time) {
@@ -306,9 +321,12 @@ class ConsultationBooking {
         const confirmContainer = document.getElementById('confirmContainer');
         document.getElementById('selectedDateText').textContent = this.formatDate(this.selectedDate);
         document.getElementById('selectedTimeText').textContent = this.selectedTime;
+          confirmContainer.style.display = 'block';
         
-        confirmContainer.style.display = 'block';
-        confirmContainer.scrollIntoView({ behavior: 'smooth' });
+        // Smooth scroll to confirmation with some delay
+        setTimeout(() => {
+            this.smoothScrollToElement(confirmContainer, 100);
+        }, 100);
     }    confirmBooking() {
         // Kreiraj potpunu rezervaciju sa svim podacima
         const bookingData = {

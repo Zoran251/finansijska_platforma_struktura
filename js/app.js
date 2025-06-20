@@ -150,22 +150,44 @@ class FinancialApp {
         
         this.showNotification('Uspešno ste se odjavili!', 'info');
     }
-    
-    updateUserInterface() {
-        document.getElementById('currentUser').textContent = this.currentUser.name;
+      updateUserInterface() {
+        if (document.getElementById('currentUser')) {
+            document.getElementById('currentUser').textContent = this.currentUser.name;
+        }
         
-        // Update profile section
-        document.getElementById('userAvatar').src = this.currentUser.avatar;
-        document.getElementById('profileName').textContent = this.currentUser.name;
-        document.getElementById('profileEmail').textContent = this.currentUser.email;
+        // Update profile section - new profile form
+        if (document.getElementById('profileName')) {
+            document.getElementById('profileName').value = this.currentUser.name;
+        }
+        if (document.getElementById('profileEmail')) {
+            document.getElementById('profileEmail').value = this.currentUser.email;
+        }
+        if (document.getElementById('profilePhone')) {
+            document.getElementById('profilePhone').value = this.currentUser.phone || '';
+        }
+        if (document.getElementById('profileUsername')) {
+            document.getElementById('profileUsername').value = this.currentUser.username;
+        }
+        if (document.getElementById('profileAvatarDisplay')) {
+            document.getElementById('profileAvatarDisplay').src = this.currentUser.avatar;
+        }
         
-        // Update profile stats
-        const userTransactions = this.transactions.filter(t => t.userId === this.currentUser.id || !t.userId);
-        document.getElementById('userTransactionCount').textContent = userTransactions.length;
-        document.getElementById('userRegistrationDate').textContent = 
-            new Date(this.currentUser.registrationDate).toLocaleDateString('sr-RS');
-        document.getElementById('userLastActivity').textContent = 
-            new Date(this.currentUser.lastActivity).toLocaleDateString('sr-RS');
+        // Update legacy profile elements if they exist
+        if (document.getElementById('userAvatar')) {
+            document.getElementById('userAvatar').src = this.currentUser.avatar;
+        }
+        if (document.getElementById('userTransactionCount')) {
+            const userTransactions = this.transactions.filter(t => t.userId === this.currentUser.id || !t.userId);
+            document.getElementById('userTransactionCount').textContent = userTransactions.length;
+        }
+        if (document.getElementById('userRegistrationDate')) {
+            document.getElementById('userRegistrationDate').textContent = 
+                new Date(this.currentUser.registrationDate).toLocaleDateString('sr-RS');
+        }
+        if (document.getElementById('userLastActivity')) {
+            document.getElementById('userLastActivity').textContent = 
+                new Date(this.currentUser.lastActivity).toLocaleDateString('sr-RS');
+        }
     }
     
     setupEventListeners() {

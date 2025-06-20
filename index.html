@@ -1857,26 +1857,74 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
-
-            <!-- System Settings -->
+            </div>            <!-- System Settings -->
             <div class="dashboard-grid" style="margin-top: 2rem;">
+                <!-- Logo Upload Section -->
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="card-title">Logo Aplikacije</div>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div class="logo-preview-container" style="position: relative; display: inline-block;">
+                            <img id="adminLogoPreview" src="https://via.placeholder.com/120x80/D4AF37/FFFFFF?text=LOGO" alt="App Logo" style="width: 120px; height: 80px; border: 2px solid var(--gold-bright); border-radius: 8px; object-fit: contain; background: white;">
+                            <button class="logo-edit-btn" onclick="document.getElementById('logoUpload').click()" style="position: absolute; bottom: -10px; right: -10px; background: var(--gradient-gold); border: none; border-radius: 50%; width: 30px; height: 30px; color: var(--dark-bg); cursor: pointer;">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <input type="file" id="logoUpload" accept="image/*" style="display: none;" onchange="handleLogoUpload(event)">
+                        <p style="font-size: 0.9rem; color: var(--muted-text); margin-top: 1rem;">
+                            Preporučena veličina: 120x80px (PNG, JPG, SVG)
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">URL Logo-a</label>
+                        <input type="url" id="logoUrlInput" class="form-input" placeholder="ili unesite URL logo-a">
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn" onclick="setLogoFromUrl()" style="flex: 1;">
+                            <i class="fas fa-link"></i> Postavi iz URL-a
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetLogo()" style="flex: 1;">
+                            <i class="fas fa-undo"></i> Resetuj
+                        </button>
+                    </div>
+                </div>
+
                 <div class="glass-card card">
                     <div class="card-header">
                         <div class="card-icon">
                             <i class="fas fa-cogs"></i>
                         </div>
                         <div class="card-title">Sistemska Podešavanja</div>
+                        <button class="btn btn-secondary" id="editSettingsBtn" onclick="toggleSettingsEdit()" style="margin-left: auto; padding: 0.5rem 1rem;">
+                            <i class="fas fa-edit"></i> Uredi
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Naziv Aplikacije</label>
-                        <input type="text" class="form-input" value="Golden Balance" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email za Obaveštenja</label>
-                        <input type="email" class="form-input" value="admin@example.com" readonly>
-                    </div>
-                    <button class="btn">Sačuvaj Podešavanja</button>
+                    <form id="settingsForm">
+                        <div class="form-group">
+                            <label class="form-label">Naziv Aplikacije</label>
+                            <input type="text" id="appNameInput" class="form-input" value="Golden Balance" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email za Obaveštenja</label>
+                            <input type="email" id="notificationEmailInput" class="form-input" value="admin@example.com" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Glavni Admin Email</label>
+                            <input type="email" id="mainAdminEmailInput" class="form-input" value="admin@goldenbalance.rs" readonly>
+                        </div>
+                        <div class="settings-edit-actions" id="settingsEditActions" style="display: none;">
+                            <button type="button" class="btn btn-primary" onclick="saveSettingsChanges()">
+                                <i class="fas fa-save"></i> Sačuvaj podešavanja
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelSettingsEdit()">
+                                <i class="fas fa-times"></i> Otkaži
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="glass-card card">
@@ -1898,9 +1946,7 @@
                     <button class="btn">Kreiraj Backup</button>
                 </div>
             </div>
-        </section>
-
-        <!-- Profile Page -->
+        </section>        <!-- Profile Page -->
         <section id="profile" class="page-section">
             <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                 Korisnički Profil
@@ -1910,26 +1956,68 @@
             </p>
 
             <div class="dashboard-grid">
+                <!-- Profile Avatar Section -->
+                <div class="glass-card card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="card-title">Profilna Slika</div>
+                    </div>
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <div class="profile-avatar-container" style="position: relative; display: inline-block;">
+                            <img id="profileAvatarDisplay" src="https://via.placeholder.com/150x150/667eea/ffffff?text=USER" alt="Profile Avatar" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--gold-bright); object-fit: cover;">
+                            <button class="avatar-edit-btn" onclick="document.getElementById('avatarUpload').click()" style="position: absolute; bottom: 0; right: 0; background: var(--gradient-gold); border: none; border-radius: 50%; width: 30px; height: 30px; color: var(--dark-bg); cursor: pointer;">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                        <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)">
+                    </div>
+                    <button class="btn" onclick="removeAvatar()">
+                        <i class="fas fa-trash"></i> Ukloni sliku
+                    </button>
+                </div>
+
                 <div class="glass-card card">
                     <div class="card-header">
                         <div class="card-icon">
                             <i class="fas fa-user"></i>
                         </div>
                         <div class="card-title">Lični Podaci</div>
+                        <button class="btn btn-secondary" id="editProfileBtn" onclick="toggleProfileEdit()" style="margin-left: auto; padding: 0.5rem 1rem;">
+                            <i class="fas fa-edit"></i> Uredi
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Ime</label>
-                        <input type="text" class="form-input" value="Marko" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Prezime</label>
-                        <input type="text" class="form-input" value="Marković" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-input" value="marko@example.com" readonly>
-                    </div>
-                    <button class="btn">Sačuvaj Promene</button>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">Ime i prezime</label>
+                            <input type="text" id="profileName" class="form-input" value="" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="profileEmail" class="form-input" value="" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" id="profilePhone" class="form-input" value="" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Username</label>
+                            <input type="text" id="profileUsername" class="form-input" value="" readonly>
+                        </div>
+                        <div class="form-group" id="passwordGroup" style="display: none;">
+                            <label class="form-label">Nova lozinka (ostavite prazno da zadržite postojeću)</label>
+                            <input type="password" id="profileNewPassword" class="form-input" placeholder="Unesite novu lozinku">
+                        </div>
+                        <div class="profile-edit-actions" id="profileEditActions" style="display: none;">
+                            <button type="button" class="btn btn-primary" onclick="saveProfileChanges()">
+                                <i class="fas fa-save"></i> Sačuvaj promene
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="cancelProfileEdit()">
+                                <i class="fas fa-times"></i> Otkaži
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="glass-card card">
@@ -2082,9 +2170,7 @@
             const tabs = document.querySelectorAll('#support .tab');
             tabs.forEach(tab => tab.classList.remove('active'));
             event.target.classList.add('active');
-        }
-
-        // Support ticket modal
+        }        // Support ticket modal
         function showCreateTicketModal() {
             const modal = document.createElement('div');
             modal.className = 'modal-overlay';
@@ -2126,6 +2212,352 @@
                 </div>
             `;
             document.body.appendChild(modal);
+        }
+
+        // Profile management functions
+        function toggleProfileEdit() {
+            const inputs = document.querySelectorAll('#profileForm input');
+            const editBtn = document.getElementById('editProfileBtn');
+            const editActions = document.getElementById('profileEditActions');
+            const passwordGroup = document.getElementById('passwordGroup');
+            
+            const isReadonly = inputs[0].readOnly;
+            
+            inputs.forEach(input => {
+                if (input.id !== 'profileUsername') { // Username shouldn't be editable
+                    input.readOnly = !isReadonly;
+                }
+            });
+            
+            if (isReadonly) {
+                editBtn.innerHTML = '<i class="fas fa-times"></i> Otkaži';
+                editBtn.onclick = cancelProfileEdit;
+                editActions.style.display = 'block';
+                passwordGroup.style.display = 'block';
+            } else {
+                editBtn.innerHTML = '<i class="fas fa-edit"></i> Uredi';
+                editBtn.onclick = toggleProfileEdit;
+                editActions.style.display = 'none';
+                passwordGroup.style.display = 'none';
+            }
+        }
+
+        function cancelProfileEdit() {
+            // Reload original values
+            if (window.app && window.app.currentUser) {
+                document.getElementById('profileName').value = window.app.currentUser.name;
+                document.getElementById('profileEmail').value = window.app.currentUser.email;
+                document.getElementById('profilePhone').value = window.app.currentUser.phone || '';
+                document.getElementById('profileUsername').value = window.app.currentUser.username;
+                document.getElementById('profileNewPassword').value = '';
+            }
+            
+            // Reset to readonly mode
+            const inputs = document.querySelectorAll('#profileForm input');
+            inputs.forEach(input => input.readOnly = true);
+            
+            document.getElementById('editProfileBtn').innerHTML = '<i class="fas fa-edit"></i> Uredi';
+            document.getElementById('editProfileBtn').onclick = toggleProfileEdit;
+            document.getElementById('profileEditActions').style.display = 'none';
+            document.getElementById('passwordGroup').style.display = 'none';
+        }
+
+        function saveProfileChanges() {
+            if (!window.app || !window.app.currentUser) return;
+            
+            const name = document.getElementById('profileName').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            const phone = document.getElementById('profilePhone').value.trim();
+            const newPassword = document.getElementById('profileNewPassword').value;
+            
+            // Validation
+            if (!name || !email) {
+                alert('Ime i email su obavezni!');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Unesite validnu email adresu!');
+                return;
+            }
+            
+            // Update user data
+            window.app.currentUser.name = name;
+            window.app.currentUser.email = email;
+            window.app.currentUser.phone = phone;
+            
+            if (newPassword && newPassword.length >= 6) {
+                window.app.currentUser.password = newPassword;
+            } else if (newPassword && newPassword.length < 6) {
+                alert('Lozinka mora imati najmanje 6 karaktera!');
+                return;
+            }
+            
+            // Save to localStorage
+            window.app.saveCurrentUser();
+            
+            // Update users array
+            const userIndex = window.app.users.findIndex(u => u.id === window.app.currentUser.id);
+            if (userIndex !== -1) {
+                window.app.users[userIndex] = { ...window.app.currentUser };
+                localStorage.setItem('users', JSON.stringify(window.app.users));
+            }
+            
+            // Update UI
+            window.app.updateUserInterface();
+            
+            // Reset to readonly mode
+            cancelProfileEdit();
+            
+            // Show success message
+            if (window.app.showNotification) {
+                window.app.showNotification('Profil je uspešno ažuriran!', 'success');
+            } else {
+                alert('Profil je uspešno ažuriran!');
+            }
+        }
+
+        function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Molimo izaberite validnu sliku!');
+                return;
+            }
+            
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Slika je prevelika! Maksimalna veličina je 5MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                
+                // Update avatar display
+                document.getElementById('profileAvatarDisplay').src = imageUrl;
+                
+                // Save to user profile
+                if (window.app && window.app.currentUser) {
+                    window.app.currentUser.avatar = imageUrl;
+                    window.app.saveCurrentUser();
+                    
+                    // Update users array
+                    const userIndex = window.app.users.findIndex(u => u.id === window.app.currentUser.id);
+                    if (userIndex !== -1) {
+                        window.app.users[userIndex].avatar = imageUrl;
+                        localStorage.setItem('users', JSON.stringify(window.app.users));
+                    }
+                    
+                    // Update UI
+                    window.app.updateUserInterface();
+                    
+                    if (window.app.showNotification) {
+                        window.app.showNotification('Profilna slika je uspešno ažurirana!', 'success');
+                    }
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeAvatar() {
+            if (confirm('Da li ste sigurni da želite da uklonite profilnu sliku?')) {
+                const defaultAvatar = 'https://via.placeholder.com/150x150/667eea/ffffff?text=USER';
+                
+                // Update avatar display
+                document.getElementById('profileAvatarDisplay').src = defaultAvatar;
+                
+                // Save to user profile
+                if (window.app && window.app.currentUser) {
+                    window.app.currentUser.avatar = defaultAvatar;
+                    window.app.saveCurrentUser();
+                    
+                    // Update users array
+                    const userIndex = window.app.users.findIndex(u => u.id === window.app.currentUser.id);
+                    if (userIndex !== -1) {
+                        window.app.users[userIndex].avatar = defaultAvatar;
+                        localStorage.setItem('users', JSON.stringify(window.app.users));
+                    }
+                    
+                    // Update UI
+                    window.app.updateUserInterface();
+                    
+                    if (window.app.showNotification) {
+                        window.app.showNotification('Profilna slika je uklonjena!', 'info');
+                    }
+                }
+            }        }
+
+        // Admin functions for logo and settings management
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Molimo izaberite validnu sliku (PNG, JPG, SVG)!');
+                return;
+            }
+            
+            // Validate file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Slika je prevelika! Maksimalna veličina je 2MB.');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imageUrl = e.target.result;
+                updateAppLogo(imageUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setLogoFromUrl() {
+            const url = document.getElementById('logoUrlInput').value.trim();
+            if (!url) {
+                alert('Molimo unesite URL logo-a!');
+                return;
+            }
+            
+            // Test if image loads successfully
+            const img = new Image();
+            img.onload = function() {
+                updateAppLogo(url);
+                document.getElementById('logoUrlInput').value = '';
+            };
+            img.onerror = function() {
+                alert('Nije moguće učitati sliku sa unetog URL-a!');
+            };
+            img.src = url;
+        }
+
+        function updateAppLogo(imageUrl) {
+            // Update preview
+            document.getElementById('adminLogoPreview').src = imageUrl;
+            
+            // Update app logo everywhere
+            const logoElements = document.querySelectorAll('.logo-icon, #appLogo, .nav-brand img');
+            logoElements.forEach(logo => {
+                if (logo.tagName === 'IMG') {
+                    logo.src = imageUrl;
+                } else {
+                    logo.style.backgroundImage = `url(${imageUrl})`;
+                    logo.style.backgroundSize = 'contain';
+                    logo.style.backgroundRepeat = 'no-repeat';
+                    logo.style.backgroundPosition = 'center';
+                }
+            });
+            
+            // Save to app settings
+            if (window.app && window.app.appSettings) {
+                window.app.appSettings.appLogo = imageUrl;
+                window.app.saveAppSettings();
+            } else {
+                // Fallback - save directly to localStorage
+                const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+                settings.appLogo = imageUrl;
+                localStorage.setItem('appSettings', JSON.stringify(settings));
+            }
+            
+            alert('Logo je uspešno ažuriran!');
+        }
+
+        function resetLogo() {
+            if (confirm('Da li ste sigurni da želite da resetujete logo na standardni?')) {
+                const defaultLogo = 'https://via.placeholder.com/120x80/D4AF37/FFFFFF?text=LOGO';
+                updateAppLogo(defaultLogo);
+            }
+        }
+
+        function toggleSettingsEdit() {
+            const inputs = document.querySelectorAll('#settingsForm input');
+            const editBtn = document.getElementById('editSettingsBtn');
+            const editActions = document.getElementById('settingsEditActions');
+            
+            const isReadonly = inputs[0].readOnly;
+            
+            inputs.forEach(input => {
+                input.readOnly = !isReadonly;
+            });
+            
+            if (isReadonly) {
+                editBtn.innerHTML = '<i class="fas fa-times"></i> Otkaži';
+                editBtn.onclick = cancelSettingsEdit;
+                editActions.style.display = 'block';
+            } else {
+                editBtn.innerHTML = '<i class="fas fa-edit"></i> Uredi';
+                editBtn.onclick = toggleSettingsEdit;
+                editActions.style.display = 'none';
+            }
+        }
+
+        function cancelSettingsEdit() {
+            // Reload original values
+            if (window.app && window.app.appSettings) {
+                document.getElementById('appNameInput').value = window.app.appSettings.appName || 'Golden Balance';
+                document.getElementById('notificationEmailInput').value = window.app.appSettings.notificationEmail || 'admin@example.com';
+                document.getElementById('mainAdminEmailInput').value = window.app.appSettings.mainAdminEmail || 'admin@goldenbalance.rs';
+            }
+            
+            // Reset to readonly mode
+            const inputs = document.querySelectorAll('#settingsForm input');
+            inputs.forEach(input => input.readOnly = true);
+            
+            document.getElementById('editSettingsBtn').innerHTML = '<i class="fas fa-edit"></i> Uredi';
+            document.getElementById('editSettingsBtn').onclick = toggleSettingsEdit;
+            document.getElementById('settingsEditActions').style.display = 'none';
+        }
+
+        function saveSettingsChanges() {
+            const appName = document.getElementById('appNameInput').value.trim();
+            const notificationEmail = document.getElementById('notificationEmailInput').value.trim();
+            const mainAdminEmail = document.getElementById('mainAdminEmailInput').value.trim();
+            
+            // Validation
+            if (!appName) {
+                alert('Naziv aplikacije je obavezan!');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (notificationEmail && !emailRegex.test(notificationEmail)) {
+                alert('Unesite validnu email adresu za obaveštenja!');
+                return;
+            }
+            
+            if (mainAdminEmail && !emailRegex.test(mainAdminEmail)) {
+                alert('Unesite validnu email adresu glavnog administratora!');
+                return;
+            }
+            
+            // Save settings
+            if (window.app && window.app.appSettings) {
+                window.app.appSettings.appName = appName;
+                window.app.appSettings.notificationEmail = notificationEmail;
+                window.app.appSettings.mainAdminEmail = mainAdminEmail;
+                window.app.saveAppSettings();
+                window.app.updateAppBranding();
+            } else {
+                // Fallback - save directly to localStorage
+                const settings = JSON.parse(localStorage.getItem('appSettings') || '{}');
+                settings.appName = appName;
+                settings.notificationEmail = notificationEmail;
+                settings.mainAdminEmail = mainAdminEmail;
+                localStorage.setItem('appSettings', JSON.stringify(settings));
+                
+                // Update page title
+                document.title = appName;
+            }
+            
+            // Reset to readonly mode
+            cancelSettingsEdit();
+            
+            alert('Podešavanja su uspešno sačuvana!');
         }
 
         // Add smooth scrolling and animations
