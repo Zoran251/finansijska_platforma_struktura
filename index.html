@@ -410,10 +410,901 @@
 
         .tab-content {
             display: none;
+        }        .tab-content.active {
+            display: block;
         }
 
-        .tab-content.active {
+        /* Consultation Booking Styles */
+        .consultation-booking {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .booking-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            gap: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            color: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .consultants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .consultant-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .consultant-card:hover,
+        .consultant-card.selected {
+            border-color: var(--gold-bright);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .consultant-avatar img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        .consultant-info h3 {
+            color: var(--gold-bright);
+            margin-bottom: 0.5rem;
+        }
+
+        .specialty {
+            color: var(--muted-text);
+            margin-bottom: 1rem;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .rating i {
+            color: var(--gold-bright);
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--gold-bright);
+            margin-bottom: 1rem;
+        }
+
+        .btn-select {
+            background: var(--gradient-gold);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-select:hover {
+            transform: translateY(-2px);
+        }
+
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .date-option {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .date-option:hover,
+        .date-option.selected {
+            border-color: var(--gold-bright);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .time-slot {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-slot:hover,
+        .time-slot.selected {
+            border-color: var(--gold-bright);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .booking-summary {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .booking-success {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .success-content {
+            background: var(--dark-card);
+            border: 1px solid var(--gold-bright);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .success-content i {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        /* Investment Calculator Styles */
+        .calculator-tabs .tab-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .calculation-results {
+            margin-top: 2rem;
+        }
+
+        .results-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold-bright);
+            margin-top: 0.5rem;
+        }
+
+        .result-value.earnings {
+            color: var(--success);
+        }
+
+        .breakdown-table {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-header,
+        .table-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .table-header {
+            background: rgba(212, 175, 55, 0.1);
+            font-weight: bold;
+            color: var(--gold-bright);
+        }
+
+        .allocation-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .allocation-item label {
+            min-width: 100px;
+        }
+
+        .allocation-item input[type="range"] {
+            flex: 1;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--dark-card);
+            outline: none;
+        }
+
+        .allocation-item input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            cursor: pointer;
+        }
+
+        .portfolio-total {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+        }
+
+        .question-group {
+            margin-bottom: 2rem;
+        }
+
+        .question-group h5 {
+            color: var(--gold-bright);
+            margin-bottom: 1rem;
+        }
+
+        .radio-option {
             display: block;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+
+        /* Support Styles */
+        .support-tabs .tab-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .chat-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .status-indicator.warning {
+            background: var(--warning);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+        }
+
+        .user-message .message-avatar {
+            background: var(--dark-secondary);
+            color: var(--light-text);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-text {
+            background: var(--dark-secondary);
+            padding: 0.75rem;
+            border-radius: 12px;
+            margin-bottom: 0.25rem;
+        }
+
+        .staff-message .message-text {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .message-time {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            background: var(--dark-card);
+            color: var(--light-text);
+        }
+
+        .chat-input button {
+            background: var(--gold-bright);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .tickets-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .support-ticket {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-id {
+            font-weight: bold;
+            color: var(--gold-bright);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-open {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-closed {
+            background: var(--muted-text);
+            color: white;
+        }
+
+        .ticket-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        .priority-high {
+            color: var(--error);
+        }
+
+        .priority-medium {
+            color: var(--warning);
+        }
+
+        .priority-low {
+            color: var(--success);
+        }
+
+        .ticket-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background: var(--gold-bright);
+            color: var(--dark-bg);
+            transition: all 0.3s ease;
+        }
+
+        .btn-sm:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: var(--error) !important;
+            color: white !important;
+        }
+
+        .btn-success {
+            background: var(--success) !important;
+            color: white !important;
+        }
+
+        .faq-container {
+            margin-top: 1rem;
+        }
+
+        .faq-item {
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--dark-card);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-answer.active {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding: 1rem;
+            margin: 0;
+            background: var(--dark-secondary);
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+        }
+
+        .contact-item i {
+            font-size: 1.5rem;
+            color: var(--gold-bright);
+            width: 30px;
+            text-align: center;
+        }
+
+        /* Admin Panel Styles */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--gold-bright);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--gold-bright);
+        }
+
+        .stat-label {
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        .admin-navigation {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-nav-btn {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            color: var(--light-text);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav-btn:hover,
+        .admin-nav-btn.active {
+            background: var(--gold-bright);
+            color: var(--dark-bg);
+        }
+
+        .admin-view-content {
+            margin-top: 2rem;
+        }
+
+        .users-table {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .users-table .table-header {
+            background: rgba(212, 175, 55, 0.1);
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 2fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            font-weight: bold;
+            color: var(--gold-bright);
+        }
+
+        .users-table .table-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1fr 1fr 1fr 2fr 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: var(--light-text);
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: var(--muted-text);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .status-active {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-suspended {
+            background: var(--error);
+            color: white;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .modal {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: var(--muted-text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .btn-close:hover {
+            color: var(--light-text);
+        }
+
+        /* Notification Styles */
+        .admin-notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 300px;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification-success {
+            border-color: var(--success);
+        }
+
+        .notification-error {
+            border-color: var(--error);
+        }
+
+        .notification-info {
+            border-color: var(--gold-bright);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--dark-bg);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                transition: left 0.3s ease;
+                padding-top: 2rem;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .consultants-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-dates {
+                grid-template-columns: 1fr;
+            }
+
+            .time-slots {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .admin-navigation {
+                flex-direction: column;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .users-table .table-header,
+            .users-table .table-row {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .user-info {
+                justify-content: center;
+            }
+
+            .contact-info {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -424,10 +1315,12 @@
             <div class="logo">
                 <div class="logo-icon">GB</div>
                 <span class="logo-text">Golden Balance</span>
-            </div>
-            <ul class="nav-menu" id="navMenu">
+            </div>            <ul class="nav-menu" id="navMenu">
                 <li><a href="#" onclick="showPage('dashboard')" class="nav-link active">Početna</a></li>
                 <li><a href="#" onclick="showPage('preview')" class="nav-link">Pregled</a></li>
+                <li><a href="#" onclick="showPage('consultation')" class="nav-link">Konsultacije</a></li>
+                <li><a href="#" onclick="showPage('calculator')" class="nav-link">Kalkulator</a></li>
+                <li><a href="#" onclick="showPage('support')" class="nav-link">Podrška</a></li>
                 <li><a href="#" onclick="showPage('admin')" class="nav-link">Admin</a></li>
                 <li><a href="#" onclick="showPage('profile')" class="nav-link">Profil</a></li>
             </ul>
@@ -689,6 +1582,222 @@
                         </div>
                     </div>
                 </div>
+            </div>        </section>
+
+        <!-- Consultation Booking Page -->
+        <section id="consultation" class="page-section">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Zakazivanje Konsultacija
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--muted-text); margin-bottom: 3rem;">
+                Rezervišite termin sa našim stručnjacima za finansijsko savetovanje
+            </p>
+
+            <div class="consultation-booking">
+                <div class="booking-steps">
+                    <div class="step active">
+                        <span class="step-number">1</span>
+                        <span class="step-title">Izaberite konsultanta</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <span class="step-title">Odaberite datum</span>
+                    </div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <span class="step-title">Potvrdite rezervaciju</span>
+                    </div>
+                </div>
+
+                <div class="consultants-section">
+                    <h3>Dostupni konsultanti</h3>
+                    <div id="consultantsContainer" class="consultants-grid">
+                        <!-- Consultants will be loaded by JavaScript -->
+                    </div>
+                </div>
+
+                <div id="calendarContainer" class="calendar-section" style="display: none;">
+                    <!-- Calendar will be loaded by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Investment Calculator Page -->
+        <section id="calculator" class="page-section">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Investicioni Kalkulator
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--muted-text); margin-bottom: 3rem;">
+                Napredni alati za planiranje i analizu vaših investicija
+            </p>
+
+            <div class="calculator-tabs">
+                <div class="tab-navigation">
+                    <button class="tab active" onclick="showCalculatorTab('compound')">
+                        <i class="fas fa-percentage"></i> Složena kamata
+                    </button>
+                    <button class="tab" onclick="showCalculatorTab('retirement')">
+                        <i class="fas fa-piggy-bank"></i> Penzijski plan
+                    </button>
+                    <button class="tab" onclick="showCalculatorTab('portfolio')">
+                        <i class="fas fa-chart-pie"></i> Portfolio analiza
+                    </button>
+                    <button class="tab" onclick="showCalculatorTab('risk')">
+                        <i class="fas fa-shield-alt"></i> Procena rizika
+                    </button>
+                </div>
+
+                <div id="compound" class="tab-content active">
+                    <div class="glass-card">
+                        <h3>Kalkulator složene kamate</h3>
+                        <p>Izračunajte koliko će vaša investicija vredeti u budućnosti</p>
+                        <div id="compoundCalculator">
+                            <!-- Compound interest calculator will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="retirement" class="tab-content">
+                    <div class="glass-card">
+                        <h3>Penzijski kalkulator</h3>
+                        <p>Planirajte svoju penziju i izračunajte koliko vam je potrebno za štednju</p>
+                        <div id="retirementCalculator">
+                            <!-- Retirement calculator will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="portfolio" class="tab-content">
+                    <div class="glass-card">
+                        <h3>Portfolio analizer</h3>
+                        <p>Analizirajte svoj portfolio i optimizujte alokaciju sredstava</p>
+                        <div id="portfolioAnalyzer">
+                            <!-- Portfolio analyzer will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="risk" class="tab-content">
+                    <div class="glass-card">
+                        <h3>Procena profila rizika</h3>
+                        <p>Otkrijte vaš profil tolerancije na rizik i dobijte personalizovane preporuke</p>
+                        <div id="riskAssessment">
+                            <!-- Risk assessment will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Support Page -->
+        <section id="support" class="page-section">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                Tehnička Podrška
+            </h1>
+            <p style="font-size: 1.2rem; color: var(--muted-text); margin-bottom: 3rem;">
+                Stojimo vam na raspolaganju 24/7 za sva vaša pitanja i probleme
+            </p>
+
+            <div class="support-tabs">
+                <div class="tab-navigation">
+                    <button class="tab active" onclick="showSupportTab('chat')">
+                        <i class="fas fa-comments"></i> Live Chat
+                    </button>
+                    <button class="tab" onclick="showSupportTab('tickets')">
+                        <i class="fas fa-ticket-alt"></i> Support Tiketi
+                    </button>
+                    <button class="tab" onclick="showSupportTab('faq')">
+                        <i class="fas fa-question-circle"></i> FAQ
+                    </button>
+                    <button class="tab" onclick="showSupportTab('contact')">
+                        <i class="fas fa-envelope"></i> Kontakt
+                    </button>
+                </div>
+
+                <div id="chat" class="tab-content active">
+                    <div class="glass-card">
+                        <div class="chat-container">
+                            <div class="chat-header">
+                                <h3>Live Chat sa podrškom</h3>
+                                <div class="chat-status">
+                                    <span class="status-indicator active"></span>
+                                    Online
+                                </div>
+                            </div>
+                            <div id="chatMessages" class="chat-messages">
+                                <!-- Chat messages will be loaded by JavaScript -->
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="chatInput" placeholder="Unesite vašu poruku..." />
+                                <button onclick="support.sendChatMessage()">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tickets" class="tab-content">
+                    <div class="glass-card">
+                        <div class="tickets-section">
+                            <div class="tickets-header">
+                                <h3>Vaši support tiketi</h3>
+                                <button class="btn btn-primary" onclick="showCreateTicketModal()">
+                                    <i class="fas fa-plus"></i> Kreiraj novi tiket
+                                </button>
+                            </div>
+                            <div id="supportTickets" class="tickets-list">
+                                <!-- Support tickets will be loaded by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="faq" class="tab-content">
+                    <div class="glass-card">
+                        <h3>Često postavljena pitanja</h3>
+                        <div id="faqContainer" class="faq-container">
+                            <!-- FAQ will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contact" class="tab-content">
+                    <div class="glass-card">
+                        <h3>Kontakt informacije</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <strong>Email</strong>
+                                    <p>support@goldenbalance.rs</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <strong>Telefon</strong>
+                                    <p>+381 11 123 4567</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <strong>Radno vreme</strong>
+                                    <p>Ponedeljak - Petak: 8:00 - 20:00<br>
+                                       Subota - Nedelja: 10:00 - 16:00</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <strong>Adresa</strong>
+                                    <p>Knez Mihailova 42<br>11000 Beograd, Srbija</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -935,9 +2044,7 @@
         function toggleMobileMenu() {
             const navMenu = document.getElementById('navMenu');
             navMenu.classList.toggle('active');
-        }
-
-        // Close mobile menu when clicking outside
+        }        // Close mobile menu when clicking outside
         document.addEventListener('click', function(event) {
             const navMenu = document.getElementById('navMenu');
             const menuBtn = document.querySelector('.mobile-menu-btn');
@@ -946,6 +2053,80 @@
                 navMenu.classList.remove('active');
             }
         });
+
+        // Calculator tab functionality
+        function showCalculatorTab(tabId) {
+            // Hide all calculator tab contents
+            const tabContents = document.querySelectorAll('#calculator .tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            const tabs = document.querySelectorAll('#calculator .tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Support tab functionality
+        function showSupportTab(tabId) {
+            // Hide all support tab contents
+            const tabContents = document.querySelectorAll('#support .tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update tab buttons
+            const tabs = document.querySelectorAll('#support .tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Support ticket modal
+        function showCreateTicketModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Kreiraj novi support tiket</h3>
+                        <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="supportForm">
+                            <div class="form-group">
+                                <label class="form-label">Naslov tiketa</label>
+                                <input type="text" id="ticketSubject" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Opis problema</label>
+                                <textarea id="ticketDescription" class="form-input" rows="5" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Prioritet</label>
+                                <select id="ticketPriority" class="form-input">
+                                    <option value="low">Nizak</option>
+                                    <option value="medium" selected>Srednji</option>
+                                    <option value="high">Visok</option>
+                                    <option value="urgent">Hitno</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Kreiraj tiket</button>
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">
+                                    Otkaži
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
 
         // Add smooth scrolling and animations
         document.addEventListener('DOMContentLoaded', function() {
@@ -956,5 +2137,11 @@
             });
         });
     </script>
+
+    <!-- Load all JavaScript modules -->
+    <script src="js/booking.js"></script>
+    <script src="js/support.js"></script>
+    <script src="js/investment-calculator.js"></script>
+    <script src="js/admin.js"></script>
 </body>
 </html>
