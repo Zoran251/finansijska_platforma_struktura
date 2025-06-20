@@ -1869,7 +1869,7 @@
                     </div>
                     <div style="text-align: center; margin-bottom: 2rem;">
                         <div class="logo-preview-container" style="position: relative; display: inline-block;">
-                            <img id="adminLogoPreview" src="https://via.placeholder.com/120x80/D4AF37/FFFFFF?text=LOGO" alt="App Logo" style="width: 120px; height: 80px; border: 2px solid var(--gold-bright); border-radius: 8px; object-fit: contain; background: white;">
+                            <img id="adminLogoPreview" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTIwIDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwQTBBMEEiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2MCA0MCkiPjxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzIiBmaWxsPSIjRkZENzAwIi8+PGxpbmUgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjIwIiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSItMjAiIHkxPSIyMCIgeDI9IjIwIiB5Mj0iMjAiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iLTE1IiBjeT0iMjAiIHI9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTUiIGN5PSIyMCIgcj0iOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZENzAwIiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+" alt="App Logo" style="width: 120px; height: 80px; border: 2px solid var(--gold-bright); border-radius: 8px; object-fit: contain; background: white;">
                             <button class="logo-edit-btn" onclick="document.getElementById('logoUpload').click()" style="position: absolute; bottom: -10px; right: -10px; background: var(--gradient-gold); border: none; border-radius: 50%; width: 30px; height: 30px; color: var(--dark-bg); cursor: pointer;">
                                 <i class="fas fa-camera"></i>
                             </button>
@@ -2511,11 +2511,9 @@
             }
             
             alert('Logo je uspešno ažuriran!');
-        }
-
-        function resetLogo() {
+        }        function resetLogo() {
             if (confirm('Da li ste sigurni da želite da resetujete logo na standardni?')) {
-                const defaultLogo = 'https://via.placeholder.com/120x80/D4AF37/FFFFFF?text=LOGO';
+                const defaultLogo = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTIwIDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwQTBBMEEiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2MCA0MCkiPjxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzIiBmaWxsPSIjRkZENzAwIi8+PGxpbmUgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjIwIiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSItMjAiIHkxPSIyMCIgeDI9IjIwIiB5Mj0iMjAiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iLTE1IiBjeT0iMjAiIHI9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTUiIGN5PSIyMCIgcj0iOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZENzAwIiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+';
                 updateAppLogo(defaultLogo);
             }
         }

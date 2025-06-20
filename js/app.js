@@ -41,12 +41,10 @@ class FinancialApp {
         
         localStorage.setItem('users', JSON.stringify(defaultUsers));
         return defaultUsers;
-    }
-    
-    createDefaultSettings() {
+    }    createDefaultSettings() {
         const defaultSettings = {
-            appName: 'FinPlatforma',
-            appLogo: 'https://via.placeholder.com/100x100/667eea/ffffff?text=FP',
+            appName: 'Golden Balance',
+            appLogo: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTIwIDgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxMjAiIGhlaWdodD0iODAiIGZpbGw9IiMwQTBBMEEiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2MCA0MCkiPjxjaXJjbGUgY3g9IjAiIGN5PSIwIiByPSIzIiBmaWxsPSIjRkZENzAwIi8+PGxpbmUgeDE9IjAiIHkxPSIwIiB4Mj0iMCIgeTI9IjIwIiBzdHJva2U9IiNGRkQ3MDAiIHN0cm9rZS13aWR0aD0iMiIvPjxsaW5lIHgxPSItMjAiIHkxPSIyMCIgeDI9IjIwIiB5Mj0iMjAiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iLTE1IiBjeT0iMjAiIHI9IjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRDcwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PGNpcmNsZSBjeD0iMTUiIGN5PSIyMCIgcj0iOCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZENzAwIiBzdHJva2Utd2lkdGg9IjIiLz48L2c+PC9zdmc+',
             categories: {
                 income: ['Plata', 'Freelance', 'Investicije', 'Poklon', 'Ostalo'],
                 expense: ['Hrana', 'Transport', 'Stan', 'Zdravlje', 'Zabava', 'Odeca', 'Ostalo']
