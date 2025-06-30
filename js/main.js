@@ -1,4 +1,232 @@
 // Glavni fajl za koordinaciju svih modula - main.js
+
+// Globalna zaštita za admin modul
+if (typeof window.admin === 'undefined') {
+    window.admin = undefined;
+}
+
+// Globalna zaštita za support modul
+if (typeof window.support === 'undefined') {
+    window.support = undefined;
+}
+
+// Fallback za showNotification ako nije definisan
+if (typeof window.showNotification !== 'function') {
+    window.showNotification = function(message, type = 'info', duration = 5000) {
+        alert((type ? `[${type}] ` : '') + message);
+    };
+}
+
+// 🔄 JEDINSTVENE FUNKCIJE ZA BUDŽET SINHRONIZACIJU
+window.BudgetSync = {
+    // Čita budžet podatke iz različitih formata i vraća unifikovane podatke
+    getUnifiedBudgetData() {
+        console.log('🔍 Čitanje unifikovanih budžet podataka...');
+        
+        const userBudget = JSON.parse(localStorage.getItem('userBudget'));
+        const mainBudget = JSON.parse(localStorage.getItem('budget'));
+        
+        let unifiedData = null;
+        
+        if (userBudget && userBudget.monthlyIncome !== undefined) {
+            // Format iz profila - konvertuj u unifikovane podatke
+            const monthlyIncome = userBudget.monthlyIncome;
+            const necessitiesAmount = (monthlyIncome * (userBudget.necessities || 0)) / 100;
+            const hobbyAmount = (monthlyIncome * (userBudget.hobby || 0)) / 100;
+            const savingsAmount = (monthlyIncome * (userBudget.savings || 0)) / 100;
+            const totalExpenses = necessitiesAmount + hobbyAmount;
+            
+            unifiedData = {
+                source: 'profile',
+                monthlyIncome: monthlyIncome,
+                totalExpenses: totalExpenses,
+                netSavings: savingsAmount,
+                remainingBalance: monthlyIncome - totalExpenses,
+                categories: {
+                    necessities: necessitiesAmount,
+                    hobby: hobbyAmount,
+                    savings: savingsAmount
+                },
+                percentages: {
+                    necessities: userBudget.necessities,
+                    hobby: userBudget.hobby,
+                    savings: userBudget.savings
+                },
+                lastUpdated: userBudget.lastUpdated || new Date().toISOString()
+            };
+        } else if (mainBudget && mainBudget.monthly !== undefined) {
+            // Format iz main.js
+            unifiedData = {
+                source: 'main',
+                monthlyIncome: mainBudget.monthly,
+                totalExpenses: mainBudget.spent,
+                netSavings: mainBudget.monthly - mainBudget.spent,
+                remainingBalance: mainBudget.monthly - mainBudget.spent,
+                categories: mainBudget.categories || {},
+                lastUpdated: new Date().toISOString()
+            };
+        }
+        
+        console.log('📊 Unifikovani podatci:', unifiedData);
+        return unifiedData;
+    },
+    
+    // Sinhronizuje sve prikaze budžeta u aplikaciji
+    synchronizeAllDisplays() {
+        console.log('🔄 Sinhronizacija svih prikaza...');
+        
+        const budgetData = this.getUnifiedBudgetData();
+        if (!budgetData) {
+            console.log('❌ Nema podataka za sinhronizaciju');
+            return false;
+        }
+        
+        // Sinhronizuj dashboard
+        this.updateDashboardDisplay(budgetData);
+        
+        // Sinhronizuj preview
+        this.updatePreviewDisplay(budgetData);
+        
+        // Pozovi globalne funkcije ako postoje
+        if (typeof window.updateBudgetDisplay === 'function') {
+            window.updateBudgetDisplay();
+        }
+        
+        console.log('✅ Sinhronizacija završena');
+        return true;
+    },
+      // Ažurira dashboard prikaz
+    updateDashboardDisplay(budgetData) {
+        try {
+            console.log('🔄 Ažuriram dashboard sa podacima:', budgetData);
+            
+            // Ažuriraj osnovne stats kartice
+            const elements = {
+                totalIncome: document.querySelector('[data-budget="total-income"]'),
+                totalExpenses: document.querySelector('[data-budget="total-expenses"]'),
+                netSavings: document.querySelector('[data-budget="net-savings"]'),
+                monthlyBudget: document.querySelector('[data-budget="monthly-budget"]'),
+                remainingBudget: document.querySelector('[data-budget="remaining-budget"]')
+            };
+            
+            if (elements.totalIncome) {
+                elements.totalIncome.textContent = `€${budgetData.monthlyIncome.toLocaleString()}`;
+            }
+            if (elements.totalExpenses) {
+                elements.totalExpenses.textContent = `€${budgetData.totalExpenses.toLocaleString()}`;
+            }
+            if (elements.netSavings) {
+                elements.netSavings.textContent = `€${budgetData.netSavings.toLocaleString()}`;
+            }
+            if (elements.monthlyBudget) {
+                elements.monthlyBudget.textContent = `€${budgetData.monthlyIncome.toLocaleString()}`;
+            }
+            if (elements.remainingBudget) {
+                elements.remainingBudget.textContent = `€${budgetData.remainingBalance.toLocaleString()}`;
+            }
+            
+            // Ažuriraj progress bar-ove ako postoje
+            const progressBars = document.querySelectorAll('.progress-bar');
+            progressBars.forEach(bar => {
+                if (bar.closest('[data-category="expenses"]') && budgetData.monthlyIncome > 0) {
+                    const percentage = (budgetData.totalExpenses / budgetData.monthlyIncome) * 100;
+                    bar.style.width = `${Math.min(percentage, 100)}%`;
+                }
+            });
+            
+            console.log('✅ Dashboard ažuriran sa novim podacima');
+        } catch (error) {
+            console.error('❌ Greška pri ažuriranju dashboard-a:', error);
+        }
+    },
+    
+    // Ažurira preview prikaz
+    updatePreviewDisplay(budgetData) {
+        try {
+            console.log('🔄 Ažuriram preview sa podacima:', budgetData);
+            
+            // Ciljamo elemente sa specifičnim data-budget atributima
+            const dataElements = {
+                income: document.querySelector('[data-budget="total-income"]'),
+                expenses: document.querySelector('[data-budget="total-expenses"]'),
+                available: document.querySelector('[data-budget="remaining-budget"]'),
+                netSavings: document.querySelector('[data-budget="net-savings"]')
+            };
+            
+            // Ažuriramo vrednosti po ID-u
+            const idElements = {
+                income: document.getElementById('summaryIncome'),
+                expenses: document.getElementById('summaryExpenses'),
+                available: document.getElementById('summaryAvailable')
+            };
+            
+            // Ažuriramo sve pronađene elemente
+            if (dataElements.income) dataElements.income.textContent = `€${budgetData.monthlyIncome.toLocaleString()}`;
+            if (dataElements.expenses) dataElements.expenses.textContent = `€${budgetData.totalExpenses.toLocaleString()}`;
+            if (dataElements.available) dataElements.available.textContent = `€${budgetData.remainingBalance.toLocaleString()}`;
+            if (dataElements.netSavings) dataElements.netSavings.textContent = `€${budgetData.netSavings.toLocaleString()}`;
+            
+            // Ažuriramo i po ID-u za potpunu pokrivenost
+            if (idElements.income) idElements.income.textContent = `€${budgetData.monthlyIncome.toLocaleString()}`;
+            if (idElements.expenses) idElements.expenses.textContent = `€${budgetData.totalExpenses.toLocaleString()}`;
+            if (idElements.available) idElements.available.textContent = `€${budgetData.remainingBalance.toLocaleString()}`;
+            
+            // Ažuriramo i dodatne elemente za pregled
+            const overviewElements = document.querySelectorAll('#overview .glass-card .stat-value');
+            if (overviewElements.length >= 3) {
+                try {
+                    overviewElements[0].textContent = `€${budgetData.monthlyIncome.toLocaleString()}`;
+                    overviewElements[1].textContent = `€${budgetData.totalExpenses.toLocaleString()}`;
+                    overviewElements[2].textContent = `€${budgetData.remainingBalance.toLocaleString()}`;
+                } catch (err) {
+                    console.error('Greška pri ažuriranju overview elemenata:', err);
+                }
+            }
+            
+            console.log('✅ Preview ažuriran sa novim podacima');
+        } catch (error) {
+            console.error('❌ Greška pri ažuriranju preview-a:', error);
+        }
+    },
+    
+    // Omogućava drugim modulima da pozovu sinhronizaciju
+    triggerSync() {
+        setTimeout(() => {
+            this.synchronizeAllDisplays();
+        }, 100);
+    }
+};
+
+// Globalne funkcije za kompatibilnost
+window.updateBudgetDisplay = function() {
+    console.log('🔄 Poziv globalne updateBudgetDisplay funkcije');
+    window.BudgetSync.synchronizeAllDisplays();
+};
+
+window.triggerBudgetSync = function() {
+    console.log('🔄 Poziv triggerBudgetSync funkcije');
+    window.BudgetSync.triggerSync();
+};
+
+// Dodajemo listener za promene u localStorage za automatsku sinhronizaciju
+window.addEventListener('storage', function(e) {
+    console.log('🔄 Storage event detected:', e.key);
+    if (e.key === 'userBudget' || e.key === 'budget') {
+        console.log('💰 Budžet promenjen u drugom prozoru/tabu, ažuriram prikaz...');
+        setTimeout(() => {
+            window.BudgetSync.synchronizeAllDisplays();
+        }, 100);
+    }
+});
+
+// Inicijalna sinhronizacija pri učitavanju stranice
+window.EventManager.onDOMReady('budgetSync', function() {
+    console.log('🔄 DOMContentLoaded - iniciram sinhronizaciju...');
+    setTimeout(() => {
+        window.BudgetSync.synchronizeAllDisplays();
+    }, 500);
+});
+
 class MainApplication {
     constructor() {
         this.currentPage = 'dashboard';
@@ -21,18 +249,27 @@ class MainApplication {
         this.waitForModules();
         this.setupGlobalEventListeners();
         this.handleInitialPage();
-    }
-
-    waitForModules() {
+    }    waitForModules() {
         // Čekamo da se svi moduli učitaju
         const checkModules = () => {
-            if (typeof booking !== 'undefined' && 
-                typeof calculator !== 'undefined' && 
-                typeof support !== 'undefined' && 
-                typeof admin !== 'undefined') {
+            const modulesLoaded = {
+                booking: typeof booking !== 'undefined',
+                calculator: typeof calculator !== 'undefined', 
+                support: typeof support !== 'undefined',
+                admin: typeof admin !== 'undefined'
+            };
+            
+            console.log('🔍 Checking modules:', modulesLoaded);
+            
+            // Nastavi bez admin modula ako nije dostupan
+            if (modulesLoaded.booking && modulesLoaded.calculator && modulesLoaded.support) {
+                this.modules = {};
+                if (modulesLoaded.booking) this.modules.booking = booking;
+                if (modulesLoaded.calculator) this.modules.calculator = calculator; 
+                if (modulesLoaded.support) this.modules.support = support;
+                if (modulesLoaded.admin) this.modules.admin = admin;
                 
-                this.modules = { booking, calculator, support, admin };
-                console.log('✅ Svi moduli uspešno učitani!');
+                console.log('✅ Moduli učitani:', Object.keys(this.modules));
                 this.initializeApplication();
             } else {
                 setTimeout(checkModules, 100);
@@ -386,7 +623,7 @@ class MainApplication {
 }
 
 // Pokretamo aplikaciju kada se učita DOM
-document.addEventListener('DOMContentLoaded', () => {
+window.EventManager.onDOMReady('mainApp', () => {
     const mainApp = new MainApplication();
     mainApp.exportToGlobal();
     
@@ -427,25 +664,49 @@ function openBudgetModal() {
             });
         }, 100);
         
-        // Setup form submission
+        // Setup form submission - uklanjamo prethodni event handler i dodajemo novi
         var form = document.getElementById('budgetForm');
-        form.onsubmit = function(e) {
+        // Prvo uklonimo sve postojeće event listenere
+        var clonedForm = form.cloneNode(true);
+        form.parentNode.replaceChild(clonedForm, form);
+        form = clonedForm;
+        
+        // Dodajemo novi event listener
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Form submitted - pozivam saveBudgetChanges()');
             saveBudgetChanges();
-        };
+        });
         
         // Setup real-time updates
         document.getElementById('monthlyBudget').addEventListener('input', updateBudgetSummary);
         document.getElementById('spentAmount').addEventListener('input', updateBudgetSummary);
+        // Removed duplicate event listener
     }
 }
 
-function closeBudgetModal() {
+// Globalna funkcija za zatvaranje budžet modala
+window.closeBudgetModal = function() {
+    console.log('Zatvaram budget modal...');
     var modal = document.getElementById('budgetModal');
     if (modal) {
         modal.style.display = 'none';
+        
+        // Reset forme
+        var form = document.getElementById('budgetForm');
+        if (form) {
+            form.reset();
+        }
+        
+        // Sakrij modal sa CSS-om takođe 
+        modal.classList.remove('active');
+        modal.classList.add('closed');
+        
+        console.log('Budget modal zatvoren.');
+    } else {
+        console.log('Ne mogu da pronađem budget modal.');
     }
-}
+};
 
 function loadBudgetCategories() {
     var container = document.getElementById('budgetCategories');
@@ -456,15 +717,19 @@ function loadBudgetCategories() {
     budgetCategories.forEach(function(category, index) {
         var categoryDiv = document.createElement('div');
         categoryDiv.style.cssText = 'display: flex; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;';
+        categoryDiv.className = 'budget-category-item';
+        // Dodajemo label i input sa jedinstvenim ID-om za svaku kategoriju
         categoryDiv.innerHTML = `
-            <input type="text" value="${category.name}" 
+            <label for="categoryName${index}" class="form-label">Naziv kategorije ${index+1}</label>
+            <input type="text" id="categoryName${index}" name="categoryName${index}" value="${category.name}" 
                    onchange="updateCategoryName(${index}, this.value)" 
-                   class="form-input" style="flex: 2;" placeholder="Naziv kategorije">
-            <input type="number" value="${category.amount}" 
+                   class="form-input" style="flex: 2;" placeholder="Naziv kategorije" autocomplete="off">
+            <label for="categoryAmount${index}" class="form-label">Iznos za kategoriju ${index+1}</label>
+            <input type="number" id="categoryAmount${index}" name="categoryAmount${index}" value="${category.amount}" 
                    onchange="updateCategoryAmount(${index}, this.value)" 
-                   class="form-input" style="flex: 1;" placeholder="Iznos" min="0" step="10">
+                   class="form-input" style="flex: 1;" placeholder="Iznos" min="0" step="10" autocomplete="off">
             <button type="button" onclick="removeBudgetCategory(${index})" 
-                    class="btn btn-secondary" style="padding: 0.4rem;">
+                    class="btn btn-secondary" style="padding: 0.4rem;" aria-label="Ukloni kategoriju ${index+1}">
                 <i class="fas fa-trash"></i>
             </button>
         `;
@@ -520,9 +785,14 @@ function updateBudgetSummary() {
     }
 }
 
-function saveBudgetChanges() {
+// Globalna funkcija za čuvanje budžeta
+window.saveBudgetChanges = function() {
+    console.log('🔄 saveBudgetChanges() pozvan!');
+    
     var monthlyBudget = parseFloat(document.getElementById('monthlyBudget').value) || 0;
     var spentAmount = parseFloat(document.getElementById('spentAmount').value) || 0;
+    
+    console.log('💰 Budžet podaci:', { monthlyBudget, spentAmount, categories: budgetCategories });
     
     var budgetData = {
         monthly: monthlyBudget,
@@ -532,44 +802,147 @@ function saveBudgetChanges() {
     };
     
     localStorage.setItem('userBudget', JSON.stringify(budgetData));
+    console.log('💾 Podaci sačuvani u localStorage');
     
     // Ažuriramo prikaz na stranici
     updateBudgetDisplay();
+    console.log('🔄 updateBudgetDisplay() pozvan');
+    
+    // Pozivamo BudgetSync da sinhronizuje prikaz na svim stranicama
+    if (typeof window.BudgetSync !== 'undefined') {
+        console.log('🔄 Pozivam BudgetSync.synchronizeAllDisplays()');
+        window.BudgetSync.synchronizeAllDisplays();
+    }
     
     // Prikazujemo obaveštenje
-    showNotification('Budžet je uspešno ažuriran!', 'success');
+    if (typeof showProfileNotification === 'function') {
+        showProfileNotification('Budžet je uspešno ažuriran!', 'success');
+    } else if (typeof window.showNotification === 'function') {
+        window.showNotification('Budžet je uspešno ažuriran!', 'success');
+    } else {
+        console.log('✅ Budžet je uspešno ažuriran!');
+    }
     
+    // Zatvaramo modal
     closeBudgetModal();
-}
+};
 
 function updateBudgetDisplay() {
-    var savedBudget = JSON.parse(localStorage.getItem('userBudget'));
-    if (!savedBudget) return;
+    console.log('📊 updateBudgetDisplay() pozvana');
     
-    // Ažuriramo sve elemente na stranici koji prikazuju budžet
+    var savedBudget = JSON.parse(localStorage.getItem('userBudget'));
+    if (!savedBudget) {
+        console.log('❌ Nema sačuvanih podataka o budžetu');
+        return;
+    }
+    
+    console.log('💾 Učitani budžet:', savedBudget);
+    
+    // Podrška za oba formata budžeta - stari (monthly/spent) i novi (monthlyIncome/necessities/hobby/savings)
+    var monthlyAmount, spentAmount, remaining;
+    
+    if (savedBudget.monthly !== undefined) {
+        // Stari format iz main.js
+        monthlyAmount = savedBudget.monthly;
+        spentAmount = savedBudget.spent || 0;
+        remaining = monthlyAmount - spentAmount;
+    } else if (savedBudget.monthlyIncome !== undefined) {
+        // Novi format iz profile.html
+        monthlyAmount = savedBudget.monthlyIncome;
+        // Izračunavamo potrošeno na osnovu procenata necessities i hobby
+        var necessitiesAmount = (monthlyAmount * (savedBudget.necessities || 0)) / 100;
+        var hobbyAmount = (monthlyAmount * (savedBudget.hobby || 0)) / 100;
+        spentAmount = necessitiesAmount + hobbyAmount;
+        remaining = monthlyAmount - spentAmount;    } else {
+        console.log('❌ Nema validnih podataka za budžet');
+        return; // Nema validnih podataka
+    }
+    
+    console.log('📊 Izračunate vrednosti:', { monthlyAmount, spentAmount, remaining });
+    
+    // Ažuriramo sve elemente na stranici koji prikazuju budžet (index.html - data-budget atributi)
     var monthlyBudgetElements = document.querySelectorAll('[data-budget="monthly"]');
     var spentElements = document.querySelectorAll('[data-budget="spent"]');
     var remainingElements = document.querySelectorAll('[data-budget="remaining"]');
     
+    console.log('🔍 Pronađeni elementi:', {
+        monthly: monthlyBudgetElements.length,
+        spent: spentElements.length,
+        remaining: remainingElements.length
+    });
+    
     monthlyBudgetElements.forEach(function(el) {
-        el.textContent = '€' + savedBudget.monthly.toLocaleString();
+        el.textContent = '€' + monthlyAmount.toLocaleString();
     });
     
     spentElements.forEach(function(el) {
-        el.textContent = '€' + savedBudget.spent.toLocaleString();
+        el.textContent = '€' + spentAmount.toLocaleString();
     });
     
-    var remaining = savedBudget.monthly - savedBudget.spent;
     remainingElements.forEach(function(el) {
         el.textContent = '€' + remaining.toLocaleString();
     });
     
     // Ažuriramo progress bar
     var progressBars = document.querySelectorAll('[data-budget="progress"]');
-    var percentage = savedBudget.monthly > 0 ? (savedBudget.spent / savedBudget.monthly) * 100 : 0;
+    var percentage = monthlyAmount > 0 ? (spentAmount / monthlyAmount) * 100 : 0;
     progressBars.forEach(function(bar) {
         bar.style.width = Math.min(percentage, 100) + '%';
     });
+      // Ažuriramo i profile elemente (profile.html - ID selektori)
+    var totalIncomeEl = document.getElementById('totalIncome');
+    var totalExpensesEl = document.getElementById('totalExpenses');
+    var currentBalanceEl = document.getElementById('currentBalance');
+    
+    if (totalIncomeEl) {
+        totalIncomeEl.textContent = '€' + monthlyAmount.toLocaleString();
+    }
+    
+    if (totalExpensesEl) {
+        totalExpensesEl.textContent = '€' + spentAmount.toLocaleString();
+    }
+    
+    if (currentBalanceEl) {
+        currentBalanceEl.textContent = '€' + remaining.toLocaleString();
+    }
+      // Ažuriramo i kategorije budžeta ako postoje
+    if (savedBudget.categories) {
+        Object.keys(savedBudget.categories).forEach(function(categoryKey) {
+            var categoryData = savedBudget.categories[categoryKey];
+            var categoryAmountEl = document.getElementById(categoryKey + 'Amount');
+            var categoryAmountDisplayEl = document.getElementById(categoryKey + 'AmountDisplay');
+            
+            if (categoryAmountEl) {
+                categoryAmountEl.textContent = '€' + (categoryData.amount || 0).toLocaleString();
+            }
+            
+            if (categoryAmountDisplayEl) {
+                categoryAmountDisplayEl.textContent = '€' + (categoryData.amount || 0).toLocaleString();
+            }
+        });
+    }
+    
+    // Ažuriranje elemenata za novi format budžeta (necessities, hobby, savings)
+    if (savedBudget.monthlyIncome !== undefined) {
+        var necessitiesAmountEl = document.getElementById('necessitiesAmount');
+        var hobbyAmountEl = document.getElementById('hobbyAmount');
+        var savingsAmountEl = document.getElementById('savingsAmount');
+        
+        if (necessitiesAmountEl) {
+            var necessitiesAmount = (monthlyAmount * (savedBudget.necessities || 0)) / 100;
+            necessitiesAmountEl.textContent = '€' + necessitiesAmount.toLocaleString();
+        }
+        
+        if (hobbyAmountEl) {
+            var hobbyAmount = (monthlyAmount * (savedBudget.hobby || 0)) / 100;
+            hobbyAmountEl.textContent = '€' + hobbyAmount.toLocaleString();
+        }
+        
+        if (savingsAmountEl) {
+            var savingsAmount = (monthlyAmount * (savedBudget.savings || 0)) / 100;
+            savingsAmountEl.textContent = '€' + savingsAmount.toLocaleString();
+        }
+    }
 }
 
 // ===== PROFILE MANAGEMENT FUNCTIONS =====
@@ -774,11 +1147,94 @@ function removeAvatar() {
 }
 
 // Load data on page load
-document.addEventListener('DOMContentLoaded', function() {
+window.EventManager.onDOMReady('profileData', function() {
     if (document.getElementById('profileForm')) {
         loadProfileData();
     }
     if (document.querySelector('[data-budget]')) {
         updateBudgetDisplay();
     }
+    
+    // Dodajemo globalni event listener za budget formu
+    const budgetFormHandler = function(e) {
+        if (e.target.id === 'budgetForm') {
+            console.log('📝 Budget forma submitted!');
+            e.preventDefault();
+            saveBudgetChanges();
+        }
+    };
+    
+    // Remove existing listener first
+    document.removeEventListener('submit', window.budgetFormHandler);
+    
+    // Store reference globally for later cleanup
+    window.budgetFormHandler = budgetFormHandler;
+    document.addEventListener('submit', budgetFormHandler);
+    
+    console.log('🏁 main.js učitan i event listeneri postavljeni');
 });
+
+// Utility for managing event listeners to prevent duplicates and memory leaks
+window.EventManager = {
+    listeners: new Map(),
+    
+    // Add event listener with automatic cleanup of previous listeners
+    addListener(element, eventType, handler, options) {
+        if (!element) return;
+        
+        // Create unique key for this element+event combination
+        const key = `${element}:${eventType}`;
+        
+        // Remove any existing listener for this element+event
+        if (this.listeners.has(key)) {
+            const oldHandler = this.listeners.get(key);
+            element.removeEventListener(eventType, oldHandler, options);
+        }
+        
+        // Add new listener and store reference
+        element.addEventListener(eventType, handler, options);
+        this.listeners.set(key, handler);
+        
+        return handler; // Return handler in case it's needed elsewhere
+    },
+    
+    // Remove a specific listener
+    removeListener(element, eventType, options) {
+        if (!element) return;
+        
+        const key = `${element}:${eventType}`;
+        if (this.listeners.has(key)) {
+            const handler = this.listeners.get(key);
+            element.removeEventListener(eventType, handler, options);
+            this.listeners.delete(key);
+        }
+    },
+    
+    // Utility for adding a safe DOMContentLoaded listener
+    // This ensures only one listener runs for each callback ID
+    onDOMReady(callbackId, callback) {
+        // Use a special prefix for document:DOMContentLoaded
+        const key = `document:DOMContentLoaded:${callbackId}`;
+        
+        // Check if DOM is already loaded
+        if (document.readyState === 'loading') {
+            // If not loaded yet, add the listener
+            const handler = () => {
+                callback();
+                this.listeners.delete(key);
+            };
+            
+            // Remove existing listener if any
+            if (this.listeners.has(key)) {
+                document.removeEventListener('DOMContentLoaded', this.listeners.get(key));
+            }
+            
+            // Add new listener
+            document.addEventListener('DOMContentLoaded', handler);
+            this.listeners.set(key, handler);
+        } else {
+            // If already loaded, run immediately
+            setTimeout(callback, 0);
+        }
+    }
+};

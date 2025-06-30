@@ -5,7 +5,15 @@ class TechnicalSupport {
         this.chatMessages = [];
         this.isTyping = false;
         this.knowledgeBase = this.initKnowledgeBase();
-        this.init();
+        this.initialized = false;
+        this.boundInit = this.init.bind(this);
+        
+        // Handle both scenarios - already loaded and still loading
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', this.boundInit);
+        } else {
+            this.boundInit();
+        }
     }
     
     initKnowledgeBase() {
@@ -197,35 +205,9 @@ Kredit može biti alat ili tereta - zavisi kako ga koristite:
 • Plaćajte više od minimuma kad god možete
 • Izbegavajte kartice sa velikim kamatama
 
-**📞 Problemi sa dugovima?** Kontaktirajte me za personalizovanu strategiju.`,                    action: 'consultation',
+**📞 Problemi sa dugovima?** Kontaktirajte me za personalizovanu strategiju.`,
+                    action: 'consultation',
                     consultationType: 'debt'
-                },
-                
-                'budžet': {
-                    message: `📊 **Budžetiranje - Kontrola nad vašim novcem**
-                    
-Budžet je plan koji vam pomaže da kontrolišete novac umesto da novac kontroliše vas:
-
-**📝 Koraci za kreiranje budžeta:**
-1. **Izračunajte ukupne prihode** (neto plata + dodatni prihodi)
-2. **Napravite listu svih troškova:**
-   - Fiksni (kirija, rate, osiguranje)
-   - Varijabilni (hrana, transport, zabava)
-3. **Kategorišite troškove** po važnosti
-4. **Postavite limite** za svaku kategoriju
-5. **Pratite troškove** tokom meseca
-
-**💡 Popularni metodi:**
-• **50/30/20 pravilo** - 50% potrebe, 30% želje, 20% štednja
-• **Zero-based budgeting** - Svaki dinar ima svrhu
-• **Envelope metod** - Fizički ili digitalni "koverat" za kategorije
-
-**📱 Alati za budžetiranje:**
-- Naš budžet tracker u aplikaciji
-- Excel/Google Sheets tabele
-- Mobilne aplikacije (YNAB, Mint)
-- Envelope sistem sa gotovinom`,
-                    action: 'general_info'
                 },
                 
                 'tehnicka': {
@@ -326,497 +308,213 @@ Mogu da vam pomognem sa:
 Kako vam mogu pomoći danas? 😊`,
                     action: 'general_info'
                 }
-                },
-                
-                'default': {
-                    message: `🤖 **Dobrodošli u Golden Balance podršku!**
-                    
-Mogu da vam pomognem sa:
-                    
-**💰 Finansijskim pitanjima:**
-• Investiranje i portfolio strategije
-• Štednja i budžetiranje  
-• Penziono planiranje
-• Upravljanje dugovima
-• Poreska pitanja
-• Osiguranje i zaštita
-
-**🔧 Tehničkim pitanjima:**
-• Korišćenje platforme
-• Problemi sa nalogom
-• Funkcionalnosti aplikacije
-
-**💬 Kako mogu da pomognem?**
-Opišite vaše pitanje ili problem, a ja ću vam dati detaljno objašnjenje i usmeriti vas ka najboljoj soluciji.
-
-**Za kompleksna finansijska pitanja, preporučujem zakazivanje besplatne konsultacije sa našim stručnjakom.**`,
-                    action: 'general_info'
-                }
             }
         };
     }
 
     init() {
-        this.renderTickets();
-        this.initChat();
-        this.setupEventListeners();
+        document.addEventListener('DOMContentLoaded', () => {
+            this.renderChat();
+            this.bindEvents();
+            this.renderTickets();
+            this.initialized = true;
+        });
     }
-
-    // Support Ticket System
-    createTicket(subject, description, priority = 'medium') {
-        const ticket = {
-            id: 'TIC-' + Date.now(),
-            subject: subject,
-            description: description,
-            priority: priority,
-            status: 'open',
-            created: new Date().toISOString(),
-            messages: []
-        };
-
-        this.tickets.unshift(ticket);
-        this.saveTickets();
-        this.renderTickets();
-        return ticket;
+    
+    bindEvents() {
+        const _this = this;
+        
+        // Slanje poruke na Enter
+        const chatInput = document.getElementById('chat-input');
+        if (chatInput) {
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    _this.sendMessage();
+                }
+            });
+        } else {
+            console.error('Element #chat-input nije pronađen');
+        }
+        
+        // Klik na dugme za slanje poruke
+        const sendButton = document.getElementById('send-button');
+        if (sendButton) {
+            sendButton.addEventListener('click', function() {
+                _this.sendMessage();
+            });
+        } else {
+            console.error('Element #send-button nije pronađen');
+        }
+        
+        // Klik na dugme za zakazivanje konsultacije
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            chatContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('schedule-consultation')) {
+                    _this.scheduleConsultation(e.target.dataset.type);
+                }
+            });
+        } else {
+            console.error('Element #chat-container nije pronađen');
+        }
     }
-
-    renderTickets() {
-        const container = document.getElementById('supportTickets');
-        if (!container) return;
-
-        if (this.tickets.length === 0) {
-            container.innerHTML = `
-                <div class="no-tickets">
-                    <i class="fas fa-ticket-alt"></i>
-                    <p>Nemate otvorene tikete</p>
-                </div>
-            `;
+    
+    renderChat() {
+        const chatContainer = document.getElementById('chat-container');
+        if (!chatContainer) {
+            console.error('Element #chat-container nije pronađen');
             return;
         }
-
-        container.innerHTML = this.tickets.map(ticket => `
-            <div class="support-ticket" data-id="${ticket.id}">
-                <div class="ticket-header">
-                    <div class="ticket-id">${ticket.id}</div>
-                    <div class="ticket-status status-${ticket.status}">${this.getStatusText(ticket.status)}</div>
-                </div>
-                <div class="ticket-subject">${ticket.subject}</div>
-                <div class="ticket-meta">
-                    <span class="priority priority-${ticket.priority}">
-                        <i class="fas fa-flag"></i> ${this.getPriorityText(ticket.priority)}
-                    </span>
-                    <span class="ticket-date">${this.formatDate(ticket.created)}</span>
-                </div>
-                <div class="ticket-actions">
-                    <button class="btn-sm" onclick="support.viewTicket('${ticket.id}')">
-                        <i class="fas fa-eye"></i> Prikaži
-                    </button>
-                    ${ticket.status === 'open' ? `
-                        <button class="btn-sm btn-danger" onclick="support.closeTicket('${ticket.id}')">
-                            <i class="fas fa-times"></i> Zatvori
-                        </button>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
-    }
-
-    getStatusText(status) {
-        const statusMap = {
-            'open': 'Otvoren',
-            'in-progress': 'U radu',
-            'closed': 'Zatvoren',
-            'resolved': 'Rešen'
-        };
-        return statusMap[status] || status;
-    }
-
-    getPriorityText(priority) {
-        const priorityMap = {
-            'low': 'Niska',
-            'medium': 'Srednja',
-            'high': 'Visoka',
-            'urgent': 'Hitno'
-        };
-        return priorityMap[priority] || priority;
-    }
-
-    viewTicket(ticketId) {
-        const ticket = this.tickets.find(t => t.id === ticketId);
-        if (!ticket) return;
-
-        const modal = this.createTicketModal(ticket);
-        document.body.appendChild(modal);
-    }
-
-    createTicketModal(ticket) {
-        const modal = document.createElement('div');
-        modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal ticket-modal">
-                <div class="modal-header">
-                    <h3>Tiket ${ticket.id}</h3>
-                    <button class="btn-close" onclick="this.closest('.modal-overlay').remove()">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="ticket-details">
-                        <div class="ticket-info">
-                            <div class="info-row">
-                                <label>Naslov:</label>
-                                <span>${ticket.subject}</span>
-                            </div>
-                            <div class="info-row">
-                                <label>Status:</label>
-                                <span class="status-${ticket.status}">${this.getStatusText(ticket.status)}</span>
-                            </div>
-                            <div class="info-row">
-                                <label>Prioritet:</label>
-                                <span class="priority-${ticket.priority}">${this.getPriorityText(ticket.priority)}</span>
-                            </div>
-                            <div class="info-row">
-                                <label>Kreiran:</label>
-                                <span>${this.formatDate(ticket.created)}</span>
-                            </div>
-                        </div>
-                        <div class="ticket-description">
-                            <h4>Opis problema:</h4>
-                            <p>${ticket.description}</p>
-                        </div>
-                        <div class="ticket-messages">
-                            <h4>Poruke:</h4>
-                            <div class="messages-list">
-                                ${ticket.messages.length === 0 ? 
-                                    '<p class="no-messages">Nema poruka</p>' :
-                                    ticket.messages.map(msg => `
-                                        <div class="message-item ${msg.isStaff ? 'staff-message' : 'user-message'}">
-                                            <div class="message-header">
-                                                <strong>${msg.isStaff ? 'Podrška' : 'Vi'}</strong>
-                                                <span class="message-time">${this.formatDate(msg.timestamp)}</span>
-                                            </div>
-                                            <div class="message-content">${msg.content}</div>
-                                        </div>
-                                    `).join('')
-                                }
-                            </div>
-                            ${ticket.status === 'open' ? `
-                                <div class="message-form">
-                                    <textarea 
-                                        id="newMessage-${ticket.id}" 
-                                        placeholder="Unesite vašu poruku..."
-                                        rows="3"
-                                    ></textarea>
-                                    <button class="btn" onclick="support.addMessage('${ticket.id}')">
-                                        Pošalji poruku
-                                    </button>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        return modal;
-    }
-
-    addMessage(ticketId) {
-        const textarea = document.getElementById(`newMessage-${ticketId}`);
-        const content = textarea.value.trim();
         
-        if (!content) return;
-
-        const ticket = this.tickets.find(t => t.id === ticketId);
-        if (!ticket) return;
-
-        const message = {
-            id: Date.now(),
-            content: content,
-            timestamp: new Date().toISOString(),
-            isStaff: false
-        };
-
-        ticket.messages.push(message);
-        this.saveTickets();
-
-        // Simulate staff response after 2 seconds
-        setTimeout(() => {
-            const staffResponse = {
-                id: Date.now() + 1,
-                content: "Hvala vam na poruci. Naš tim će preuzeti slučaj i kontaktirati vas uskoro.",
-                timestamp: new Date().toISOString(),
-                isStaff: true
-            };
-            ticket.messages.push(staffResponse);
-            this.saveTickets();
-        }, 2000);
-
-        // Close modal and refresh
-        document.querySelector('.modal-overlay').remove();
-        this.viewTicket(ticketId);
+        chatContainer.innerHTML = '';
+        
+        this.chatMessages.forEach(msg => {
+            const div = document.createElement('div');
+            div.classList.add('chat-message');
+            div.classList.add(msg.type);
+            div.innerHTML = msg.type === 'user' ? `
+                <div class="message-content user-message">
+                    ${msg.text}
+                </div>
+            ` : `
+                <div class="message-content bot-message">
+                    ${msg.text}
+                </div>
+            `;
+            chatContainer.appendChild(div);
+        });
+        
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-
-    closeTicket(ticketId) {
-        const ticket = this.tickets.find(t => t.id === ticketId);
-        if (ticket) {
-            ticket.status = 'closed';
+    
+    renderTickets() {
+        const ticketsContainer = document.getElementById('tickets-container');
+        if (!ticketsContainer) {
+            console.error('Element #tickets-container nije pronađen');
+            return;
+        }
+        
+        ticketsContainer.innerHTML = '';
+        
+        this.tickets.forEach((ticket, index) => {
+            const div = document.createElement('div');
+            div.classList.add('ticket');
+            div.innerHTML = `
+                <div class="ticket-header">
+                    <span class="ticket-id">Ticket #${ticket.id}</span>
+                    <span class="ticket-status ${ticket.status}">${ticket.status}</span>
+                </div>
+                <div class="ticket-body">
+                    <div class="ticket-question">${ticket.question}</div>
+                    <div class="ticket-answer ${ticket.answer ? '' : 'hidden'}">${ticket.answer}</div>
+                </div>
+                <div class="ticket-footer">
+                    <button class="btn btn-primary btn-sm" onclick="support.replyToTicket(${index})">Odgovori</button>
+                    <button class="btn btn-danger btn-sm" onclick="support.deleteTicket(${index})">Obriši</button>
+                </div>
+            `;
+            ticketsContainer.appendChild(div);
+        });
+    }
+    
+    sendMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        
+        if (!text) return;
+        
+        // Dodaj korisničku poruku u chat
+        this.chatMessages.push({ type: 'user', text });
+        this.renderChat();
+        
+        // Očisti input polje
+        input.value = '';
+        
+        // Simuliraj odgovor bota
+        this.simulateBotResponse(text);
+    }
+    
+    simulateBotResponse(userText) {
+        const lowerCaseText = userText.toLowerCase();
+        let responseKey = 'default';
+        
+        // Proveri da li korisnik traži konsultaciju
+        if (this.knowledgeBase.investmentKeywords.some(keyword => lowerCaseText.includes(keyword))) {
+            responseKey = 'consultation_required';
+        } else {
+            // Prođi kroz sve ključne reči i pronađi odgovarajući odgovor
+            for (const [key, keywords] of Object.entries(this.knowledgeBase.keywords)) {
+                for (const keyword of keywords) {
+                    if (lowerCaseText.includes(keyword)) {
+                        responseKey = key;
+                        break;
+                    }
+                }
+                if (responseKey !== 'default') break;
+            }
+        }
+        
+        const response = this.knowledgeBase.responses[responseKey];
+        
+        // Dodaj odgovor bota u chat
+        this.chatMessages.push({ type: 'bot', text: response.message });
+        this.renderChat();
+        
+        // Ako je potrebna konsultacija, dodaj dugme za zakazivanje
+        if (response.action === 'consultation') {
+            this.addConsultationButton(response.consultationType);
+        }
+    }
+    
+    addConsultationButton(type) {
+        const button = document.createElement('button');
+        button.classList.add('btn', 'btn-success', 'schedule-consultation');
+        button.dataset.type = type;
+        button.innerText = 'Zakazivanje konsultacije';
+        
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            chatContainer.appendChild(button);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        } else {
+            console.error('Element #chat-container nije pronađen');
+        }
+    }
+    
+    scheduleConsultation(type) {
+        // Ovdje ide logika za zakazivanje konsultacije (npr. otvaranje novog prozora ili preusmeravanje na stranicu za zakazivanje)
+        alert(`Zakazivanje konsultacije za tip: ${type}`);
+    }
+    
+    replyToTicket(index) {
+        const ticket = this.tickets[index];
+        const answer = prompt('Unesite odgovor:', ticket.answer || '');
+        
+        if (answer !== null) {
+            // Ažuriraj odgovor na tiketu
+            this.tickets[index].answer = answer;
+            this.saveTickets();
+            this.renderTickets();
+            
+            // Prikaži odgovor u chat-u
+            this.chatMessages.push({ type: 'bot', text: answer });
+            this.renderChat();
+        }
+    }
+    
+    deleteTicket(index) {
+        if (confirm('Da li ste sigurni da želite da obrišete ovaj tiket?')) {
+            this.tickets.splice(index, 1);
             this.saveTickets();
             this.renderTickets();
         }
     }
-
-    // Live Chat System
-    initChat() {
-        this.chatMessages = [
-            {
-                id: 1,
-                content: "Dobrodošli u tehničku podršku! Kako vam možemo pomoći danas?",
-                isStaff: true,
-                timestamp: new Date().toISOString()
-            }
-        ];
-        this.renderChatMessages();
-    }
-
-    renderChatMessages() {
-        const container = document.getElementById('chatMessages');
-        if (!container) return;
-
-        container.innerHTML = this.chatMessages.map(msg => `
-            <div class="chat-message ${msg.isStaff ? 'staff-message' : 'user-message'}">
-                <div class="message-avatar">
-                    <i class="fas ${msg.isStaff ? 'fa-headset' : 'fa-user'}"></i>
-                </div>
-                <div class="message-content">
-                    <div class="message-text">${msg.content}</div>
-                    <div class="message-time">${this.formatTime(msg.timestamp)}</div>
-                </div>
-            </div>
-        `).join('');
-
-        container.scrollTop = container.scrollHeight;
-    }
-
-    sendChatMessage() {
-        const input = document.getElementById('chatInput');
-        const content = input.value.trim();
-        
-        if (!content) return;
-
-        // Add user message
-        const userMessage = {
-            id: Date.now(),
-            content: content,
-            isStaff: false,
-            timestamp: new Date().toISOString()
-        };
-
-        this.chatMessages.push(userMessage);
-        input.value = '';
-        this.renderChatMessages();
-
-        // Show typing indicator
-        this.showTypingIndicator();
-
-        // Simulate staff response
-        setTimeout(() => {
-            this.hideTypingIndicator();
-            const response = this.generateResponse(content);
-            const staffMessage = {
-                id: Date.now() + 1,
-                content: response,
-                isStaff: true,
-                timestamp: new Date().toISOString()
-            };
-            this.chatMessages.push(staffMessage);
-            this.renderChatMessages();
-        }, Math.random() * 2000 + 1000);
-    }
-
-    showTypingIndicator() {
-        const container = document.getElementById('chatMessages');
-        const typingDiv = document.createElement('div');
-        typingDiv.id = 'typingIndicator';
-        typingDiv.className = 'chat-message staff-message typing';
-        typingDiv.innerHTML = `
-            <div class="message-avatar">
-                <i class="fas fa-headset"></i>
-            </div>
-            <div class="message-content">
-                <div class="typing-dots">
-                    <span></span><span></span><span></span>
-                </div>
-            </div>
-        `;        container.appendChild(typingDiv);
-        container.scrollTop = container.scrollHeight;
-    }
     
-    hideTypingIndicator() {
-        const indicator = document.getElementById('typingIndicator');
-        if (indicator) indicator.remove();
-    }
-    
-    generateResponse(userMessage) {
-        const message = userMessage.toLowerCase();
-        
-        // Analiza ključnih reči za finansijska pitanja
-        const detectedCategory = this.analyzeMessage(message);
-        const response = this.knowledgeBase.responses[detectedCategory] || this.knowledgeBase.responses.default;
-        
-        // Formatiraj odgovor
-        let formattedResponse = response.message;
-        
-        // Dodaj akcije na osnovu kategorije
-        if (response.action === 'consultation') {
-            formattedResponse += `\n\n🗓️ **Preporučujem zakazivanje besplatne konsultacije**\n[Zakažite konsultaciju](javascript:openModal('consultationModal')) za detaljno razmotravanje vaše situacije.`;
-        } else if (response.action === 'budgeting') {
-            formattedResponse += `\n\n📊 **Koristite naš budžet tracker**\nProbajte naš [budžet alat](profile.html#budget) za lakše upravljanje troškovima.`;
-        }
-          return formattedResponse;
-    }
-
-    analyzeMessage(message) {
-        // Analiza ključnih reči
-        for (var category in this.knowledgeBase.keywords) {
-            var keywords = this.knowledgeBase.keywords[category];
-            for (var i = 0; i < keywords.length; i++) {
-                if (message.includes(keywords[i].toLowerCase())) {
-                    return category;
-                }
-            }
-        }
-        
-        // Specifična prepoznavanja
-        if (message.includes('ne radi') || message.includes('greška') || message.includes('problem')) {
-            return 'tehnicka';
-        }
-        
-        if (message.includes('lozinka') || message.includes('login') || message.includes('prijava')) {
-            return 'login';
-        }
-        
-        if (message.includes('sporo') || message.includes('ne učitava') || message.includes('aplikacija')) {
-            return 'aplikacija';
-        }
-        
-        // Ako nema poklapanja, vrati default
-        return 'default';
-    }
-
-    // Nova funkcija za prepoznavanje kada je potrebna konsultacija
-    requiresConsultation(message) {
-        // Proveravamo da li poruka sadrži ključne reči koje zahtevaju konsultaciju
-        for (var i = 0; i < this.knowledgeBase.investmentKeywords.length; i++) {
-            if (message.includes(this.knowledgeBase.investmentKeywords[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // FAQ System
-    renderFAQ() {
-        const faqData = [
-            {
-                question: "Kako da resetujem lozinku?",
-                answer: "Kliknite na 'Zaboravili ste lozinku?' na stranici za prijavu i sledite instrukcije."
-            },
-            {
-                question: "Kako da promenim svoju email adresu?",
-                answer: "Idite u Profil → Podešavanja → Lične informacije i ažurirajte vašu email adresu."
-            },
-            {
-                question: "Da li je moj novac siguran?",
-                answer: "Da, koristimo bank-level enkripciju i partneri smo sa licenciranim finansijskim institucijama."
-            },
-            {
-                question: "Kako da kontaktiram podršku?",
-                answer: "Možete nas kontaktirati preko live chat-a, email-a ili kreiranjem support tiketa."
-            },
-            {
-                question: "Koliko košta korišćenje aplikacije?",
-                answer: "Osnovno korišćenje je besplatno. Premium funkcije su dostupne za 9.99€ mesečno."
-            }
-        ];
-
-        const container = document.getElementById('faqContainer');
-        if (!container) return;
-
-        container.innerHTML = faqData.map((item, index) => `
-            <div class="faq-item">
-                <div class="faq-question" onclick="support.toggleFAQ(${index})">
-                    <span>${item.question}</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer" id="faq-${index}">
-                    <p>${item.answer}</p>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    toggleFAQ(index) {
-        const answer = document.getElementById(`faq-${index}`);
-        const question = answer.previousElementSibling;
-        const icon = question.querySelector('i');
-        
-        answer.classList.toggle('active');
-        icon.classList.toggle('fa-chevron-down');
-        icon.classList.toggle('fa-chevron-up');
-    }
-
-    // Utility methods
     saveTickets() {
         localStorage.setItem('supportTickets', JSON.stringify(this.tickets));
     }
-
-    formatDate(dateString) {
-        return new Date(dateString).toLocaleDateString('sr-RS', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-
-    formatTime(dateString) {
-        return new Date(dateString).toLocaleTimeString('sr-RS', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    }
-
-    setupEventListeners() {
-        // Chat input enter key
-        const chatInput = document.getElementById('chatInput');
-        if (chatInput) {
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    this.sendChatMessage();
-                }
-            });
-        }
-
-        // Support form submission
-        const supportForm = document.getElementById('supportForm');
-        if (supportForm) {
-            supportForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const subject = document.getElementById('ticketSubject').value;
-                const description = document.getElementById('ticketDescription').value;
-                const priority = document.getElementById('ticketPriority').value;
-                
-                if (subject && description) {
-                    this.createTicket(subject, description, priority);
-                    supportForm.reset();
-                    alert('Tiket je uspešno kreiran!');
-                }
-            });
-        }
-    }
 }
 
-// Initialize support system
+// Inicijalizuj podršku
 const support = new TechnicalSupport();

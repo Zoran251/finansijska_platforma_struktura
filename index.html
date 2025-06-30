@@ -1340,9 +1340,7 @@
                 <button class="btn" onclick="showPage('preview')">
                     <i class="fas fa-chart-line"></i> Pogledaj Pregled
                 </button>
-            </div>
-
-            <div class="dashboard-grid">
+            </div>            <div class="dashboard-grid">
                 <div class="glass-card card">
                     <div class="card-header">
                         <div class="card-icon">
@@ -1350,7 +1348,7 @@
                         </div>
                         <div class="card-title">Ukupni Prihodi</div>
                     </div>
-                    <div class="card-value">€54,000</div>
+                    <div class="card-value" data-budget="total-income">€54,000</div>
                     <div class="card-subtitle">
                         <i class="fas fa-arrow-up" style="color: var(--success);"></i>
                         23.36% u odnosu na prošli mesec
@@ -1364,7 +1362,7 @@
                         </div>
                         <div class="card-title">Ukupni Rashodi</div>
                     </div>
-                    <div class="card-value">€22,500</div>
+                    <div class="card-value" data-budget="total-expenses">€22,500</div>
                     <div class="card-subtitle">
                         <i class="fas fa-arrow-down" style="color: var(--error);"></i>
                         9.05% smanjenje
@@ -1378,7 +1376,7 @@
                         </div>
                         <div class="card-title">Neto Bilans</div>
                     </div>
-                    <div class="card-value">€31,500</div>
+                    <div class="card-value" data-budget="net-savings">€31,500</div>
                     <div class="card-subtitle">
                         <i class="fas fa-arrow-up" style="color: var(--success);"></i>
                         14.31% rast
@@ -1392,9 +1390,9 @@
                         </div>
                         <div class="card-title">Budžet za Mesec</div>
                     </div>
-                    <div class="card-value">€18,000</div>
+                    <div class="card-value" data-budget="monthly-budget">€18,000</div>
                     <div class="card-subtitle">
-                        Preostalo: €12,500
+                        Preostalo: <span data-budget="remaining-budget">€12,500</span>
                     </div>
                 </div>
             </div>
@@ -2007,7 +2005,7 @@
                         </div>
                         <div class="form-group" id="passwordGroup" style="display: none;">
                             <label class="form-label">Nova lozinka (ostavite prazno da zadržite postojeću)</label>
-                            <input type="password" id="profileNewPassword" class="form-input" placeholder="Unesite novu lozinku">
+                            <input type="password" id="profileNewPassword" class="form-input" placeholder="Unesite novu lozinku" autocomplete="off">
                         </div>
                         <div class="profile-edit-actions" id="profileEditActions" style="display: none;">
                             <button type="button" class="btn btn-primary" onclick="saveProfileChanges()">
@@ -2094,8 +2092,7 @@
         </section>
     </main>
 
-    <script>
-        // Navigation functionality
+    <script>        // Navigation functionality
         function showPage(pageId) {
             // Hide all pages
             const pages = document.querySelectorAll('.page-section');
@@ -2108,9 +2105,123 @@
             const navLinks = document.querySelectorAll('.nav-link');
             navLinks.forEach(link => link.classList.remove('active'));
             event.target.classList.add('active');
-            
-            // Close mobile menu if open
+              // Close mobile menu if open
             document.getElementById('navMenu').classList.remove('active');
+              // Ažuriramo podatke kada se otvori preview stranica
+            if (pageId === 'preview') {
+                // 🔄 NOVA SINHRONIZACIJA - koristi BudgetSync
+                if (typeof window.BudgetSync !== 'undefined') {
+                    console.log('🔄 Pozivam BudgetSync za preview');
+                    window.BudgetSync.updatePreviewDisplay(window.BudgetSync.getUnifiedBudgetData());
+                } else {
+                    // Fallback na staru funkciju
+                    updatePreviewData();
+                }
+            }
+            
+            // 🔄 NOVA SINHRONIZACIJA - ažuriramo dashboard kada se otvori
+            if (pageId === 'dashboard') {
+                if (typeof window.BudgetSync !== 'undefined') {
+                    console.log('🔄 Pozivam BudgetSync za dashboard');
+                    const budgetData = window.BudgetSync.getUnifiedBudgetData();
+                    if (budgetData) {
+                        window.BudgetSync.updateDashboardDisplay(budgetData);
+                    }
+                }
+            }
+        }
+
+        // Funkcija za ažuriranje preview podataka iz localStorage
+        function updatePreviewData() {
+            console.log('🔄 Ažuriranje preview podataka...');
+            
+            const budgetData = JSON.parse(localStorage.getItem('userBudget'));
+            if (!budgetData) {
+                console.log('❌ Nema sačuvanih budžet podataka');
+                return;
+            }
+            
+            console.log('📊 Učitani budžet podatci:', budgetData);
+            
+            // Izračunavamo vrednosti
+            let monthlyIncome, totalExpenses, netSavings;
+            
+            if (budgetData.monthlyIncome !== undefined) {
+                // Novi format iz profila
+                monthlyIncome = budgetData.monthlyIncome;
+                const necessitiesAmount = (monthlyIncome * (budgetData.necessities || 0)) / 100;
+                const hobbyAmount = (monthlyIncome * (budgetData.hobby || 0)) / 100;
+                totalExpenses = necessitiesAmount + hobbyAmount;
+                netSavings = monthlyIncome - totalExpenses;
+            } else if (budgetData.monthly !== undefined) {
+                // Stari format iz main.js
+                monthlyIncome = budgetData.monthly;
+                totalExpenses = budgetData.spent || 0;
+                netSavings = monthlyIncome - totalExpenses;
+            } else {
+                console.log('❌ Nepoznat format budžet podataka');
+                return;
+            }
+            
+            // Ažuriramo prikaz u preview sekciji
+            updatePreviewDisplay(monthlyIncome, totalExpenses, netSavings, budgetData);
+        }
+
+        function updatePreviewDisplay(income, expenses, savings, budgetData) {
+            // Ažuriramo osnovne vrednosti u overview tab-u
+            const overviewSection = document.getElementById('overview');
+            if (overviewSection) {
+                // Pronađemo i ažuriramo tekst
+                const incomeSpan = overviewSection.querySelector('.glass-card:first-child div:nth-child(2) span');
+                const expensesSpan = overviewSection.querySelector('.glass-card:first-child div:nth-child(3) span');
+                const savingsSpan = overviewSection.querySelector('.glass-card:first-child div:nth-child(4) span');
+                
+                if (incomeSpan) incomeSpan.textContent = `€${income.toLocaleString()}`;
+                if (expensesSpan) expensesSpan.textContent = `€${expenses.toLocaleString()}`;
+                if (savingsSpan) savingsSpan.textContent = `€${savings.toLocaleString()}`;
+                
+                // Ažuriramo progress bar
+                const progressBar = overviewSection.querySelector('.glass-card:first-child div[style*="width: 58%"]');
+                if (progressBar && income > 0) {
+                    const percentage = (expenses / income) * 100;
+                    progressBar.style.width = `${Math.min(percentage, 100)}%`;
+                }
+                
+                console.log('✅ Preview display ažuriran:', { income, expenses, savings });
+            }
+            
+            // Ažuriramo kategorije ako imamo nove podatke
+            if (budgetData.necessities !== undefined) {
+                updateCategoriesDisplay(budgetData);
+            }
+        }
+
+        function updateCategoriesDisplay(budgetData) {
+            const categoriesCard = document.querySelector('#overview .glass-card:nth-child(2)');
+            if (categoriesCard && budgetData.necessities !== undefined) {
+                // Ažuriramo procente za kategorije
+                const categoryRows = categoriesCard.querySelectorAll('div[style*="justify-content: space-between"]');
+                
+                if (categoryRows.length >= 3) {
+                    // Glavni troškovi (necessities)
+                    const necessitiesSpan = categoryRows[0]?.querySelector('span:last-child');
+                    if (necessitiesSpan) necessitiesSpan.textContent = `${budgetData.necessities}%`;
+                    
+                    // Hobi troškovi  
+                    const hobbySpan = categoryRows[1]?.querySelector('span:last-child');
+                    if (hobbySpan) hobbySpan.textContent = `${budgetData.hobby}%`;
+                    
+                    // Štednja
+                    const savingsSpan = categoryRows[2]?.querySelector('span:last-child');
+                    if (savingsSpan) savingsSpan.textContent = `${budgetData.savings}%`;
+                }
+                
+                console.log('✅ Kategorije ažurirane:', { 
+                    necessities: budgetData.necessities, 
+                    hobby: budgetData.hobby, 
+                    savings: budgetData.savings 
+                });
+            }
         }
 
         // Tab functionality for preview page
@@ -2605,12 +2716,33 @@
         }
 
         // Add smooth scrolling and animations
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add fade-in animation to cards
-            const cards = document.querySelectorAll('.glass-card');
-            cards.forEach((card, index) => {                card.style.animationDelay = `${index * 0.1}s`;
+        if (window.EventManager) {
+            window.EventManager.onDOMReady('animations', function() {
+                // Add fade-in animation to cards
+                const cards = document.querySelectorAll('.glass-card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+                
+                // Ažuriramo prikaz budžeta na početnom učitavanju
+                if (typeof updateBudgetDisplay === 'function') {
+                    updateBudgetDisplay();
+                }
             });
-        });
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add fade-in animation to cards
+                const cards = document.querySelectorAll('.glass-card');
+                cards.forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+                
+                // Ažuriramo prikaz budžeta na početnom učitavanju
+                if (typeof updateBudgetDisplay === 'function') {
+                    updateBudgetDisplay();
+                }
+            });
+        }
     </script>
 
     <!-- Budget Edit Modal -->
@@ -2620,14 +2752,14 @@
                 <h3><i class="fas fa-chart-pie"></i> Upravljanje Budžetom</h3>
                 <button class="close-btn" onclick="closeBudgetModal()">&times;</button>
             </div>
-            <form id="budgetForm">
+            <form id="budgetForm" name="budgetForm">
                 <div class="form-group">
-                    <label class="form-label">Mesečni budžet (€)</label>
-                    <input type="number" id="monthlyBudget" class="form-input" placeholder="3000" min="0" step="10">
+                    <label class="form-label" for="monthlyBudget">Mesečni budžet (€)</label>
+                    <input type="number" id="monthlyBudget" name="monthlyBudget" class="form-input" placeholder="3000" min="0" step="10" autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Već potrošeno ovaj mesec (€)</label>
-                    <input type="number" id="spentAmount" class="form-input" placeholder="2250" min="0" step="10">
+                    <label class="form-label" for="spentAmount">Već potrošeno ovaj mesec (€)</label>
+                    <input type="number" id="spentAmount" name="spentAmount" class="form-input" placeholder="2250" min="0" step="10" autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Kategorije troškova</label>
@@ -2665,14 +2797,74 @@
                     </button>                </div>
             </form>
         </div>
-    </div>
-
-    <!-- Load all JavaScript modules -->
+    </div>    <!-- Load all JavaScript modules -->
+    <script src="js/event-manager.js"></script>
     <script src="js/app.js"></script>
     <script src="js/booking.js"></script>
     <script src="js/support.js"></script>
     <script src="js/investment-calculator.js"></script>
     <script src="js/admin.js"></script>
     <script src="js/main.js"></script>
+    
+    <script>
+        // ✅ AUTOMATSKA SINHRONIZACIJA pri učitavanju stranice
+        if (window.EventManager) {
+            window.EventManager.onDOMReady('budgetSyncIndex', function() {
+                console.log('🚀 Stranica učitana - pokretam automatsku sinhronizaciju...');
+                
+                // Sačekaj da se svi moduli učitaju
+                setTimeout(function() {
+                    if (typeof window.BudgetSync !== 'undefined') {
+                        console.log('🔄 Pokretam BudgetSync.synchronizeAllDisplays()');
+                        window.BudgetSync.synchronizeAllDisplays();
+                    } else {
+                        console.log('❌ BudgetSync nije dostupan, probavam ponovo za 1 sekund...');
+                        setTimeout(function() {
+                            if (typeof window.BudgetSync !== 'undefined') {
+                                window.BudgetSync.synchronizeAllDisplays();
+                            }
+                        }, 1000);
+                    }
+                }, 500);
+            });
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('🚀 Stranica učitana - pokretam automatsku sinhronizaciju...');
+                
+                // Sačekaj da se svi moduli učitaju
+                setTimeout(function() {
+                    if (typeof window.BudgetSync !== 'undefined') {
+                        console.log('🔄 Pokretam BudgetSync.synchronizeAllDisplays()');
+                        window.BudgetSync.synchronizeAllDisplays();
+                    } else {
+                        console.log('❌ BudgetSync nije dostupan, probavam ponovo za 1 sekund...');
+                        setTimeout(function() {
+                            if (typeof window.BudgetSync !== 'undefined') {
+                                window.BudgetSync.synchronizeAllDisplays();
+                            }
+                        }, 1000);
+                    }
+                }, 500);
+            });
+        }
+            
+            // Dodatna provera za budget formu
+            var budgetForm = document.getElementById('budgetForm');
+            if (budgetForm) {
+                console.log('Postavljam dodatni event listener na budgetForm');
+                budgetForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Form submitted kroz dodatni listener');
+                    if (typeof window.saveBudgetChanges === 'function') {
+                        window.saveBudgetChanges();
+                    } else {
+                        console.error('saveBudgetChanges funkcija nije dostupna!');
+                    }
+                    return false;
+                });
+            }
+        });
+    </script>
 </body>
 </html>
+

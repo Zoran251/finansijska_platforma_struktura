@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sve Stranice - Golden Balance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #0A0A0A;
+            --dark-secondary: #1A1A1C;
+            --dark-card: rgba(26, 26, 28, 0.8);
+            --gold-bright: #D4AF37;
+            --gold-medium: #B8860B;
+            --gold-dark: #8B7355;
+            --light-text: #F5F5F5;
+            --muted-text: #CCCCCC;
+            --border-light: rgba(212, 175, 55, 0.2);
+            --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #B8860B 50%, #8B7355 100%);
+            --success: #22c55e;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--muted-text);
+            margin-bottom: 2rem;
+        }
+
+        .pages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .page-card {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--light-text);
+            display: block;
+        }
+
+        .page-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.2);
+            border-color: var(--gold-bright);
+        }
+
+        .page-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-bg);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--light-text);
+        }
+
+        .page-description {
+            color: var(--muted-text);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .page-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .status-ready {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-testing {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .github-section {
+            background: var(--dark-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .github-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-gold);
+            color: var(--dark-bg);
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .github-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .pages-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎯 Test Sve Stranice</h1>
+            <p class="subtitle">Kliknite na bilo koju karticu da testirate funkcionalnost stranice</p>
+        </div>
+
+        <div class="pages-grid">
+            <!-- Glavna aplikacija -->
+            <a href="index.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3 class="page-title">Glavna aplikacija</h3>
+                <p class="page-description">Kompletna finansijska aplikacija sa dashboard-om, transakcijama, budžetom i svim funkcionalnostima.</p>
+                <span class="page-status status-ready">✅ Spremno</span>
+            </a>
+
+            <!-- Admin panel -->
+            <a href="admin.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h3 class="page-title">Admin Panel</h3>
+                <p class="page-description">Administratorski panel sa upravljanjem korisnicima, podacima i sistemskim podešavanjima.</p>
+                <span class="page-status status-ready">✅ Spremno</span>
+            </a>
+
+            <!-- Profil stranica -->
+            <a href="profil.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="page-title">Profil korisnika</h3>
+                <p class="page-description">Upravljanje profilom, ličnim podacima, budžetom i finansijskim ciljevima.</p>
+                <span class="page-status status-ready">✅ Spremno</span>
+            </a>
+
+            <!-- Preview stranica -->
+            <a href="preview.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3 class="page-title">Preview</h3>
+                <p class="page-description">Pregled aplikacije sa demo podacima i glavnim funkcionalnostima.</p>
+                <span class="page-status status-ready">✅ Spremno</span>
+            </a>
+
+            <!-- Profile alternativna -->
+            <a href="profile.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+                <h3 class="page-title">Profile (Alt)</h3>
+                <p class="page-description">Alternativna verzija profil stranice sa dodatnim funkcionalnostima.</p>
+                <span class="page-status status-ready">✅ Spremno</span>
+            </a>
+
+            <!-- Preview Fixed -->
+            <a href="preview-fixed.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3 class="page-title">Preview Fixed</h3>
+                <p class="page-description">Ispravljena verzija preview stranice sa optimizovanim performansama.</p>
+                <span class="page-status status-ready">✅ Spremno</span>
+            </a>
+
+            <!-- Test stranice -->
+            <a href="test-budget.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h3 class="page-title">Test Budžet</h3>
+                <p class="page-description">Test stranica za budžet funkcionalnosti sa kompletnim CRUD operacijama.</p>
+                <span class="page-status status-testing">🧪 Test</span>
+            </a>
+
+            <a href="test-sinhronizacija.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-sync"></i>
+                </div>
+                <h3 class="page-title">Test Sinhronizacija</h3>
+                <p class="page-description">Test sinhronizacije podataka između različitih komponenti aplikacije.</p>
+                <span class="page-status status-testing">🧪 Test</span>
+            </a>
+
+            <a href="test-dugme.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-mouse-pointer"></i>
+                </div>
+                <h3 class="page-title">Test Dugmad</h3>
+                <p class="page-description">Test interaktivnosti dugmića i UI komponenti aplikacije.</p>
+                <span class="page-status status-testing">🧪 Test</span>
+            </a>
+
+            <a href="finalni-test-sinhronizacija.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-check-double"></i>
+                </div>
+                <h3 class="page-title">Finalni Test</h3>
+                <p class="page-description">Kompletno testiranje svih funkcionalnosti aplikacije u jednom mestu.</p>
+                <span class="page-status status-testing">🧪 Test</span>
+            </a>
+
+            <a href="error-fix-test.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-bug"></i>
+                </div>
+                <h3 class="page-title">Error Fix Test</h3>
+                <p class="page-description">Test stranica za verifikaciju ispravki grešaka i debug funkcionalnosti.</p>
+                <span class="page-status status-testing">🧪 Test</span>
+            </a>
+
+            <a href="FINAL-TEST.html" class="page-card" target="_blank">
+                <div class="page-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3 class="page-title">FINAL TEST</h3>
+                <p class="page-description">Konačno testiranje kompletne aplikacije pre deployment-a.</p>
+                <span class="page-status status-testing">🧪 Test</span>
+            </a>
+        </div>
+
+        <div class="github-section">
+            <h3 style="margin-bottom: 1rem; color: var(--light-text);">🚀 GitHub Pages Deployment</h3>
+            <p style="color: var(--muted-text); margin-bottom: 2rem;">Aplikacija je takođe dostupna na GitHub Pages-u</p>
+            
+            <a href="#" class="github-btn" onclick="openGitHubPages()">
+                <i class="fab fa-github"></i>
+                Otvori GitHub Pages
+            </a>
+            
+            <a href="#" class="github-btn" onclick="openRepository()">
+                <i class="fas fa-code-branch"></i>
+                Pogledaj Repository
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function openGitHubPages() {
+            // Zameniti sa vašim stvarnim GitHub Pages URL-om
+            window.open('https://zoran251.github.io/finansijska_platforma_struktura/', '_blank');
+        }
+
+        function openRepository() {
+            // Zameniti sa vašim stvarnim GitHub repository URL-om
+            window.open('https://github.com/zoran251/finansijska_platforma_struktura', '_blank');
+        }
+
+        // Praćenje klikova na stranice
+        document.querySelectorAll('.page-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const title = this.querySelector('.page-title').textContent;
+                console.log(`Otvaranje stranice: ${title}`);
+                
+                // Dodavanje vizuelnog feedback-a
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Dodavanje smooth scroll animacije
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.page-card');
+            
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

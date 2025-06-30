@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>🔧 Fixed Error Test</title>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: Arial; margin: 20px; }
+        .section { background: #333; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        button { background: #d4af37; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; font-weight: bold; }
+        input { padding: 8px; margin: 5px; border-radius: 4px; border: 1px solid #555; background: #444; color: white; width: 200px; }
+        .budget-display { background: #222; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .progress-bar { width: 100%; height: 20px; background: #555; border-radius: 10px; margin: 5px 0; }
+        .progress-fill { height: 100%; background: #d4af37; border-radius: 10px; width: 0%; transition: width 0.3s; }
+        #log { background: #000; padding: 10px; border-radius: 5px; height: 300px; overflow-y: scroll; font-family: monospace; font-size: 12px; }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+        .warning { color: #ffd43b; }
+    </style>
+</head>
+<body>
+    <h1>🔧 FIXED - Error Test & Budget Button</h1>
+    
+    <div class="section">
+        <h2>📊 Prikaz budžeta</h2>
+        <div class="budget-display">
+            <p>Mesečni budžet: <span data-budget="monthly">€0</span></p>
+            <p>Potrošeno: <span data-budget="spent">€0</span></p>
+            <p>Preostalo: <span data-budget="remaining">€0</span></p>
+            <div class="progress-bar">
+                <div data-budget="progress" class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>✏️ Budžet forma</h2>
+        <form id="budgetForm">
+            <div>
+                <label>Mesečni budžet (€):</label><br>
+                <input type="number" id="monthlyBudget" value="6000" min="0" step="10">
+            </div>
+            <div>
+                <label>Već potrošeno (€):</label><br>
+                <input type="number" id="spentAmount" value="4200" min="0" step="10">
+            </div>
+            <div style="margin: 20px 0;">
+                <button type="submit">💾 SAČUVAJ BUDŽET</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="section">
+        <h2>🧪 Test funkcije</h2>
+        <button onclick="testModules()">🔍 Test modula</button>
+        <button onclick="testBudget()">📊 Test budžeta</button>
+        <button onclick="clearErrors()">🧹 Obriši log</button>
+    </div>
+    
+    <div class="section">
+        <h2>📝 Console & Error Log</h2>
+        <div id="log"></div>
+    </div>
+
+    <!-- Prvo učitaj app.js -->
+    <script src="js/app.js"></script>
+    <!-- Zatim support.js -->
+    <script src="js/support.js"></script>
+    <!-- Zatim admin.js -->
+    <script src="js/admin.js"></script>
+    <!-- Na kraju main.js -->
+    <script src="js/main.js"></script>
+    
+    <script>
+        const log = document.getElementById('log');
+        
+        // Override console methods
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addLog(message, type = 'info') {
+            const time = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'warn' ? 'warning' : type === 'success' ? 'success' : '';
+            log.innerHTML += `<div class="${className}">[${time}] ${message}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addLog(args.join(' '), 'info');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addLog('❌ ERROR: ' + args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addLog('⚠️ WARNING: ' + args.join(' '), 'warn');
+        };
+        
+        // Catch global errors
+        window.addEventListener('error', function(e) {
+            addLog(`🚨 GLOBAL ERROR: ${e.message} at ${e.filename}:${e.lineno}`, 'error');
+        });
+        
+        function testModules() {
+            addLog('=== MODULE TEST ===', 'info');
+            addLog(`booking: ${typeof booking}`, 'info');
+            addLog(`calculator: ${typeof calculator}`, 'info');
+            addLog(`support: ${typeof support}`, 'info');
+            addLog(`admin: ${typeof admin}`, 'info');
+            addLog(`mainApp: ${typeof mainApp}`, 'info');
+            addLog(`updateBudgetDisplay: ${typeof updateBudgetDisplay}`, 'info');
+            addLog(`saveBudgetChanges: ${typeof saveBudgetChanges}`, 'info');
+        }
+        
+        function testBudget() {
+            addLog('=== BUDGET TEST ===', 'info');
+            try {
+                if (typeof window.updateBudgetDisplay === 'function') {
+                    window.updateBudgetDisplay();
+                    addLog('✅ updateBudgetDisplay executed', 'success');
+                } else {
+                    addLog('❌ updateBudgetDisplay not available', 'error');
+                }
+            } catch (error) {
+                addLog(`❌ Budget test error: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearErrors() {
+            log.innerHTML = '';
+            addLog('🧹 Log cleared', 'success');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('🚀 Test stranica učitana', 'success');
+            
+            setTimeout(() => {
+                testModules();
+                testBudget();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

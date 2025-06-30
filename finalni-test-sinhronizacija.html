@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINALNI TEST - Sinhronizacija Budžeta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .button {
+            background: #D4AF37;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:hover {
+            background: #C5A028;
+        }
+        .data-display {
+            background: #333;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .success { background: #10b981; }
+        .error { background: #ef4444; }
+        .warning { background: #f59e0b; }
+        .info { background: #3b82f6; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .budget-card {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #555;
+        }
+        .budget-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 FINALNI TEST - Potpuna Sinhronizacija Budžeta</h1>
+        
+        <div class="section">
+            <h2>🔧 Kontrola i Setup</h2>
+            <button class="button" onclick="clearAllData()">🗑️ Obriši sve podatke</button>
+            <button class="button" onclick="createTestBudget()">💰 Kreiraj test budžet</button>
+            <button class="button" onclick="checkAllData()">🔍 Proveri sve podatke</button>
+            <button class="button" onclick="testSyncFunctions()">🔄 Test sinhronizacije</button>
+            <div id="controlStatus" class="status"></div>
+        </div>
+        
+        <div class="section">
+            <h2>📊 Trenutno stanje localStorage</h2>
+            <div id="localStorageDisplay" class="data-display"></div>
+        </div>
+        
+        <div class="grid">
+            <div class="section">
+                <h2>💼 Simulacija Profil Prikaza</h2>
+                <div class="budget-card">
+                    <div>Mesečni prihod:</div>
+                    <div id="profileIncome" class="budget-value">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Troškovi (Glavne potrebe + Hobi):</div>
+                    <div id="profileExpenses" class="budget-value">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Štednja:</div>
+                    <div id="profileSavings" class="budget-value">€0</div>
+                </div>
+                <button class="button" onclick="updateProfileDisplay()">🔄 Ažuriraj profil prikaz</button>
+            </div>
+            
+            <div class="section">
+                <h2>📈 Simulacija Dashboard Prikaza</h2>
+                <div class="budget-card">
+                    <div>Ukupni prihodi:</div>
+                    <div id="dashboardIncome" class="budget-value" data-budget="total-income">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Ukupni rashodi:</div>
+                    <div id="dashboardExpenses" class="budget-value" data-budget="total-expenses">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Neto bilans:</div>
+                    <div id="dashboardSavings" class="budget-value" data-budget="net-savings">€0</div>
+                </div>
+                <button class="button" onclick="updateDashboardDisplay()">🔄 Ažuriraj dashboard prikaz</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📋 Simulacija Preview Prikaza</h2>
+            <div class="grid">
+                <div class="budget-card">
+                    <div>Prihod:</div>
+                    <div id="previewIncome" class="budget-value">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Troškovi:</div>
+                    <div id="previewExpenses" class="budget-value">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Štednja:</div>
+                    <div id="previewSavings" class="budget-value">€0</div>
+                </div>
+                <div class="budget-card">
+                    <div>Preostalo:</div>
+                    <div id="previewRemaining" class="budget-value">€0</div>
+                </div>
+            </div>
+            <button class="button" onclick="updatePreviewDisplay()">🔄 Ažuriraj preview prikaz</button>
+        </div>
+        
+        <div class="section">
+            <h2>🎯 GLAVNI TEST SINHRONIZACIJE</h2>
+            <button class="button" onclick="runMainSyncTest()">🚀 Pokreni glavni test</button>
+            <div id="mainTestStatus" class="status"></div>
+        </div>
+        
+        <div class="section">
+            <h2>📝 Log aktivnosti</h2>
+            <div id="activityLog" class="data-display"></div>
+            <button class="button" onclick="clearLog()">🧹 Obriši log</button>
+        </div>
+    </div>
+
+    <script>
+        let activityLog = [];
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = `[${timestamp}] ${type.toUpperCase()}: ${message}`;
+            activityLog.push(logEntry);
+            updateLogDisplay();
+            console.log(logEntry);
+        }
+        
+        function updateLogDisplay() {
+            document.getElementById('activityLog').textContent = activityLog.slice(-20).join('\n');
+        }
+        
+        function clearLog() {
+            activityLog = [];
+            updateLogDisplay();
+        }
+        
+        function clearAllData() {
+            localStorage.removeItem('userBudget');
+            localStorage.removeItem('budget');
+            localStorage.removeItem('budgetData');
+            
+            const statusDiv = document.getElementById('controlStatus');
+            statusDiv.className = 'status warning';
+            statusDiv.textContent = '🗑️ Svi podatci obrisani iz localStorage';
+            
+            log('Svi localStorage podatci obrisani', 'warning');
+            checkAllData();
+        }
+        
+        function createTestBudget() {
+            const testBudget = {
+                monthlyIncome: 75000,
+                necessities: 50,     // 37,500 RSD
+                hobby: 30,          // 22,500 RSD
+                savings: 20,        // 15,000 RSD
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userBudget', JSON.stringify(testBudget));
+            
+            const statusDiv = document.getElementById('controlStatus');
+            statusDiv.className = 'status success';
+            statusDiv.innerHTML = `
+                ✅ Test budžet kreiran!<br>
+                💰 Prihod: ${testBudget.monthlyIncome.toLocaleString()} RSD<br>
+                📊 Podela: ${testBudget.necessities}% | ${testBudget.hobby}% | ${testBudget.savings}%
+            `;
+            
+            log(`Test budžet kreiran: ${testBudget.monthlyIncome} RSD`, 'success');
+            checkAllData();
+        }
+        
+        function checkAllData() {
+            const userBudget = localStorage.getItem('userBudget');
+            const budget = localStorage.getItem('budget');
+            const budgetData = localStorage.getItem('budgetData');
+            
+            let displayText = 'TRENUTNO STANJE:\n\n';
+            
+            if (userBudget) {
+                try {
+                    const parsed = JSON.parse(userBudget);
+                    displayText += 'userBudget (PROFIL FORMAT):\n' + JSON.stringify(parsed, null, 2) + '\n\n';
+                } catch (e) {
+                    displayText += 'userBudget: NEISPRAVNA JSON\n\n';
+                }
+            } else {
+                displayText += 'userBudget: NULL\n\n';
+            }
+            
+            if (budget) {
+                try {
+                    const parsed = JSON.parse(budget);
+                    displayText += 'budget (MAIN FORMAT):\n' + JSON.stringify(parsed, null, 2) + '\n\n';
+                } catch (e) {
+                    displayText += 'budget: NEISPRAVNA JSON\n\n';
+                }
+            } else {
+                displayText += 'budget: NULL\n\n';
+            }
+            
+            if (budgetData) {
+                displayText += 'budgetData: ' + budgetData + '\n\n';
+            } else {
+                displayText += 'budgetData: NULL\n\n';
+            }
+            
+            document.getElementById('localStorageDisplay').textContent = displayText;
+        }
+        
+        function testSyncFunctions() {
+            const statusDiv = document.getElementById('controlStatus');
+            
+            if (typeof window.BudgetSync !== 'undefined') {
+                log('BudgetSync DOSTUPAN - testiram funkcije', 'success');
+                
+                try {
+                    const unifiedData = window.BudgetSync.getUnifiedBudgetData();
+                    if (unifiedData) {
+                        statusDiv.className = 'status success';
+                        statusDiv.innerHTML = `
+                            ✅ BudgetSync funkcije rade!<br>
+                            📊 Izvor: ${unifiedData.source}<br>
+                            💰 Prihod: ${unifiedData.monthlyIncome.toLocaleString()} RSD<br>
+                            💸 Troškovi: ${unifiedData.totalExpenses.toLocaleString()} RSD<br>
+                            💰 Štednja: ${unifiedData.netSavings.toLocaleString()} RSD
+                        `;
+                        log(`BudgetSync radi: prihod=${unifiedData.monthlyIncome}, troškovi=${unifiedData.totalExpenses}`, 'success');
+                    } else {
+                        statusDiv.className = 'status error';
+                        statusDiv.textContent = '❌ BudgetSync ne može da učita podatke';
+                        log('BudgetSync ne može da učita podatke', 'error');
+                    }
+                } catch (error) {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ Greška u BudgetSync: ' + error.message;
+                    log('Greška u BudgetSync: ' + error.message, 'error');
+                }
+            } else {
+                statusDiv.className = 'status error';
+                statusDiv.textContent = '❌ BudgetSync NIJE DOSTUPAN';
+                log('BudgetSync NIJE DOSTUPAN', 'error');
+            }
+        }
+        
+        function updateProfileDisplay() {
+            try {
+                if (typeof window.BudgetSync !== 'undefined') {
+                    const data = window.BudgetSync.getUnifiedBudgetData();
+                    if (data) {
+                        document.getElementById('profileIncome').textContent = `€${data.monthlyIncome.toLocaleString()}`;
+                        document.getElementById('profileExpenses').textContent = `€${data.totalExpenses.toLocaleString()}`;
+                        document.getElementById('profileSavings').textContent = `€${data.netSavings.toLocaleString()}`;
+                        log('Profil prikaz ažuriran', 'success');
+                    }
+                } else {
+                    log('BudgetSync nije dostupan za profil', 'error');
+                }
+            } catch (error) {
+                log('Greška pri ažuriranju profila: ' + error.message, 'error');
+            }
+        }
+        
+        function updateDashboardDisplay() {
+            try {
+                if (typeof window.BudgetSync !== 'undefined') {
+                    const data = window.BudgetSync.getUnifiedBudgetData();
+                    if (data) {
+                        window.BudgetSync.updateDashboardDisplay(data);
+                        
+                        // Ažuriraj i naše test elemente
+                        document.getElementById('dashboardIncome').textContent = `€${data.monthlyIncome.toLocaleString()}`;
+                        document.getElementById('dashboardExpenses').textContent = `€${data.totalExpenses.toLocaleString()}`;
+                        document.getElementById('dashboardSavings').textContent = `€${data.netSavings.toLocaleString()}`;
+                        log('Dashboard prikaz ažuriran', 'success');
+                    }
+                } else {
+                    log('BudgetSync nije dostupan za dashboard', 'error');
+                }
+            } catch (error) {
+                log('Greška pri ažuriranju dashboard-a: ' + error.message, 'error');
+            }
+        }
+        
+        function updatePreviewDisplay() {
+            try {
+                if (typeof window.BudgetSync !== 'undefined') {
+                    const data = window.BudgetSync.getUnifiedBudgetData();
+                    if (data) {
+                        window.BudgetSync.updatePreviewDisplay(data);
+                        
+                        // Ažuriraj i naše test elemente
+                        document.getElementById('previewIncome').textContent = `€${data.monthlyIncome.toLocaleString()}`;
+                        document.getElementById('previewExpenses').textContent = `€${data.totalExpenses.toLocaleString()}`;
+                        document.getElementById('previewSavings').textContent = `€${data.netSavings.toLocaleString()}`;
+                        document.getElementById('previewRemaining').textContent = `€${data.remainingBalance.toLocaleString()}`;
+                        log('Preview prikaz ažuriran', 'success');
+                    }
+                } else {
+                    log('BudgetSync nije dostupan za preview', 'error');
+                }
+            } catch (error) {
+                log('Greška pri ažuriranju preview-a: ' + error.message, 'error');
+            }
+        }
+        
+        function runMainSyncTest() {
+            const statusDiv = document.getElementById('mainTestStatus');
+            statusDiv.className = 'status info';
+            statusDiv.textContent = '🔄 Pokrećem glavni test sinhronizacije...';
+            
+            log('POČETAK GLAVNOG TESTA SINHRONIZACIJE', 'info');
+            
+            // Korak 1: Kreiraj test podatke
+            createTestBudget();
+            
+            // Korak 2: Proveri da li BudgetSync postoji
+            setTimeout(() => {
+                if (typeof window.BudgetSync !== 'undefined') {
+                    log('✅ BudgetSync je dostupan', 'success');
+                    
+                    // Korak 3: Test čitanja podataka
+                    const data = window.BudgetSync.getUnifiedBudgetData();
+                    if (data) {
+                        log(`✅ Podatci uspešno učitani: ${data.source} format`, 'success');
+                        
+                        // Korak 4: Test sinhronizacije svih prikaza
+                        const syncResult = window.BudgetSync.synchronizeAllDisplays();
+                        if (syncResult) {
+                            log('✅ Sinhronizacija svih prikaza uspešna', 'success');
+                            
+                            // Korak 5: Ažuriraj naše test prikaze
+                            updateProfileDisplay();
+                            updateDashboardDisplay();
+                            updatePreviewDisplay();
+                            
+                            statusDiv.className = 'status success';
+                            statusDiv.innerHTML = `
+                                🎉 GLAVNI TEST USPEŠAN!<br>
+                                ✅ BudgetSync radi<br>
+                                ✅ Podatci se čitaju<br>
+                                ✅ Sinhronizacija funkcioniše<br>
+                                ✅ Svi prikazi ažurirani
+                            `;
+                            log('🎉 GLAVNI TEST ZAVRŠEN USPEŠNO', 'success');
+                        } else {
+                            statusDiv.className = 'status error';
+                            statusDiv.textContent = '❌ Sinhronizacija neuspešna';
+                            log('❌ Sinhronizacija neuspešna', 'error');
+                        }
+                    } else {
+                        statusDiv.className = 'status error';
+                        statusDiv.textContent = '❌ Ne mogu da učitam podatke';
+                        log('❌ Ne mogu da učitam podatke', 'error');
+                    }
+                } else {
+                    statusDiv.className = 'status error';
+                    statusDiv.textContent = '❌ BudgetSync nije dostupan';
+                    log('❌ BudgetSync nije dostupan', 'error');
+                }
+            }, 1000);
+        }
+        
+        // Automatski proveri podatke pri učitavanju
+        window.onload = function() {
+            log('Test stranica učitana', 'info');
+            checkAllData();
+            
+            // Proveravaj BudgetSync na svakih 2 sekunde
+            const checkInterval = setInterval(() => {
+                if (typeof window.BudgetSync !== 'undefined') {
+                    log('BudgetSync je sada dostupan!', 'success');
+                    clearInterval(checkInterval);
+                }
+            }, 2000);
+        };
+    </script>
+    
+    <!-- Učitaj main.js da bi imao BudgetSync -->
+    <script src="js/main.js"></script>
+</body>
+</html>

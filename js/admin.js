@@ -1,6 +1,7 @@
 // Admin panel - admin.js
 class AdminPanel {
     constructor() {
+        this.initialized = false;
         this.users = this.loadUsers();
         this.systemStats = this.loadSystemStats();
         this.notifications = [];
@@ -9,9 +10,25 @@ class AdminPanel {
     }
 
     init() {
-        this.renderAdminDashboard();
-        this.setupEventListeners();
-        this.startRealTimeUpdates();
+        if (!this.initialized) {
+            this.renderAdminDashboard();
+            this.setupEventListeners();
+            this.startRealTimeUpdates();
+            this.initialized = true;
+        }
+    }
+
+    setupEventListeners() {
+        // Admin panel event listeners
+        const adminControls = document.querySelectorAll('.admin-control');
+        adminControls.forEach(control => {
+            control.addEventListener('click', (e) => this.handleAdminAction(e));
+        });
+    }
+
+    handleAdminAction(event) {
+        // Handle admin actions
+        console.log('Admin action:', event.target.dataset.action);
     }
 
     loadUsers() {

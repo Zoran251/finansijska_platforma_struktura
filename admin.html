@@ -132,6 +132,39 @@
             background-clip: text;
         }
 
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--light-text);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            background: var(--gradient-gold);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        .nav-link.active {
+            background: var(--gradient-gold);
+            color: var(--dark-bg);
+        }
+
         h1, h2, h3 {
             color: var(--gold-bright);
             margin-bottom: var(--spacing-md);
@@ -263,13 +296,16 @@
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="brand" onclick="window.location.href='preview.html'">
+        <div class="brand" onclick="window.location.href='preview-fixed.html'">
             <span>Golden Balance</span>
             <span style="font-size: 1rem; font-weight: normal; color: var(--gold-pale);">| Admin Panel</span>
         </div>
-        <div>
-            <a href="preview.html" class="nav-link">
+        <div class="nav-menu">
+            <a href="preview-fixed.html" class="nav-link">
                 <i class="fas fa-home"></i> Početna
+            </a>
+            <a href="profile.html" class="nav-link">
+                <i class="fas fa-user"></i> Profil
             </a>
         </div>
     </header>
@@ -292,7 +328,7 @@
                 
                 <div class="form-group">
                     <label for="password">Lozinka</label>
-                    <input type="password" id="password" placeholder="Unesite vašu lozinku" required>
+                    <input type="password" id="password" name="password" placeholder="Unesite vašu lozinku" required autocomplete="off">
                 </div>
                 
                 <button type="submit">Prijavi se</button>

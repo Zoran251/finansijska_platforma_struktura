@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <title>FINAL TEST - Sačuvaj budžet</title>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: Arial; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .section { background: #333; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        button { background: #d4af37; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; font-weight: bold; }
+        input { padding: 8px; margin: 5px; border-radius: 4px; border: 1px solid #555; background: #444; color: white; width: 200px; }
+        .budget-display { background: #222; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .progress-bar { width: 100%; height: 20px; background: #555; border-radius: 10px; margin: 5px 0; }
+        .progress-fill { height: 100%; background: #d4af37; border-radius: 10px; width: 0%; transition: width 0.3s; }
+        #log { background: #000; padding: 10px; border-radius: 5px; height: 200px; overflow-y: scroll; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 FINAL TEST - Dugme "Sačuvaj budžet"</h1>
+        
+        <div class="section">
+            <h2>📊 Trenutni prikaz budžeta</h2>
+            <div class="budget-display">
+                <p>Mesečni budžet: <span data-budget="monthly">€0</span></p>
+                <p>Potrošeno: <span data-budget="spent">€0</span></p>
+                <p>Preostalo: <span data-budget="remaining">€0</span></p>
+                <div class="progress-bar">
+                    <div data-budget="progress" class="progress-fill"></div>
+                </div>
+            </div>
+            
+            <h3>Profile elementi (totalIncome, totalExpenses, currentBalance)</h3>
+            <div class="budget-display">
+                <p>Total Income: <span id="totalIncome">€0</span></p>
+                <p>Total Expenses: <span id="totalExpenses">€0</span></p>
+                <p>Current Balance: <span id="currentBalance">€0</span></p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>✏️ Test unos</h2>
+            <form id="budgetForm">
+                <div>
+                    <label>Mesečni budžet (€):</label><br>
+                    <input type="number" id="monthlyBudget" value="5000" min="0" step="10">
+                </div>
+                <div>
+                    <label>Već potrošeno (€):</label><br>
+                    <input type="number" id="spentAmount" value="3200" min="0" step="10">
+                </div>
+                <div style="margin: 20px 0;">
+                    <button type="submit">💾 SAČUVAJ BUDŽET</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="section">
+            <h2>🔧 Test funkcije</h2>
+            <button onclick="testFunctions()">🧪 Test funkcije</button>
+            <button onclick="createDemo()">🎯 Demo podaci</button>
+            <button onclick="clearData()">🗑️ Obriši podatke</button>
+            <button onclick="window.updateBudgetDisplay()">🔄 Manual update</button>
+        </div>
+        
+        <div class="section">
+            <h2>📝 Log</h2>
+            <div id="log"></div>
+        </div>
+    </div>
+
+    <script>
+        // Jednostavan log sistem
+        const log = document.getElementById('log');
+        function addLog(message) {
+            const time = new Date().toLocaleTimeString();
+            log.innerHTML += `[${time}] ${message}<br>`;
+            log.scrollTop = log.scrollHeight;
+            console.log(message);
+        }
+        
+        // Mock funkcije ako main.js ne radi
+        let budgetCategories = [];
+        
+        function saveBudgetChanges() {
+            addLog('🔄 saveBudgetChanges() pozvana');
+            
+            const monthlyBudget = parseFloat(document.getElementById('monthlyBudget').value) || 0;
+            const spentAmount = parseFloat(document.getElementById('spentAmount').value) || 0;
+            
+            addLog(`💰 Podaci: mesečni=${monthlyBudget}, potrošeno=${spentAmount}`);
+            
+            const budgetData = {
+                monthly: monthlyBudget,
+                spent: spentAmount,
+                categories: budgetCategories,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('userBudget', JSON.stringify(budgetData));
+            addLog('💾 Podaci sačuvani u localStorage');
+            
+            updateBudgetDisplay();
+            addLog('✅ Budget uspešno ažuriran!');
+        }
+        
+        function updateBudgetDisplay() {
+            addLog('📊 updateBudgetDisplay() pozvana');
+            
+            const savedBudget = JSON.parse(localStorage.getItem('userBudget'));
+            if (!savedBudget) {
+                addLog('❌ Nema sačuvanih podataka');
+                return;
+            }
+            
+            addLog(`📊 Učitani podaci: ${JSON.stringify(savedBudget)}`);
+            
+            // Update data-budget elements
+            const monthlyElements = document.querySelectorAll('[data-budget="monthly"]');
+            const spentElements = document.querySelectorAll('[data-budget="spent"]');
+            const remainingElements = document.querySelectorAll('[data-budget="remaining"]');
+            const progressElements = document.querySelectorAll('[data-budget="progress"]');
+            
+            const monthly = savedBudget.monthly || 0;
+            const spent = savedBudget.spent || 0;
+            const remaining = monthly - spent;
+            const percentage = monthly > 0 ? (spent / monthly) * 100 : 0;
+            
+            addLog(`🔢 Izračunato: mjesečni=${monthly}, potrošeno=${spent}, preostalo=${remaining}, procenat=${percentage}%`);
+            
+            monthlyElements.forEach(el => el.textContent = `€${monthly.toLocaleString()}`);
+            spentElements.forEach(el => el.textContent = `€${spent.toLocaleString()}`);
+            remainingElements.forEach(el => el.textContent = `€${remaining.toLocaleString()}`);
+            progressElements.forEach(el => el.style.width = `${Math.min(percentage, 100)}%`);
+            
+            // Update profile elements
+            const totalIncomeEl = document.getElementById('totalIncome');
+            const totalExpensesEl = document.getElementById('totalExpenses');
+            const currentBalanceEl = document.getElementById('currentBalance');
+            
+            if (totalIncomeEl) totalIncomeEl.textContent = `€${monthly.toLocaleString()}`;
+            if (totalExpensesEl) totalExpensesEl.textContent = `€${spent.toLocaleString()}`;
+            if (currentBalanceEl) currentBalanceEl.textContent = `€${remaining.toLocaleString()}`;
+            
+            addLog(`✅ Prikaz ažuriran! Pronađeno ${monthlyElements.length} monthly, ${spentElements.length} spent, ${remainingElements.length} remaining elemenata`);
+        }
+        
+        function testFunctions() {
+            addLog('🧪 === TEST FUNKCIJA ===');
+            addLog(`updateBudgetDisplay: ${typeof updateBudgetDisplay}`);
+            addLog(`saveBudgetChanges: ${typeof saveBudgetChanges}`);
+            addLog(`localStorage userBudget: ${localStorage.getItem('userBudget')}`);
+            updateBudgetDisplay();
+        }
+        
+        function createDemo() {
+            addLog('🎯 Kreiranje demo podataka...');
+            const demo = {
+                monthly: 4500,
+                spent: 2800,
+                categories: [],
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('userBudget', JSON.stringify(demo));
+            updateBudgetDisplay();
+        }
+        
+        function clearData() {
+            localStorage.removeItem('userBudget');
+            addLog('🗑️ Podaci obrisani');
+            updateBudgetDisplay();
+        }
+        
+        // Event listener za formu
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('🚀 Stranica učitana');
+            
+            // Dodaj event listener za formu
+            document.getElementById('budgetForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                addLog('📝 Forma submitted!');
+                saveBudgetChanges();
+            });
+            
+            // Test početni prikaz
+            updateBudgetDisplay();
+        });
+        
+        // Export na window za testiranje
+        window.updateBudgetDisplay = updateBudgetDisplay;
+        window.saveBudgetChanges = saveBudgetChanges;
+    </script>
+    
+    <!-- Pokušaj učitati main.js, ali nastavi i bez njega -->
+    <script src="js/main.js" onerror="addLog('⚠️ main.js se nije učitao, koristimo backup funkcije')"></script>
+</body>
+</html>

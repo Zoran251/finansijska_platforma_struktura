@@ -925,12 +925,15 @@
     <!-- Header -->
     <header class="header" style="background: rgba(10, 10, 12, 0.95); padding: 1rem 2rem; backdrop-filter: blur(10px); box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(212, 175, 55, 0.15);">
         <div class="header-content" style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <a href="preview.html" class="logo" style="text-decoration: none;">
+            <a href="preview-fixed.html" class="logo" style="text-decoration: none;">
                 <span style="font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Golden Balance</span>
             </a>
             <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
-                <a href="preview.html" class="btn" style="background: linear-gradient(135deg, #D4AF37, #A8861D); color: #0E0E10; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                <a href="preview-fixed.html" class="btn" style="background: linear-gradient(135deg, #D4AF37, #A8861D); color: #0E0E10; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
                     <i class="fas fa-home"></i> Početna
+                </a>
+                <a href="admin.html" id="adminSettingsBtn" class="btn" style="background: linear-gradient(135deg, #C5A028, #A8861D); color: #0E0E10; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); display: none;">
+                    <i class="fas fa-cogs"></i> Admin
                 </a>
             </div>
         </div>
@@ -1825,15 +1828,15 @@
                         <form id="changePasswordForm">
                             <div class="form-group">
                                 <label for="currentPassword" class="form-label">Trenutna lozinka</label>
-                                <input type="password" id="currentPassword" class="form-control" required>
+                                <input type="password" id="currentPassword" class="form-control" required autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label for="newPassword" class="form-label">Nova lozinka</label>
-                                <input type="password" id="newPassword" class="form-control" required>
+                                <input type="password" id="newPassword" class="form-control" required autocomplete="off">
                             </div>
                             <div class="form-group">
                                 <label for="confirmNewPassword" class="form-label">Potvrdite novu lozinku</label>
-                                <input type="password" id="confirmNewPassword" class="form-control" required>
+                                <input type="password" id="confirmNewPassword" class="form-control" required autocomplete="off">
                             </div>
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-key"></i> Promeni lozinku
@@ -1868,6 +1871,18 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is admin and show admin button
+            function checkAdminStatus() {
+                const isAdmin = localStorage.getItem('admin_logged_in') === 'true';
+                const adminBtn = document.getElementById('adminSettingsBtn');
+                if (adminBtn) {
+                    adminBtn.style.display = isAdmin ? 'flex' : 'none';
+                }
+            }
+            
+            // Initialize admin status check
+            checkAdminStatus();
+            
             // Tab switching functionality
             const tabLinks = document.querySelectorAll('.nav-link');
             const sections = {
@@ -2181,15 +2196,18 @@
             document.getElementById('monthlyIncome').value = savedBudget.monthlyIncome;
             document.getElementById('necessitiesPercent').value = savedBudget.necessities;
             document.getElementById('hobbyPercent').value = savedBudget.hobby;
-            document.getElementById('savingsPercent').value = savedBudget.savings;
-
-            // Ako postoji prihod, prikaži kategorije
+            document.getElementById('savingsPercent').value = savedBudget.savings;            // Ako postoji prihod, prikaži kategorije
             if (savedBudget.monthlyIncome > 0) {
                 document.getElementById('budgetCategories').style.display = 'block';
             }
 
             // Ažuriranje prikaza
             updateBudgetDisplay();
+            
+            // Pozivamo i globalnu funkciju za budžet iz main.js
+            if (typeof window.updateBudgetDisplay === 'function') {
+                window.updateBudgetDisplay();
+            }
 
             // Dodavanje event listenera za dugme za izračunavanje
             document.getElementById('calculateBudget').addEventListener('click', function() {
@@ -2218,7 +2236,9 @@
             });
 
             // Dodavanje event listenera za čuvanje plana
-            document.getElementById('saveBudgetPlan').addEventListener('click', function() {
+            document.getElementById('saveBudgetPlan').addEventListener('click', function(e) {
+                console.log('🖱️ Dugme "Sačuvaj budžet" kliknuto!');
+                e.preventDefault();
                 saveBudgetPlan();
             });
             
@@ -2270,15 +2290,25 @@
             const savings = parseInt(document.getElementById('savingsPercent').value);
             
             const total = necessities + hobby + savings;
+            console.log('🔍 Validacija klizača:', {
+                necessities: necessities,
+                hobby: hobby,
+                savings: savings,
+                total: total,
+                isValid: total === 100
+            });
+            
             const saveButton = document.getElementById('saveBudgetPlan');
             
             if (total !== 100) {
+                console.log('❌ Validacija neuspešna - ukupan procenat nije 100%');
                 saveButton.disabled = true;
                 saveButton.style.opacity = '0.7';
                 saveButton.style.cursor = 'not-allowed';
                 saveButton.title = 'Ukupan zbir procenata mora biti tačno 100%';
                 return false;
             } else {
+                console.log('✅ Validacija uspešna - ukupan procenat je 100%');
                 saveButton.disabled = false;
                 saveButton.style.opacity = '1';
                 saveButton.style.cursor = 'pointer';
@@ -2333,10 +2363,28 @@
 
         // Funkcija za čuvanje plana budžeta
         function saveBudgetPlan() {
+            console.log('🔄 saveBudgetPlan() pozvan!');
+            
+            // Debug: proveravamo sve elemente
+            const monthlyIncomeEl = document.getElementById('monthlyIncome');
+            const necessitiesEl = document.getElementById('necessitiesPercent');
+            const hobbyEl = document.getElementById('hobbyPercent');
+            const savingsEl = document.getElementById('savingsPercent');
+            
+            console.log('📊 Debug elementi:', {
+                monthlyIncome: monthlyIncomeEl ? monthlyIncomeEl.value : 'NIJE PRONAĐEN',
+                necessities: necessitiesEl ? necessitiesEl.value : 'NIJE PRONAĐEN',
+                hobby: hobbyEl ? hobbyEl.value : 'NIJE PRONAĐEN',
+                savings: savingsEl ? savingsEl.value : 'NIJE PRONAĐEN'
+            });
+            
             if (!validateSliders()) {
+                console.log('❌ Validacija nije prošla!');
                 showNotification('Greška: Ukupan zbir procenata mora biti tačno 100%!', 'error');
                 return;
             }
+            
+            console.log('✅ Validacija prošla, kreiram budgetPlan...');
             
             const budgetPlan = {
                 monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value) || 0,
@@ -2346,17 +2394,30 @@
                 lastUpdated: new Date().toISOString()
             };
             
+            console.log('💰 Kreiran budgetPlan:', budgetPlan);
+            
             // Čuvanje u localStorage
             localStorage.setItem('userBudget', JSON.stringify(budgetPlan));
+            console.log('✅ Budžet sačuvan u localStorage');
             
             // Ažuriranje prikaza ukupnih prihoda i troškova
             updateTotalBudgetDisplay(budgetPlan);
-            
-            // Prikazivanje obaveštenja o uspešnom čuvanju
+              // Prikazivanje obaveštenja o uspešnom čuvanju
             showNotification('Plan budžeta je uspešno sačuvan!', 'success');
             
-            // Ažuriranje prikaza
+            // Ažuriranje lokalnog prikaza
             updateBudgetDisplay();
+            
+            // 🔄 NOVA SINHRONIZACIJA - pozivamo globalnu sinhronizaciju
+            if (typeof window.BudgetSync !== 'undefined') {
+                console.log('🔄 Pozivam BudgetSync.triggerSync()');
+                window.BudgetSync.triggerSync();
+            } else if (typeof window.updateBudgetDisplay === 'function') {
+                console.log('🔄 Pozivam window.updateBudgetDisplay()');
+                window.updateBudgetDisplay();
+            } else {
+                console.log('❌ Nema dostupnih funkcija za sinhronizaciju');
+            }
         }
         
         // Funkcija za ažuriranje prikaza ukupnih prihoda i troškova
@@ -2729,9 +2790,13 @@
                     successMsg.style.opacity = '0';
                     setTimeout(() => successMsg.remove(), 300);
                 }, 3000);
-                
-                // Update total stats
+                  // Update total stats
                 updateBudgetStats();
+                
+                // Pozivamo i globalnu funkciju za budžet iz main.js
+                if (typeof window.updateBudgetDisplay === 'function') {
+                    window.updateBudgetDisplay();
+                }
             }
             
             // Update budget stats at the top
@@ -3281,8 +3346,10 @@
                         }
                     });
                 }
-            });
-        });
+            });        });
     </script>
+    
+    <!-- Uključujemo main.js za globalne funkcije budžeta -->
+    <script src="js/main.js"></script>
 </body>
 </html>

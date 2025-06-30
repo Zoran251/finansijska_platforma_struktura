@@ -1202,7 +1202,7 @@
                 <div class="form-group">
                     <label for="loginPassword">Lozinka</label>
                     <div class="password-input">
-                        <input type="password" id="loginPassword" required>
+                        <input type="password" id="loginPassword" name="loginPassword" required autocomplete="off">
                         <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
                             <i class="far fa-eye"></i>
                         </button>
@@ -1246,7 +1246,7 @@
                 <div class="form-group">
                     <label for="regPassword">Lozinka</label>
                     <div class="password-input">
-                        <input type="password" id="regPassword" required>
+                        <input type="password" id="regPassword" name="regPassword" required autocomplete="off">
                         <button type="button" class="toggle-password" onclick="togglePassword('regPassword')">
                             <i class="far fa-eye"></i>
                         </button>
@@ -1258,7 +1258,7 @@
                 </div>
                 <div class="form-group">
                     <label for="regConfirmPassword">Potvrdi lozinku</label>
-                    <input type="password" id="regConfirmPassword" required>
+                    <input type="password" id="regConfirmPassword" name="regConfirmPassword" required autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label class="profile-picture-upload">
@@ -4499,11 +4499,336 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 
+    <!-- Testimonijal sekcija -->
+    <section id="testimonials" style="padding: 4rem 2rem; background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(184, 134, 11, 0.05)); margin-top: 4rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 2.5rem; font-weight: 700; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem;">
+                    Šta kažu naši korisnici
+                </h2>
+                <p style="color: var(--muted-text); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+                    Pridružite se hiljadama zadovoljnih korisnika koji su transformisali svoje finansije uz Golden Balance
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <!-- Testimonijal 1 -->
+                <div style="background: rgba(18, 18, 18, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(10px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face&auto=format" 
+                             style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem;" alt="Marko P.">
+                        <div>
+                            <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Marko Petrović</h4>
+                            <p style="color: var(--muted-text); font-size: 0.9rem;">IT Menadžer, Beograd</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                    </div>
+                    <p style="color: var(--light-text); line-height: 1.6; font-style: italic;">
+                        "Golden Balance je potpuno promenio način na koji upravljam svojim finansijama. Sada imam jasnu sliku o svojim prihodima i rashodima, a budžet planer mi pomaže da štedim za buduće ciljeve."
+                    </p>
+                </div>
+
+                <!-- Testimonijal 2 -->
+                <div style="background: rgba(18, 18, 18, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(10px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face&auto=format" 
+                             style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem;" alt="Ana M.">
+                        <div>
+                            <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Ana Marković</h4>
+                            <p style="color: var(--muted-text); font-size: 0.9rem;">Preduzetnica, Novi Sad</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                    </div>
+                    <p style="color: var(--light-text); line-height: 1.6; font-style: italic;">
+                        "Kao preduzetnica, potreban mi je pouzdan alat za praćenje poslovnih finansija. Golden Balance mi omogućava da lako pratim prihode, rashode i planiram investicije. Preporučujem svima!"
+                    </p>
+                </div>
+
+                <!-- Testimonijal 3 -->
+                <div style="background: rgba(18, 18, 18, 0.8); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 1rem; padding: 2rem; backdrop-filter: blur(10px);">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face&auto=format" 
+                             style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem;" alt="Stefan J.">
+                        <div>
+                            <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Stefan Jovanović</h4>
+                            <p style="color: var(--muted-text); font-size: 0.9rem;">Finansijski savetnik, Kragujevac</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                        <i class="fas fa-star" style="color: #FFD700;"></i>
+                    </div>
+                    <p style="color: var(--light-text); line-height: 1.6; font-style: italic;">
+                        "Kao finansijski savetnik, preporučujem Golden Balance svim svojim klijentima. Jednostavan je za korišćenje, ima sve potrebne funkcionalnosti i odličan je za početak finansijskog planiranja."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Statistike -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center;">
+                <div>
+                    <h3 style="font-size: 3rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 0.5rem;">15K+</h3>
+                    <p style="color: var(--muted-text);">Aktivnih korisnika</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 3rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 0.5rem;">€2.5M</h3>
+                    <p style="color: var(--muted-text);">Ukupno upravljanih sredstava</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 3rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 0.5rem;">98%</h3>
+                    <p style="color: var(--muted-text);">Zadovoljni korisnici</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 3rem; font-weight: 700; color: var(--gold-bright); margin-bottom: 0.5rem;">24/7</h3>
+                    <p style="color: var(--muted-text);">Podrška dostupna</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sekcija o nama -->
+    <section id="about" style="padding: 4rem 2rem; background: rgba(10, 10, 10, 0.95);">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+                <div>
+                    <h2 style="font-size: 2.5rem; font-weight: 700; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1.5rem;">
+                        O Golden Balance
+                    </h2>
+                    <p style="color: var(--muted-text); line-height: 1.7; margin-bottom: 1.5rem; font-size: 1.1rem;">
+                        Golden Balance je napredna finansijska platforma kreirana da vam pomogne da potpuno kontrolišete svoje finansije. 
+                        Naš tim stručnjaka za finansije i tehnologiju radi na tome da vam pruži alate koji su jednostavni za korišćenje, 
+                        ali dovoljno moćni da zadovolje sve vaše potrebe.
+                    </p>
+                    <p style="color: var(--muted-text); line-height: 1.7; margin-bottom: 2rem; font-size: 1.1rem;">
+                        Verujemo da svako zaslužuje pristup profesionalnim finansijskim alatima, bez obzira na veličinu portfolija. 
+                        Zato smo Golden Balance učinili dostupnim svima koji žele da poboljšaju svoje finansijsko zdravlje.
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 50px; background: var(--gradient-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shield-alt" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Sigurnost</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">Bank-level enkripcija</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 50px; background: var(--gradient-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-chart-line" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Analitika</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">Napredni izveštaji</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 50px; background: var(--gradient-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-users" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Podrška</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">24/7 stručna pomoć</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 50px; height: 50px; background: var(--gradient-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-mobile-alt" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--light-text); margin-bottom: 0.25rem;">Mobilnost</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">Pristup svugde</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="position: relative;">
+                    <div style="background: var(--gradient-gold); border-radius: 1rem; padding: 3rem; text-align: center; transform: rotate(3deg);">
+                        <div style="background: var(--dark-bg); border-radius: 0.75rem; padding: 2rem; transform: rotate(-3deg);">
+                            <h3 style="color: var(--light-text); font-size: 1.8rem; margin-bottom: 1rem;">Naša misija</h3>
+                            <p style="color: var(--muted-text); line-height: 1.6;">
+                                "Učiniti finansijsko planiranje jednostavnim, dostupnim i efikasnim za sve ljude, 
+                                omogućavajući im da ostvare svoje finansijske ciljeve i sanjaju veću budućnost."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer sekcija -->
+    <footer style="background: var(--dark-card); border-top: 1px solid rgba(212, 175, 55, 0.2); padding: 3rem 2rem 1rem; margin-top: 4rem;">
+        <div class="container" style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 2rem;">
+                <!-- Logo i opis -->
+                <div>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="width: 50px; height: 50px; background: var(--gradient-gold); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-coins" style="color: var(--dark-bg); font-size: 1.5rem;"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 700; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                            Golden Balance
+                        </h3>
+                    </div>
+                    <p style="color: var(--muted-text); line-height: 1.6; margin-bottom: 1.5rem;">
+                        Vaša potpuna finansijska platforma za upravljanje budžetom, praćenje troškova i ostvarivanje finansijskih ciljeva.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease;">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease;">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Linkovi -->
+                <div>
+                    <h4 style="color: var(--light-text); font-weight: 600; margin-bottom: 1.5rem;">Funkcionalnosti</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#dashboard" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Dashboard</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#budgets" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Budžet planer</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#analytics" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Analitika</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#calculator" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Investicioni kalkulator</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#consultation" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Konsultacije</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Podrška -->
+                <div>
+                    <h4 style="color: var(--light-text); font-weight: 600; margin-bottom: 1.5rem;">Podrška</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#help" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Pomoć</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#faq" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Česta pitanja</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#contact" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Kontakt</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#privacy" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Privatnost</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#terms" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Uslovi korišćenja</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kontakt -->
+                <div>
+                    <h4 style="color: var(--light-text); font-weight: 600; margin-bottom: 1.5rem;">Kontakt</h4>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <i class="fas fa-envelope" style="color: var(--gold-bright); width: 16px;"></i>
+                            <span style="color: var(--muted-text);">info@goldenbalance.rs</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <i class="fas fa-phone" style="color: var(--gold-bright); width: 16px;"></i>
+                            <span style="color: var(--muted-text);">+381 11 123 4567</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-map-marker-alt" style="color: var(--gold-bright); width: 16px;"></i>
+                            <span style="color: var(--muted-text);">Knez Mihailova 42, Beograd</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div style="border-top: 1px solid rgba(212, 175, 55, 0.2); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <p style="color: var(--muted-text); margin: 0;">
+                    © 2025 Golden Balance. Sva prava zadržana.
+                </p>
+                <p style="color: var(--muted-text); margin: 0; font-size: 0.9rem;">
+                    Kreiran sa ❤️ za vaše finansije
+                </p>
+            </div>
+        </div>
+    </footer>
+
     <script src="js/consultation.js"></script>
     <script>
         // Inicijalizacija modala i drugih skripti ako je potrebno
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Stranica je učitana');
+            
+            // Smooth scrolling za footer linkove
+            document.querySelectorAll('footer a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Hover efekti za social media linkove
+            document.querySelectorAll('footer a[style*="background: rgba(212, 175, 55, 0.1)"]').forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.background = 'var(--gradient-gold)';
+                    this.style.color = 'var(--dark-bg)';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.background = 'rgba(212, 175, 55, 0.1)';
+                    this.style.color = 'var(--gold-bright)';
+                });
+            });
+
+            // Hover efekti za footer linkove
+            document.querySelectorAll('footer a[style*="color: var(--muted-text)"]').forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.color = 'var(--gold-bright)';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.color = 'var(--muted-text)';
+                });
+            });
         });
     </script>
 </body>

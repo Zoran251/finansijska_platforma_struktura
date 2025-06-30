@@ -1,7 +1,7 @@
 [build]
-publish = "c:\Users\Korisnik\Desktop\finansijska aplikacija\finansijska_platforma_struktura"
+publish = "./"
 
 [[redirects]]
-  from = "/"
-  to = "/preview.html"
+  from = "/*"
+  to = "/index.html"
   status = 200
