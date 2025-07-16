@@ -1,0 +1,214 @@
+/* AI Asistent - Stylesheet za chat komponentu */
+
+.chat-container {
+    width: 100%;
+    max-width: 500px;
+    height: 500px;
+    border: 1px solid #e1e4e8;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chat-header {
+    padding: 15px;
+    background-color: #1c3e6a;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-header .logo {
+    height: 24px;
+    margin-right: 10px;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f8f9fa;
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.user-message {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    border-bottom-right-radius: 5px;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.chat-input-container {
+    display: flex;
+    padding: 10px;
+    background-color: white;
+    border-top: 1px solid #e1e4e8;
+}
+
+.chat-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+}
+
+.chat-send-btn {
+    background-color: #1c3e6a;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.chat-send-btn:hover {
+    background-color: #0e2b54;
+}
+
+.chat-send-btn:active {
+    transform: scale(0.95);
+}
+
+/* Animacija za typing indikator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    padding: 8px 15px;
+    border-radius: 15px;
+    max-width: 150px;
+    margin-bottom: 15px;
+    align-self: flex-start;
+}
+
+.typing-indicator span {
+    height: 8px;
+    width: 8px;
+    background-color: #666;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 0 1px;
+    animation: typing 1.4s infinite both;
+}
+
+.typing-indicator span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typing {
+    0% {
+        transform: translateY(0px);
+        background-color: #666;
+    }
+    28% {
+        transform: translateY(-5px);
+        background-color: #ccc;
+    }
+    44% {
+        transform: translateY(0px);
+        background-color: #666;
+    }
+}
+
+/* Responsivnost za mobilne uređaje */
+@media (max-width: 600px) {
+    .chat-container {
+        height: calc(100vh - 80px);
+        max-width: 100%;
+        border-radius: 0;
+        border: none;
+    }
+    
+    .chat-message {
+        max-width: 90%;
+    }
+}
+
+/* Stilovi za linkove u porukama */
+.bot-message a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+.bot-message a:hover {
+    text-decoration: underline;
+}
+
+/* Stilovi za liste u porukama */
+.bot-message ul, .bot-message ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.bot-message li {
+    margin-bottom: 5px;
+}
+
+/* Stilovi za bold tekst */
+.bot-message strong {
+    font-weight: 600;
+}
+
+/* Tooltip stil */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

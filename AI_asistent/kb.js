@@ -9,7 +9,8 @@
             keywords: ["zdravo", "pozdrav", "hi", "hello", "bok", "dobar dan", "dobro veče", "dobro jutro", "ćao", "cao", "hey"]
         },
         investment_intent: {
-            response: "Investiranje je važan korak u izgradnji dugoročnog finansijskog blagostanja. Postoji više različitih opcija za investiranje, od niskog do visokog rizika:\n\n1. Štedni računi i oročeni depoziti (nizak rizik, 1-3% prinosa)\n2. Državne i korporativne obveznice (nizak do srednji rizik, 2-7% prinosa)\n3. Investicione nekretnine (srednji rizik, 4-10% prinosa)\n4. Akcije i ETF fondovi (srednji do visok rizik, 7-12% prinosa dugoročno)\n5. Kriptovalute i alternativne investicije (visok rizik, volatilni prinosi)\n\nPre donošenja odluke o investiranju, važno je razmotriti vaše finansijske ciljeve, vremenski horizont i toleranciju na rizik."
+            response: "Investiranje je važan korak u izgradnji dugoročnog finansijskog blagostanja. Postoji više različitih opcija za investiranje, od niskog do visokog rizika:\n\n1. Štedni računi i oročeni depoziti (nizak rizik, 1-3% prinosa)\n2. Državne i korporativne obveznice (nizak do srednji rizik, 2-7% prinosa)\n3. Investicione nekretnine (srednji rizik, 4-10% prinosa)\n4. Akcije i ETF fondovi (srednji do visok rizik, 7-12% prinosa dugoročno)\n5. Kriptovalute i alternativne investicije (visok rizik, volatilni prinosi)\n\nPre donošenja odluke o investiranju, važno je razmotriti vaše finansijske ciljeve, vremenski horizont i toleranciju na rizik.",
+            keywords: ["investirati", "investicija", "ulaganje", "uložiti", "ulagati", "investiranje", "portfolio", "prinos", "berza", "akcije"]
         },
         kredit: {
             response: "Pre uzimanja kredita, važno je razmotriti sledeće faktore:\n\n1. Kamatnu stopu i EKS (efektivna kamatna stopa koja uključuje sve troškove)\n2. Period otplate i kako utiče na ukupne troškove kredita\n3. Mesečnu ratu u odnosu na vaše prihode (idealno ispod 30%)\n4. Dodatne troškove i naknade (obrada, osiguranje, prevremena otplata)\n5. Fiksna vs. varijabilna kamata i rizike koje nosi svaka opcija\n\nZlatno pravilo je da rata kredita ne bi trebalo da prelazi 30% vaših mesečnih prihoda, a za stambene kredite do 40% uz odgovarajuću analizu.",
@@ -93,6 +94,10 @@
         const investmentIntentPatterns = [
             /gde (da )?invest(iram|irati)|gde (da )?ul(ozim|agati|azem)/i,
             /kako (da )?invest(iram|irati)|kako (da )?ul(ozim|agati|azem)/i,
+            /kako mogu (da )?(invest|ulož|uloz|ulag)/i,
+            /kako mogu investirati/i,
+            /kako mogu uložiti/i,
+            /kako mogu da investiram/i,
             /u [sš]ta (da )?invest(iram|irati)|u [sš]ta (da )?ul(ozim|agati|azem)/i,
             /(preporuc|preporuč)(i|ite|ujete) (mi )?investicij/i,
             /savetu?j(e|ete)? (me )?(oko|za) (invest|ulag)/i,
@@ -105,7 +110,8 @@
             /poveća(ti|nje) (novac|kapital|bogatstv|štednj)/i,
             /uložiti (novac|pare|štednj)/i,
             /(sigurn|bezbedn|pametno) ulaga/i,
-            /pasivn[ai] (prihod|zarad)/i
+            /pasivn[ai] (prihod|zarad)/i,
+            /gdje mogu da uložim/i
         ];
         
         // Provera za investicionu nameru
@@ -123,7 +129,7 @@
                         }
                     }
                 }
-                if (investmentIntent) break;
+                // Ne izlazimo iz petlje ovde, dozvoljavamo da se prođe kroz sve obrasce
             }
         }
         
@@ -422,8 +428,8 @@
                     }
                 }
                 
-        // Provera da li je pitanje vezano za investiranje i dodavanje preporuke za konsultaciju
-                const investmentCategories = ["investiranje", "akcije", "nekretnine", "kriptovalute", "berza", "rizik", "investment_intent"];
+                // Provera da li je pitanje vezano za investiranje i dodavanje preporuke za konsultaciju
+                const investmentCategories = ["investment_intent", "akcije", "nekretnine", "kriptovalute", "berza", "rizik"];
                 if (investmentCategories.includes(category)) {
                     return knowledgeBase[category].response + 
                            "\n\nZa detaljnije informacije o investiranju i personalizovane savete prilagođene vašoj situaciji, " +

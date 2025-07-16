@@ -20,7 +20,7 @@
             keywords: ["porez", "porezi", "pdv", "dohodak", "imovina", "kapitalni dobitak", "poreska prijava", "poreske olakšice", "godišnji porez", "plaćanje poreza", "povraćaj poreza", "poreski odbici", "porez na nekretnine", "porez na dividendu", "porez na zarade"]
         },
         kriptovalute: {
-            response: "Investiranje u kriptovalute nosi visok rizik i zahteva poseban oprez:\n\n1. Izuzetno volatilno tržište - cene mogu značajno oscilirati u kratkom periodu\n2. Potrebno temeljno istraživanje - razumevanje tehnologije i tržišnih faktora\n3. Investirajte samo onoliko koliko ste spremni da izgubite\n4. Diversifikujte portfolio umesto ulaganja u samo jednu kriptovalutu\n5. Bezbednost je ključna - koristite sigurne novčanike i pouzdane platforme za trgovanje\n\nPreporučujem da kriptovalute čine maksimalno 5-10% vašeg ukupnog investicionog portfolia, zavisno od vaše tolerancije na rizik.",
+            response: "Investiranje u kriptovalute nosi visok rizik i zahteva poseban oprez:\n\n1. Izuzetno volatilno tržište - cene mogu značajno oscilirati u kratkom periodu\n2. Potrebno temeljno istraživanje - razumevanje tehnologije i tržišnih faktora\n3. Investirajte samo onoliko koliko ste spremni da izgubite\n4. Diversifikujte portfolio umesto ulaganja u samo jednu kriptovalutu\n5. Bezbednost je ključna - koristite sigurne novčanike i pouzdane platforme za trgovanje\n\nPreporučujem da kriptovalute čine maksimalno 5-10% vašeg ukupnog investicionog portfolia, zavisno od vaše tolerancije na rizik. Za složenije strategije ulaganja u kriptovalute, razmislite o konsultaciji sa stručnjakom.",
             keywords: ["kripto", "kriptovalute", "bitcoin", "ethereum", "bitkoin", "btc", "eth", "altcoin", "blockchain", "rudarenje", "mining", "token", "wallet", "novčanik za kriptovalute", "defi", "nft", "stablecoin", "binance", "coinbase"]
         },
         osiguranje: {
@@ -45,11 +45,11 @@
         },
         akcije: {
             response: "Akcije (deonice) predstavljaju vlasnički udeo u kompaniji i jedan su od osnovnih investicionih instrumenata:\n\n1. Potencijal za dugoročni rast kapitala - istorijski, akcije beleže najveće prinose u dužem periodu\n2. Dividende - dodatni prihod od profita kompanije koji se isplaćuje akcionarima\n3. Likvidnost - mogućnost brze kupovine i prodaje na organizovanim tržištima\n4. Rizik - cene akcija mogu biti volatilne u kraćem periodu\n\nZa početak investiranja u akcije, razmotrite ETF-ove (fondovi koji prate berze) koji nude diversifikaciju i niže troškove. Indeksni fondovi koji prate S&P 500, MSCI World ili domaće indekse mogu biti dobra početna tačka sa istorijskim prinosom od oko 7-10% godišnje dugoročno.",
-            keywords: ["akcije", "deonice", "berza", "berzansko trgovanje", "hartije od vrednosti", "dividenda", "broker", "akcionarsko društvo", "s&p 500", "belex", "blue chip", "tržišna kapitalizacija", "p/e racio", "cena akcije", "volatilnost", "likvidnost", "trgovanje akcijama", "kupovina akcija", "prodaja akcija", "investiranje u akcije", "ulaganje u akcije", "kako kupiti akcije", "gde kupiti akcije", "etf", "index fond", "indeksni fond", "berzanski indeks"]
+            keywords: ["akcije", "deonice", "berza", "berzansko trgovanje", "hartije od vrednosti", "dividenda", "broker", "akcionarsko društvo", "s&p 500", "belex", "blue chip", "tržišna kapitalizacija", "p/e racio", "cena akcije", "volatilnost", "likvidnost", "trgovanje akcijama"]
         },
         nekretnine: {
             response: "Investiranje u nekretnine je popularna strategija dugoročnog stvaranja bogatstva:\n\n1. Potencijal za aprecijaciju vrednosti tokom vremena\n2. Pasivan prihod od izdavanja\n3. Zaštita od inflacije - vrednost nekretnina često prati ili premašuje stopu inflacije\n4. Potencijalne poreske olakšice za vlasnike nekretnina\n5. Mogućnost korišćenja finansijskog leveridža (hipotekarni krediti)\n\nPri investiranju u nekretnine, ključni faktori su lokacija, stanje objekta, potencijal za rast vrednosti i odnos prihoda od izdavanja prema vrednosti nekretnine (tzv. yield). Za početnike, REIT fondovi (fondovi za ulaganje u nekretnine) mogu biti pristupačnija opcija sa manjim početnim ulaganjem.",
-            keywords: ["nekretnina", "nekretnine", "stan", "kuća", "kuca", "plac", "zemljište", "investiciona nekretnina", "izdavanje", "renta", "yield", "najam", "stanarina", "hipoteka", "kvadratura", "kvadrat", "cena nekretnine", "lokacija", "reit", "stambeni kredit", "kupovina stana", "kupovina kuće", "investicija u nekretnine", "nekretnina kao investicija", "ulaganje u nekretnine", "investiranje u stanove"]
+            keywords: ["nekretnina", "nekretnine", "stan", "kuća", "kuca", "plac", "zemljište", "investiciona nekretnina", "izdavanje", "renta", "yield", "najam", "stanarina", "hipoteka", "kvadratura", "kvadrat", "cena nekretnine", "lokacija", "reit", "stambeni kredit"]
         },
         složena_kamata: {
             response: "Složena kamata je jedan od najmoćnijih finansijskih koncepata i često se naziva osmim svetskim čudom. Evo kako funkcioniše:\n\n1. Za razliku od proste kamate koja se obračunava samo na glavnicu, složena kamata se obračunava i na glavnicu i na prethodno zarađenu kamatu\n\n2. Formula za izračunavanje: A = P(1 + r/n)^(nt), gde je:\n    A = konačni iznos\n    P = početna glavnica\n    r = godišnja kamatna stopa (u decimalnom zapisu)\n    n = broj perioda kapitalizacije godišnje\n    t = vreme u godinama\n\n3. Primeri rasta investicije od 10.000€ sa različitim stopama prinosa:\n    3% godišnje: nakon 20 godina = 18.061€\n    5% godišnje: nakon 20 godina = 26.533€\n    7% godišnje: nakon 20 godina = 38.697€\n    10% godišnje: nakon 20 godina = 67.275€\n\n4. Sa redovnim mesečnim uplatama rezultati su još impresivniji. Na primer, 200€ mesečno tokom 30 godina uz 7% prinosa daje oko 243.000€!\n\nVažno je razumeti da čak i mala razlika u stopi prinosa može dovesti do ogromne razlike u konačnom iznosu nakon dužeg vremenskog perioda. Zato je važno početi investirati što ranije i težiti najvišim razumno ostvarivim stopama prinosa za vaš nivo rizika.\n\nProbajte naš kalkulator da izračunate koliko će vredeti vaša investicija kroz vreme uz moć složene kamate.",
@@ -105,7 +105,8 @@
             /poveća(ti|nje) (novac|kapital|bogatstv|štednj)/i,
             /uložiti (novac|pare|štednj)/i,
             /(sigurn|bezbedn|pametno) ulaga/i,
-            /pasivn[ai] (prihod|zarad)/i
+            /pasivn[ai] (prihod|zarad)/i,
+            /gdje mogu da uložim/i
         ];
         
         // Provera za investicionu nameru
@@ -421,15 +422,6 @@
                                ", preporučujemo da koristite naš kalkulator složene kamate za tačnu procenu.";
                     }
                 }
-                
-        // Provera da li je pitanje vezano za investiranje i dodavanje preporuke za konsultaciju
-                const investmentCategories = ["investiranje", "akcije", "nekretnine", "kriptovalute", "berza", "rizik", "investment_intent"];
-                if (investmentCategories.includes(category)) {
-                    return knowledgeBase[category].response + 
-                           "\n\nZa detaljnije informacije o investiranju i personalizovane savete prilagođene vašoj situaciji, " +
-                           "preporučujemo da zakažete konsultaciju sa našim stručnim brokerom koji će vam pomoći da napravite " +
-                           "optimalan investicioni plan. Možete zakazati termin klikom na dugme 'Zakaži konsultaciju' u gornjem meniju naše aplikacije.";
-                }
             }
             
             return knowledgeBase[category].response;
@@ -541,54 +533,6 @@
                 return true;
             } else {
                 console.log("Testiranje je dostupno samo u development okruženju.");
-                return false;
-            }
-        },
-        
-        // Test funkcija za kreiranje notifikacije
-        createTestNotification: function(title, message, type) {
-            // Funkcija koja kreira test notifikaciju za proveru funkcionalnosti
-            console.log("Kreiranje test notifikacije:", title, message, type);
-            
-            // Pokušaj slanja preko UserNotifications ako postoji
-            if (typeof UserNotifications !== 'undefined' && UserNotifications.addNotification) {
-                UserNotifications.addNotification({
-                    title: title || "Test notifikacija",
-                    message: message || "Ovo je test notifikacija za proveru sistema.",
-                    type: type || "Obaveštenje"
-                });
-                console.log("Notifikacija poslata preko UserNotifications");
-                return true;
-            }
-            
-            // Alternativni pristup - direktno u localStorage
-            try {
-                const userNotifications = localStorage.getItem('userNotifications') ? 
-                    JSON.parse(localStorage.getItem('userNotifications')) : [];
-                
-                userNotifications.push({
-                    id: 'user_notif_' + Date.now(),
-                    title: title || "Test notifikacija",
-                    message: message || "Ovo je test notifikacija za proveru sistema.",
-                    type: type || "Obaveštenje",
-                    timestamp: new Date().toISOString(),
-                    read: false
-                });
-                
-                localStorage.setItem('userNotifications', JSON.stringify(userNotifications));
-                
-                // Ažuriranje bedža ako postoji
-                const badge = document.querySelector('.notification-badge');
-                if (badge) {
-                    const unreadCount = userNotifications.filter(notif => !notif.read).length;
-                    badge.textContent = unreadCount;
-                    badge.style.display = unreadCount > 0 ? 'flex' : 'none';
-                }
-                
-                console.log("Notifikacija direktno dodana u localStorage");
-                return true;
-            } catch (error) {
-                console.error("Greška pri kreiranju notifikacije:", error);
                 return false;
             }
         }

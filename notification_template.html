@@ -1,0 +1,219 @@
+<!-- Notifikacioni sistem - Dodati u header.html ili navbar template -->
+
+<!-- Ikonice za notifikacije -->
+<div class="notification-container">
+    <div class="notification-bell" aria-label="Notifikacije">
+        <i class="fas fa-bell"></i>
+        <span class="notification-badge" style="display: none;">0</span>
+    </div>
+    
+    <!-- Panel sa notifikacijama -->
+    <div class="notification-panel" style="display: none; opacity: 0; transform: translateY(-10px); transition: opacity 0.2s ease, transform 0.2s ease;">
+        <div class="notification-panel-header">
+            <h4>Notifikacije</h4>
+            <button id="markAllRead" class="mark-all-read-btn">
+                <i class="fas fa-check-double" style="margin-right: 4px; font-size: 0.75rem;"></i>Označi sve kao pročitano
+            </button>
+        </div>
+        <div class="notifications-list">
+            <!-- Notifikacije se dinamički ubacuju ovde -->
+            <div class="empty-notifications">
+                <i class="fas fa-bell-slash"></i>
+                <p>Nemate notifikacija</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS stilovi za notifikacije -->
+<link rel="stylesheet" href="assets/css/notification_styles.css">
+
+<!-- JavaScript za notifikacije -->
+<script src="js/enhanced_notifications.js"></script>
+<script src="js/notification_integration.js"></script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Funkcionalnost za notifikacije
+    const notificationBell = document.querySelector('.notification-bell');
+    const notificationPanel = document.querySelector('.notification-panel');
+    let isNotificationPanelOpen = false;
+    
+    // Učitavanje pročitanih notifikacija iz localStorage
+    function loadReadNotifications() {
+        const saved = localStorage.getItem('readNotifications');
+        return saved ? JSON.parse(saved) : [];
+    }
+    
+    // Čuvanje pročitanih notifikacija u localStorage
+    function saveReadNotifications(readNotifications) {
+        localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+    }
+    
+    // Ažuriranje broja nepročitanih notifikacija
+    function updateUnreadCount() {
+        const userNotifications = localStorage.getItem('userNotifications') ? 
+            JSON.parse(localStorage.getItem('userNotifications')) : [];
+        const unreadCount = userNotifications.filter(notif => !notif.read).length;
+        
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+            badge.textContent = unreadCount;
+            badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+    }
+    
+    // Toggle panel sa notifikacijama
+    if (notificationBell) {
+        notificationBell.addEventListener('click', function(e) {
+            e.stopPropagation();
+            isNotificationPanelOpen = !isNotificationPanelOpen;
+            notificationPanel.style.display = isNotificationPanelOpen ? 'block' : 'none';
+            
+            if (isNotificationPanelOpen) {
+                renderNotifications();
+            }
+        });
+    }
+    
+    // Zatvaranje panela klikom van njega
+    document.addEventListener('click', function(e) {
+        if (isNotificationPanelOpen && 
+            !notificationPanel.contains(e.target) && 
+            !notificationBell.contains(e.target)) {
+            isNotificationPanelOpen = false;
+            notificationPanel.style.display = 'none';
+        }
+    });
+    
+    // Prikazivanje notifikacija
+    function renderNotifications() {
+        const notificationsList = document.querySelector('.notifications-list');
+        if (!notificationsList) return;
+        
+        // Učitavanje notifikacija
+        const userNotifications = localStorage.getItem('userNotifications') ? 
+            JSON.parse(localStorage.getItem('userNotifications')) : [];
+        
+        notificationsList.innerHTML = '';
+        
+        if (userNotifications.length === 0) {
+            notificationsList.innerHTML = `
+                <div class="empty-notifications">
+                    <i class="fas fa-bell-slash"></i>
+                    <p>Nemate notifikacija</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Sortiranje od najnovijih ka najstarijim
+        userNotifications.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        userNotifications.forEach((notification) => {
+            const item = document.createElement('div');
+            item.className = 'notification-item';
+            if (notification.read) {
+                item.classList.add('read');
+            }
+            item.setAttribute('data-id', notification.id);
+            
+            // Formatiranje vremena
+            const time = new Date(notification.timestamp);
+            let timeString = 'upravo sada';
+            
+            const now = new Date();
+            const diffMs = now - time;
+            const diffMin = Math.floor(diffMs / (60 * 1000));
+            const diffHour = Math.floor(diffMs / (60 * 60 * 1000));
+            const diffDay = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+            
+            if (diffMin >= 1 && diffMin < 60) {
+                timeString = `pre ${diffMin} ${diffMin === 1 ? 'minut' : diffMin < 5 ? 'minuta' : 'minuta'}`;
+            } else if (diffHour >= 1 && diffHour < 24) {
+                timeString = `pre ${diffHour} ${diffHour === 1 ? 'sat' : diffHour < 5 ? 'sata' : 'sati'}`;
+            } else if (diffDay >= 1) {
+                timeString = `pre ${diffDay} ${diffDay === 1 ? 'dan' : 'dana'}`;
+            }
+            
+            // Određivanje ikone na osnovu tipa
+            let icon = 'bell';
+            if (notification.type === 'Zakazani sastanak') icon = 'calendar-alt';
+            if (notification.type === 'Važno') icon = 'exclamation-circle';
+            
+            item.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas fa-${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${timeString}</div>
+                </div>
+            `;
+            
+            // Klik na notifikaciju - označavanje kao pročitane
+            item.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                markNotificationAsRead(id);
+                this.classList.add('read');
+            });
+            
+            notificationsList.appendChild(item);
+        });
+    }
+    
+    // Funkcija za označavanje notifikacije kao pročitane
+    function markNotificationAsRead(id) {
+        const userNotifications = localStorage.getItem('userNotifications') ? 
+            JSON.parse(localStorage.getItem('userNotifications')) : [];
+        
+        const index = userNotifications.findIndex(notif => notif.id === id);
+        if (index !== -1) {
+            userNotifications[index].read = true;
+            localStorage.setItem('userNotifications', JSON.stringify(userNotifications));
+            updateUnreadCount();
+        }
+    }
+    
+    // Funkcija za označavanje svih notifikacija kao pročitanih
+    function markAllNotificationsAsRead() {
+        console.log("Funkcija markAllNotificationsAsRead pozvana");
+        const notificationItems = document.querySelectorAll('.notification-item');
+        console.log(`Pronađeno ${notificationItems.length} notifikacija`);
+        
+        const userNotifications = localStorage.getItem('userNotifications') ? 
+            JSON.parse(localStorage.getItem('userNotifications')) : [];
+        
+        let updated = false;
+        
+        userNotifications.forEach(notif => {
+            if (!notif.read) {
+                notif.read = true;
+                updated = true;
+            }
+        });
+        
+        if (updated) {
+            localStorage.setItem('userNotifications', JSON.stringify(userNotifications));
+            
+            // Označavanje svih elemenata kao pročitanih u UI
+            notificationItems.forEach(item => {
+                item.classList.add('read');
+            });
+            
+            updateUnreadCount();
+        }
+    }
+    
+    // Event listener za dugme "Označi sve kao pročitano"
+    const markAllReadBtn = document.getElementById('markAllRead');
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            markAllNotificationsAsRead();
+        });
+    }
+    
+    // Inicijalno ažuriranje brojača
+    updateUnreadCount();
+});
+</script>

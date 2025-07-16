@@ -1,0 +1,244 @@
+/* Improved notification styles */
+
+.notification-container {
+    position: relative;
+    margin-left: 1rem;
+}
+
+.notification-bell {
+    position: relative;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: var(--gold-bright);
+    transition: transform 0.2s ease;
+}
+
+.notification-bell:hover {
+    transform: rotate(10deg);
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #fc8181;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Improved notification panel */
+.notification-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 350px; /* Increased width for better text visibility */
+    max-width: 90vw;
+    background: rgba(16, 16, 18, 0.98); /* Darker background for better contrast */
+    border: 1px solid var(--gold-dark);
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.notification-panel-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gold-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(14, 14, 16, 0.98);
+    z-index: 2;
+    position: sticky;
+    top: 0;
+}
+
+.notification-panel-header h4 {
+    margin: 0;
+    color: var(--gold-bright);
+}
+
+.mark-all-read-btn {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid var(--gold-dark);
+    border-radius: 4px;
+    color: var(--gold-bright);
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.mark-all-read-btn:hover {
+    background: rgba(212, 175, 55, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Improved notification list container */
+.notifications-list {
+    max-height: 400px; /* Increased height */
+    overflow-y: auto;
+    overflow-x: auto; /* Omogućava horizontalno skrolovanje */
+    padding: 0.5rem;
+    /* Custom scrollbar for webkit browsers */
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold-dark) rgba(16, 16, 18, 0.3);
+}
+
+/* Custom scrollbar for webkit browsers */
+.notifications-list::-webkit-scrollbar {
+    width: 6px;
+    height: 6px; /* Height for horizontal scrollbar */
+}
+
+.notifications-list::-webkit-scrollbar-track {
+    background: rgba(16, 16, 18, 0.3);
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+    background-color: var(--gold-dark);
+    border-radius: 6px;
+}
+
+/* Improved notification items */
+.notification-item {
+    display: flex;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    transition: background-color 0.2s, transform 0.1s;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+}
+
+/* Poseban stil za notifikacije o sastancima */
+.notification-item[data-type="Zakazani sastanak"] {
+    border-left: 3px solid #4dabf7; /* Plava ivica za sastanke */
+    background-color: rgba(77, 171, 247, 0.05); /* Blaga plava pozadina */
+}
+
+.notification-item[data-type="Zakazani sastanak"]:hover {
+    background-color: rgba(77, 171, 247, 0.1); /* Jača plava pozadina pri hoveru */
+}
+
+.notification-item[data-type="Zakazani sastanak"] .notification-icon {
+    color: #4dabf7; /* Plava ikonica za sastanke */
+}
+
+/* Stil za poruke o odloženim konsultacijama */
+.notification-item[data-type="Info"] {
+    border-left: 3px solid #f59e0b; /* Žuta ivica za informacije */
+    background-color: rgba(245, 158, 11, 0.05); /* Blaga žuta pozadina */
+}
+
+.notification-item[data-type="Info"]:hover {
+    background-color: rgba(245, 158, 11, 0.1); /* Jača žuta pozadina pri hoveru */
+}
+
+.notification-item[data-type="Info"] .notification-icon {
+    color: #f59e0b; /* Žuta ikonica za informacije */
+}
+
+/* Stil za Zoom linkove u notifikacijama */
+.notification-message a[href^="https://zoom.us"] {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(77, 171, 247, 0.1);
+    border: 1px solid rgba(77, 171, 247, 0.3);
+    border-radius: 4px;
+    margin-top: 0.25rem;
+    color: #4dabf7;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.notification-message a[href^="https://zoom.us"]:hover {
+    background-color: rgba(77, 171, 247, 0.2);
+    border-color: rgba(77, 171, 247, 0.5);
+    transform: translateY(-1px);
+}
+
+.notification-message a[href^="https://zoom.us"]:before {
+    content: "\f03d";
+    font-family: "Font Awesome 5 Free";
+    margin-right: 0.3rem;
+}
+
+/* Stil za file linkove u notifikacijama */
+.notification-message a[href^="file://"] {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(77, 171, 247, 0.1);
+    border: 1px solid rgba(77, 171, 247, 0.3);
+    border-radius: 4px;
+    margin-top: 0.25rem;
+    color: #4dabf7;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.notification-message a[href^="file://"]:hover {
+    background-color: rgba(77, 171, 247, 0.2);
+    border-color: rgba(77, 171, 247, 0.5);
+    transform: translateY(-1px);
+}
+
+.notification-message a[href^="file://"]:before {
+    content: "\f15c";
+    font-family: "Font Awesome 5 Free";
+    margin-right: 0.3rem;
+}
+
+/* Uklanjamo expanded stil jer sada prikazujemo celu poruku po defaultu */
+/* Prošireni panel za notifikacije za bolju vidljivost */
+.notification-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 400px; /* Povećana širina za bolju vidljivost teksta */
+    max-width: 90vw;
+    background: rgba(16, 16, 18, 0.98); /* Darker background for better contrast */
+    border: 1px solid var(--gold-dark);
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.empty-notifications {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    color: var(--muted-text);
+}
+
+.empty-notifications i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--gold-pale);
+}
+
+/* Generalni stil za sve linkove u notifikacijama */
+.notification-message a {
+    color: #4dabf7;
+    text-decoration: underline;
+    word-break: break-word;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.notification-message a:hover {
+    color: #74c0fc;
+}

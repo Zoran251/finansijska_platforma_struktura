@@ -1,0 +1,195 @@
+/* Admin panel notification styles */
+
+/* Notifikacije tabela */
+.notifications-list-container {
+  margin-top: 1rem;
+}
+
+.notifications-list-container .data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.notifications-list-container .data-table th,
+.notifications-list-container .data-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.notifications-list-container .data-table th {
+  font-weight: 600;
+  color: var(--gold-medium);
+  border-bottom: 2px solid var(--gold-dark);
+}
+
+.notifications-list-container .data-table tbody tr:hover {
+  background-color: var(--dark-accent);
+}
+
+/* Badge stilovi za tipove notifikacija */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge-blue {
+  background-color: rgba(66, 153, 225, 0.2);
+  color: #63b3ed;
+}
+
+.badge-green {
+  background-color: rgba(72, 187, 120, 0.2);
+  color: #68d391;
+}
+
+.badge-red {
+  background-color: rgba(245, 101, 101, 0.2);
+  color: #fc8181;
+}
+
+.badge-orange {
+  background-color: rgba(237, 137, 54, 0.2);
+  color: #f6ad55;
+}
+
+.badge-yellow {
+  background-color: rgba(236, 201, 75, 0.2);
+  color: #f6e05e;
+}
+
+/* Ikone akcija */
+.action-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.action-icons i {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.action-icons i:hover {
+  color: var(--gold-bright);
+}
+
+.action-icons .fa-trash:hover {
+  color: #fc8181;
+}
+
+/* Forma za kreiranje/uređivanje notifikacija */
+.notification-form-container {
+  background: var(--dark-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.notification-form-container form {
+  width: 100%;
+}
+
+.notification-form-container .form-group {
+  margin-bottom: 1rem;
+}
+
+.notification-form-container label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gold-pale);
+}
+
+.notification-form-container input,
+.notification-form-container textarea,
+.notification-form-container select {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(31, 41, 55, 0.4);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  color: var(--light-text);
+}
+
+.notification-form-container textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.notification-form-container .form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+/* Modalni prozor za pregled notifikacije */
+.notification-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--dark-card);
+  border: 1px solid var(--gold-dark);
+  border-radius: 8px;
+  padding: 2rem;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close-modal {
+  cursor: pointer;
+  color: var(--gold-medium);
+  font-size: 1.5rem;
+}
+
+.close-modal:hover {
+  color: var(--gold-bright);
+}
+
+/* Obavestenje o uspesnom slanju */
+.success-message {
+  background-color: rgba(72, 187, 120, 0.1);
+  border: 1px solid #68d391;
+  color: #68d391;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.success-message i {
+  margin-right: 0.5rem;
+}
+
+/* Obavestenje o gresci */
+.error-message {
+  background-color: rgba(245, 101, 101, 0.1);
+  border: 1px solid #fc8181;
+  color: #fc8181;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.error-message i {
+  margin-right: 0.5rem;
+}
