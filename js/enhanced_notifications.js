@@ -3,17 +3,7 @@
  * Enhanced script for better notification visibility and user experience
  */
 
-const EnhancedNo            // HTML struktura notifikacije
-            notificationElement.innerHTML = `
-                <div class="notification-icon">
-                    <i class="fas fa-${icon}"></i>
-                </div>
-                <div class="notification-content">
-                    <div class="notification-title">${notification.title}</div>
-                    <div class="notification-message" data-id="${notification.id}">${linkifyText(notification.message)}</div>
-                    <div class="notification-time">${formattedTime}</div>
-                </div>
-            `; = (function() {
+const EnhancedNotifications = (function() {
     "use strict";
     
     // Konstante
