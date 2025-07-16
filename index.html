@@ -3,113 +3,593 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finansijska Platforma - Početna stranica</title>
+    <title>Golden Balance - Finansijska platforma</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f0f4f8;
+        :root {
+            --primary-bg: #0a0a0c;
+            --secondary-bg: #1a1a1f;
+            --accent-bg: #2a2a2f;
+            --gold-bright: #FFD700;
+            --gold-medium: #D4AF37;
+            --gold-dark: #B8860B;
+            --light-text: #f8f9fa;
+            --muted-text: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --gradient-gold: linear-gradient(45deg, #FFD700, #D4AF37);
+            --gradient-gold-dark: linear-gradient(45deg, #D4AF37, #B8860B);
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--primary-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .landing-container {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            flex: 1;
-        }
-        header {
-            background-color: #1a365d;
-            color: white;
-            padding: 20px 0;
+            justify-content: center;
+            align-items: center;
             text-align: center;
+            padding: 2rem;
+            position: relative;
         }
-        h1 {
-            margin: 0;
-            font-size: 28px;
+
+        .landing-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(212, 175, 55, 0.08) 0%, transparent 50%);
+            pointer-events: none;
         }
-        .nav-links {
+
+        .logo-container {
+            margin-bottom: 2rem;
+            z-index: 1;
+            position: relative;
+        }
+
+        .logo-container img {
+            height: 120px;
+            width: auto;
+            filter: drop-shadow(0 4px 20px rgba(255, 215, 0, 0.3));
+        }
+
+        .brand-name {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: var(--muted-text);
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .cta-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            z-index: 1;
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .cta-button {
+            background: var(--gradient-gold);
+            color: var(--primary-bg);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--box-shadow);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(255, 215, 0, 0.4);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--gold-medium);
+            border: 2px solid var(--gold-medium);
+        }
+
+        .cta-button.secondary:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--gold-bright);
+            color: var(--gold-bright);
+        }
+
+        .cta-button.tertiary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cta-button.tertiary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .app-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .app-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .app-links a:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .app-links img {
+            height: 30px;
+        }
+
+        /* Login/Register Form Styles */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-top: 30px;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
-        .card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        .auth-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .auth-container {
+            background: var(--secondary-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .auth-modal.active .auth-container {
+            transform: translateY(0);
+        }
+
+        .auth-header {
             text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            font-size: 1.8rem;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            cursor: pointer;
+            color: var(--muted-text);
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: var(--gold-medium);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-gold);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--muted-text);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: var(--light-text);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold-medium);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--muted-text);
+        }
+
+        .auth-footer a {
+            color: var(--gold-medium);
             text-decoration: none;
-            color: #333;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: var(--muted-text);
+            background: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .card h2 {
-            color: #1a365d;
-            margin-top: 0;
+
+        .close-modal:hover {
+            color: var(--light-text);
         }
-        .card p {
-            color: #666;
+
+        /* Animacije */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        footer {
-            background-color: #1a365d;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto;
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .fade-in-up-delay {
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+        }
+
+        .fade-in-up-delay-2 {
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        @media (max-width: 768px) {
+            .brand-name {
+                font-size: 2.5rem;
+            }
+            
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .cta-container {
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Finansijska Platforma - Navigacija</h1>
-    </header>
-    
-    <div class="container">
-        <div class="nav-links">
-            <a href="admin_page.py" class="card">
-                <h2>Admin Panel</h2>
-                <p>Upravljanje korisnicima, konsultacijama i notifikacijama</p>
-            </a>
-            
-            <a href="main_page.py" class="card">
-                <h2>Glavna Stranica</h2>
-                <p>Pregled osnovnih finansijskih informacija</p>
-            </a>
-            
-            <a href="profile_page.py" class="card">
-                <h2>Korisnički Profil</h2>
-                <p>Upravljanje korisničkim profilom i podešavanjima</p>
-            </a>
-            
-            <a href="preview_page.py" class="card">
-                <h2>Pregled</h2>
-                <p>Pregled finansijskih stanja i analiza</p>
-            </a>
+    <div class="landing-container">
+        <div class="logo-container fade-in-up">
+            <img src="https://i.imgur.com/yQGiMd5.png" alt="Golden Balance Logo">
         </div>
         
-        <div class="nav-links">
-            <a href="notification_template.html" class="card">
-                <h2>Notifikacije</h2>
-                <p>Pregled sistema notifikacija</p>
+        <h1 class="brand-name fade-in-up-delay">Golden Balance</h1>
+        
+        <p class="tagline fade-in-up-delay">
+            Vaš pouzdani partner za upravljanje ličnim finansijama, investiranje i postizanje finansijske stabilnosti.
+        </p>
+        
+        <div class="cta-container fade-in-up-delay-2">
+            <a href="#" class="cta-button" id="loginButton">
+                <i class="fas fa-user"></i>
+                Prijavi se
             </a>
             
-            <a href="AI_asistent/index.html" class="card">
-                <h2>AI Asistent</h2>
-                <p>Pomoć i podrška putem AI asistenta</p>
+            <a href="#" class="cta-button secondary" id="registerButton">
+                <i class="fas fa-user-plus"></i>
+                Registruj se
             </a>
+            
+            <a href="preview_page.py" class="cta-button tertiary" id="guestButton">
+                <i class="fas fa-eye"></i>
+                Pregledaj kao gost
+            </a>
+            
+            <div class="app-links">
+                <a href="#" id="androidApp">
+                    <img src="https://i.imgur.com/OXUe4qZ.png" alt="Android App">
+                </a>
+                <a href="#" id="iosApp">
+                    <img src="https://i.imgur.com/Px2O18T.png" alt="iOS App">
+                </a>
+            </div>
         </div>
     </div>
-    
-    <footer>
-        <p>&copy; 2025 Finansijska Platforma</p>
-    </footer>
+
+    <!-- Login/Register Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-container">
+            <button class="close-modal" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="auth-header">
+                <h2>Dobrodošli</h2>
+                <p>Pristupite vašem finansijskom asistetu</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" data-tab="login">Prijava</div>
+                <div class="auth-tab" data-tab="register">Registracija</div>
+            </div>
+            
+            <!-- Login Form -->
+            <form class="auth-form active" id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email adresa</label>
+                    <input type="email" class="form-control" id="loginEmail" placeholder="Unesite vašu email adresu" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Lozinka</label>
+                    <input type="password" class="form-control" id="loginPassword" placeholder="Unesite vašu lozinku" required>
+                </div>
+                
+                <button type="submit" class="cta-button">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Prijavi se
+                </button>
+                
+                <div class="auth-footer">
+                    <a href="#">Zaboravili ste lozinku?</a>
+                </div>
+            </form>
+            
+            <!-- Register Form -->
+            <form class="auth-form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Ime i prezime</label>
+                    <input type="text" class="form-control" id="registerName" placeholder="Unesite vaše ime i prezime" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerEmail">Email adresa</label>
+                    <input type="email" class="form-control" id="registerEmail" placeholder="Unesite vašu email adresu" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Lozinka</label>
+                    <input type="password" class="form-control" id="registerPassword" placeholder="Kreirajte lozinku" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Potvrda lozinke</label>
+                    <input type="password" class="form-control" id="registerPasswordConfirm" placeholder="Potvrdite lozinku" required>
+                </div>
+                
+                <button type="submit" class="cta-button">
+                    <i class="fas fa-user-plus"></i>
+                    Registruj se
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auth Modal Functionality
+        const loginButton = document.getElementById('loginButton');
+        const registerButton = document.getElementById('registerButton');
+        const authModal = document.getElementById('authModal');
+        const closeModal = document.getElementById('closeModal');
+        const authTabs = document.querySelectorAll('.auth-tab');
+        const authForms = document.querySelectorAll('.auth-form');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const guestButton = document.getElementById('guestButton');
+        
+        // Open modal functions
+        function openAuthModal(tab) {
+            authModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Set active tab
+            authTabs.forEach(t => t.classList.remove('active'));
+            authForms.forEach(f => f.classList.remove('active'));
+            
+            const activeTab = document.querySelector(`.auth-tab[data-tab="${tab}"]`);
+            const activeForm = document.getElementById(`${tab}Form`);
+            
+            if (activeTab && activeForm) {
+                activeTab.classList.add('active');
+                activeForm.classList.add('active');
+            }
+        }
+        
+        // Open login modal
+        loginButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openAuthModal('login');
+        });
+        
+        // Open register modal
+        registerButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            openAuthModal('register');
+        });
+        
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            authModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Tab switching
+        authTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.getAttribute('data-tab');
+                
+                // Update active tab
+                authTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active form
+                authForms.forEach(f => f.classList.remove('active'));
+                document.getElementById(`${tabName}Form`).classList.add('active');
+            });
+        });
+        
+        // Form submissions
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Basic validation
+            if (!email || !password) {
+                alert('Molimo popunite sva polja.');
+                return;
+            }
+            
+            // Simuliraj login (demo)
+            // Ovde biste inače imali AJAX poziv ka serveru
+            alert(`Uspešna prijava! Dobrodošli, ${email}`);
+            window.location.href = 'preview_page.py';
+        });
+        
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            
+            // Basic validation
+            if (!name || !email || !password || !passwordConfirm) {
+                alert('Molimo popunite sva polja.');
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                alert('Lozinke se ne podudaraju.');
+                return;
+            }
+            
+            // Simuliraj registraciju (demo)
+            // Ovde biste inače imali AJAX poziv ka serveru
+            alert(`Uspešna registracija! Dobrodošli, ${name}`);
+            window.location.href = 'preview_page.py';
+        });
+        
+        // Mobile App Downloads
+        document.getElementById('androidApp').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Android aplikacija će uskoro biti dostupna na Google Play Store-u!');
+        });
+        
+        document.getElementById('iosApp').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('iOS aplikacija će uskoro biti dostupna na App Store-u!');
+        });
+        
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
 </body>
 </html>
