@@ -1,0 +1,17 @@
+{
+  "name": "finansijska-platforma-server",
+  "version": "1.0.0",
+  "description": "Development server za Golden Balance platformu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  },
+  "keywords": ["finance", "dashboard", "golden-balance"],
+  "author": "Zoran251",
+  "license": "MIT"
+}

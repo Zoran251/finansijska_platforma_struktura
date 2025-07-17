@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Balance - Preview Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-bg: #0a0a0c;
+            --secondary-bg: #1a1a1f;
+            --accent-bg: #2a2a2f;
+            --dark-bg: #101012;
+            --gold-bright: #FFD700;
+            --gold-medium: #D4AF37;
+            --gold-dark: #B8860B;
+            --light-text: #f8f9fa;
+            --muted-text: #6c757d;
+            --success: #28a745;
+            --error: #dc3545;
+            --border-light: rgba(255, 255, 255, 0.1);
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            --gradient-gold: linear-gradient(45deg, #FFD700, #D4AF37);
+            --gradient-gold-dark: linear-gradient(45deg, #D4AF37, #B8860B);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--dark-bg);
+            color: var(--light-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Glass card effect */
+        .glass-card {
+            background: rgba(42, 42, 47, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--secondary-bg);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-gold);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .navbar-nav a {
+            color: var(--light-text);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-nav a:hover {
+            color: var(--gold-bright);
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: var(--primary-bg);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--gold-bright);
+            border: 1px solid var(--gold-bright);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(16, 16, 18, 0.95) 0%, rgba(24, 24, 27, 0.95) 100%);
+            padding: 4rem 0;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-gold);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--muted-text);
+            margin-bottom: 3rem;
+        }
+
+        /* Financial Cards Grid */
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .financial-card {
+            padding: 1.5rem;
+            height: 160px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            font-size: 1.5rem;
+        }
+
+        .card-label {
+            color: var(--muted-text);
+            font-size: 0.875rem;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+
+        .card-change {
+            font-size: 0.875rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-section {
+            padding: 2rem;
+        }
+
+        .chart-container {
+            height: 400px;
+            margin-top: 1rem;
+        }
+
+        .quick-actions {
+            padding: 2rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: var(--gold-bright);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .recent-activity {
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .transaction-list {
+            margin-top: 1rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--gold-bright);
+        }
+
+        .transaction-details h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .transaction-details p {
+            margin: 0;
+            color: var(--muted-text);
+            font-size: 0.875rem;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .amount-positive {
+            color: var(--success);
+        }
+
+        .amount-negative {
+            color: var(--error);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                display: none;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .financial-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <i class="fas fa-coins"></i>
+                Golden Balance
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#analytics">Analitika</a></li>
+                <li><a href="#budget">Budžet</a></li>
+                <li><a href="#goals">Ciljevi</a></li>
+                <li><a href="#settings">Podešavanja</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="#" class="btn btn-outline">
+                    <i class="fas fa-bell"></i>
+                    Obaveštenja
+                </a>
+                <a href="admin.html" class="btn btn-outline">
+                    <i class="fas fa-cog"></i>
+                    Admin
+                </a>
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Odjavi se
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <h1 class="hero-title">Dobrodošli u vašu Finansijsku Platformu</h1>
+            <p class="hero-subtitle">Potpuno upravljanje vašim finansijama na jednom mestu</p>
+            
+            <!-- Financial Indicators -->
+            <div class="financial-grid">
+                <div class="glass-card financial-card">
+                    <div class="card-header">
+                        <i class="fas fa-dollar-sign card-icon" style="color: var(--gold-bright);"></i>
+                        <span class="card-label">Ukupno stanje</span>
+                    </div>
+                    <div class="card-value" style="color: var(--light-text);">€15,420.50</div>
+                    <div class="card-change" style="color: var(--success);">+2.5% ovaj mesec</div>
+                </div>
+
+                <div class="glass-card financial-card">
+                    <div class="card-header">
+                        <i class="fas fa-trending-up card-icon" style="color: var(--success);"></i>
+                        <span class="card-label">Mesečni prihodi</span>
+                    </div>
+                    <div class="card-value" style="color: var(--success);">€4,200.00</div>
+                    <div class="card-change" style="color: var(--success);">+8.2% u odnosu na prošli mesec</div>
+                </div>
+
+                <div class="glass-card financial-card">
+                    <div class="card-header">
+                        <i class="fas fa-trending-down card-icon" style="color: var(--error);"></i>
+                        <span class="card-label">Mesečni rashodi</span>
+                    </div>
+                    <div class="card-value" style="color: var(--error);">€2,850.30</div>
+                    <div class="card-change" style="color: var(--success);">-3.1% u odnosu na prošli mesec</div>
+                </div>
+
+                <div class="glass-card financial-card">
+                    <div class="card-header">
+                        <i class="fas fa-piggy-bank card-icon" style="color: var(--gold-bright);"></i>
+                        <span class="card-label">Ušteđevina</span>
+                    </div>
+                    <div class="card-value" style="color: var(--gold-bright);">€8,150.20</div>
+                    <div class="card-change" style="color: var(--muted-text);">32.1% od prihoda</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-grid">
+            <!-- Chart Section -->
+            <div class="glass-card chart-section">
+                <h2>Finansijski pregled</h2>
+                <div class="chart-container">
+                    <canvas id="financeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="glass-card quick-actions">
+                <h3>Brze akcije</h3>
+                <div class="actions-grid">
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-plus"></i><br>
+                        Dodaj transakciju
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-chart-pie"></i><br>
+                        Budžet plan
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-target"></i><br>
+                        Postavi cilj
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-file-invoice"></i><br>
+                        Generiši izveštaj
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass-card recent-activity">
+            <h3>Poslednje aktivnosti</h3>
+            <div class="transaction-list">
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Kupovina u supermarketu</h4>
+                            <p>17. jul 2025 • 14:30</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount amount-negative">-€85.50</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">
+                            <i class="fas fa-money-bill"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Plata</h4>
+                            <p>15. jul 2025 • 09:00</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount amount-positive">+€4,200.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">
+                            <i class="fas fa-gas-pump"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Gorivo</h4>
+                            <p>14. jul 2025 • 18:45</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount amount-negative">-€65.00</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Kafić</h4>
+                            <p>13. jul 2025 • 10:15</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount amount-negative">-€12.50</div>
+                </div>
+
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <h4>Kirija</h4>
+                            <p>01. jul 2025 • 08:00</p>
+                        </div>
+                    </div>
+                    <div class="transaction-amount amount-negative">-€800.00</div>
+                </div>
+            </div>
+            <button class="btn btn-outline" style="margin-top: 1rem;">
+                Prikaži sve transakcije
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Chart
+        const ctx = document.getElementById('financeChart').getContext('2d');
+        const financeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Prihodi',
+                    data: [3800, 3900, 4100, 4000, 4300, 4100, 4200],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Rashodi',
+                    data: [2800, 2900, 2750, 2950, 2800, 2900, 2850],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Ušteđevina',
+                    data: [1000, 1000, 1350, 1050, 1500, 1200, 1350],
+                    borderColor: '#FFD700',
+                    backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#f8f9fa'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#6c757d'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#6c757d',
+                            callback: function(value) {
+                                return '€' + value.toLocaleString();
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add interactivity
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Ova funkcionalnost će uskoro biti dostupna!');
+            });
+        });
+
+        document.querySelector('.btn-outline').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Prikazivanje svih transakcija - funkcionalnost u razvoju!');
+        });
+    </script>
+</body>
+</html>
