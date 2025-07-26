@@ -1293,6 +1293,346 @@
                 bottom: 85px;
             }
         }
+
+        /* ========================================= */
+        /* KOMPLETNA MOBILNA RESPONSIVNOST */
+        /* ========================================= */
+
+        /* Osnovna mobilna optimizacija */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px; /* Prevent iOS zoom */
+                overflow-x: hidden;
+            }
+
+            /* Navigation Header - Mobile */
+            .nav-header {
+                padding: 0.75rem 1rem !important;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .nav-logo {
+                font-size: 1.25rem !important;
+            }
+
+            .nav-links {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+
+            .nav-links a {
+                padding: 0.5rem 1rem !important;
+                text-align: center;
+                border-radius: 0.5rem;
+                background: rgba(212, 175, 55, 0.1);
+            }
+
+            /* Container - Mobile */
+            .container {
+                width: 95%;
+                margin: 1rem auto;
+                padding: 1.5rem 1rem;
+                border-radius: 1rem;
+            }
+
+            /* Hero Section - Mobile */
+            .hero-section {
+                text-align: center;
+                padding: 3rem 0 2rem;
+                margin-top: 80px; /* Account for fixed header */
+            }
+
+            .hero-title {
+                font-size: 2rem !important;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem !important;
+                margin-bottom: 2rem;
+                padding: 0 1rem;
+            }
+
+            /* Button Groups - Mobile */
+            .button-group {
+                flex-direction: column !important;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            .primary-button, .secondary-button {
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                min-height: 48px; /* Touch target */
+            }
+
+            /* Grid Layouts - Mobile */
+            .features-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                margin: 2rem 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            /* Section Cards - Mobile */
+            .section-card {
+                padding: 1.5rem 1rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            .section-card h2 {
+                font-size: 1.5rem !important;
+                margin-bottom: 1rem;
+            }
+
+            .section-card h3 {
+                font-size: 1.25rem !important;
+                margin-bottom: 0.75rem;
+            }
+
+            .section-card p {
+                font-size: 0.95rem !important;
+                line-height: 1.6;
+            }
+
+            /* Feature Cards - Mobile */
+            .feature-card {
+                padding: 1.5rem 1rem !important;
+                text-align: center;
+            }
+
+            .feature-card i {
+                font-size: 2rem !important;
+                margin-bottom: 1rem;
+            }
+
+            .feature-card h4 {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem;
+            }
+
+            .feature-card p {
+                font-size: 0.9rem !important;
+                line-height: 1.5;
+            }
+
+            /* Tables - Mobile */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 600px;
+                font-size: 0.875rem;
+            }
+
+            /* Charts - Mobile */
+            .chart-container {
+                padding: 1rem !important;
+                margin: 1.5rem 0 !important;
+            }
+
+            /* Footer - Mobile */
+            .footer {
+                padding: 2rem 1rem !important;
+                text-align: center;
+            }
+
+            .footer-content {
+                flex-direction: column !important;
+                gap: 2rem !important;
+            }
+
+            .footer-section {
+                width: 100% !important;
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center !important;
+            }
+
+            /* Notification Panel - Mobile */
+            .notifications-panel {
+                width: 95vw !important;
+                max-width: none !important;
+                left: 2.5vw !important;
+                right: 2.5vw !important;
+                top: 80px !important;
+                max-height: calc(100vh - 100px) !important;
+            }
+
+            /* Consultation Form - Mobile */
+            .consultation-modal .modal-content {
+                width: 95vw !important;
+                max-width: none !important;
+                margin: 1rem auto !important;
+                padding: 1.5rem 1rem !important;
+            }
+
+            .consultation-form .form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .consultation-form .form-group {
+                width: 100% !important;
+            }
+
+            /* Typography - Mobile */
+            h1 { font-size: 2rem !important; }
+            h2 { font-size: 1.75rem !important; }
+            h3 { font-size: 1.5rem !important; }
+            h4 { font-size: 1.25rem !important; }
+            h5 { font-size: 1.125rem !important; }
+            h6 { font-size: 1rem !important; }
+
+            /* Spacing Adjustments - Mobile */
+            .section {
+                margin: 2rem 0 !important;
+            }
+
+            .mb-4 { margin-bottom: 1.5rem !important; }
+            .mt-4 { margin-top: 1.5rem !important; }
+            .py-4 { padding: 1.5rem 0 !important; }
+            .px-4 { padding: 0 1rem !important; }
+        }
+
+        /* Extra Small Devices (phones in portrait) */
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.75rem !important;
+            }
+
+            .container {
+                width: 98%;
+                padding: 1rem 0.75rem;
+            }
+
+            .section-card {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .nav-header {
+                padding: 0.5rem 0.75rem !important;
+            }
+
+            .floating-chat-btn {
+                width: 50px !important;
+                height: 50px !important;
+                bottom: 15px !important;
+                right: 15px !important;
+            }
+
+            .chat-container {
+                width: calc(100vw - 30px) !important;
+                right: 15px !important;
+                bottom: 75px !important;
+            }
+
+            /* Form improvements for very small screens */
+            input, select, textarea {
+                font-size: 16px !important; /* Prevent zoom on iOS */
+                padding: 0.875rem !important;
+            }
+
+            .primary-button, .secondary-button {
+                padding: 0.875rem 1rem !important;
+                font-size: 0.95rem !important;
+            }
+        }
+
+        /* Tablet Portrait */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                width: 92%;
+                padding: 2rem 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .hero-title {
+                font-size: 2.5rem !important;
+            }
+
+            .section-card {
+                padding: 2rem 1.5rem !important;
+            }
+        }
+
+        /* Landscape orientation fixes */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero-section {
+                padding: 1rem 0;
+            }
+
+            .modal-content {
+                max-height: 90vh !important;
+                overflow-y: auto;
+            }
+
+            .notifications-panel {
+                max-height: 85vh !important;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            /* Touch devices */
+            button, .button, a, input[type="submit"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Larger tap targets */
+            .nav-links a {
+                padding: 0.75rem 1rem !important;
+            }
+
+            /* Remove hover effects on touch devices */
+            .feature-card:hover,
+            .section-card:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .nav-header,
+            .floating-chat-btn,
+            .chat-container,
+            .notifications-panel {
+                display: none !important;
+            }
+
+            body {
+                color: #000 !important;
+                background: #fff !important;
+            }
+
+            .container,
+            .section-card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+        }
     </style>
 </head>
 <body>

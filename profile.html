@@ -925,6 +925,343 @@
                 margin-bottom: 0;
             }
         }
+
+        /* ========================================= */
+        /* KOMPLETNA MOBILNA RESPONSIVNOST - PROFILE */
+        /* ========================================= */
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px; /* Prevent iOS zoom */
+                overflow-x: hidden;
+            }
+
+            /* Header - Mobile */
+            .header {
+                padding: 0.75rem 1rem !important;
+            }
+
+            .header-content {
+                flex-direction: column !important;
+                gap: 1rem;
+                align-items: stretch !important;
+            }
+
+            .logo {
+                justify-content: center !important;
+            }
+
+            .nav-links {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+                width: 100%;
+            }
+
+            .nav-links a {
+                padding: 0.75rem 1rem !important;
+                text-align: center;
+                border-radius: 0.5rem;
+                background: rgba(212, 175, 55, 0.1);
+            }
+
+            /* Main Container - Mobile */
+            .main-container {
+                margin-top: 120px !important; /* Account for taller mobile header */
+                padding: 1rem !important;
+                max-width: 100% !important;
+            }
+
+            /* Sidebar - Mobile */
+            .sidebar {
+                position: fixed !important;
+                top: 0;
+                left: -100%;
+                width: 280px !important;
+                height: 100vh;
+                z-index: 1001;
+                transition: left 0.3s ease !important;
+                overflow-y: auto;
+                padding-top: 120px !important;
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            /* Mobile sidebar toggle */
+            .mobile-menu-toggle {
+                display: block !important;
+                position: fixed;
+                top: 80px;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--gold-bright);
+                color: var(--dark-bg);
+                border: none;
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+                font-size: 1.25rem;
+                cursor: pointer;
+                box-shadow: var(--box-shadow);
+            }
+
+            /* Content Area - Mobile */
+            .content-area {
+                margin-left: 0 !important;
+                padding: 1rem !important;
+                width: 100% !important;
+            }
+
+            /* Dashboard Grid - Mobile */
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            /* Stats Cards - Mobile */
+            .stat-card {
+                padding: 1.5rem 1rem !important;
+                text-align: center;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem !important;
+            }
+
+            .stat-card p {
+                font-size: 0.9rem !important;
+            }
+
+            /* Charts - Mobile */
+            .chart-container {
+                padding: 1rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            /* Forms - Mobile */
+            .form-container {
+                padding: 1.5rem 1rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .form-group {
+                width: 100% !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Buttons - Mobile */
+            .btn, .primary-btn, .secondary-btn {
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                min-height: 48px; /* Touch target */
+                margin-bottom: 0.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+            }
+
+            /* Tables - Mobile */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 600px;
+                font-size: 0.875rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem !important;
+                white-space: nowrap;
+            }
+
+            /* Navigation Tabs - Mobile */
+            .nav-tabs {
+                flex-direction: column !important;
+                gap: 0.25rem !important;
+            }
+
+            .nav-tab {
+                width: 100% !important;
+                text-align: center !important;
+                padding: 1rem !important;
+            }
+
+            /* Modals - Mobile */
+            .modal-content {
+                width: 95vw !important;
+                max-width: none !important;
+                margin: 1rem auto !important;
+                padding: 1.5rem 1rem !important;
+                max-height: calc(100vh - 2rem) !important;
+                overflow-y: auto;
+            }
+
+            /* Typography - Mobile */
+            h1 { font-size: 1.75rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.25rem !important; }
+            h4 { font-size: 1.125rem !important; }
+            h5 { font-size: 1rem !important; }
+
+            /* Cards - Mobile */
+            .card {
+                margin: 1rem 0 !important;
+                padding: 1.5rem 1rem !important;
+            }
+
+            .card-header {
+                padding: 1rem !important;
+                text-align: center;
+            }
+
+            .card-body {
+                padding: 1rem !important;
+            }
+
+            /* Budget specific - Mobile */
+            .budget-category {
+                padding: 1rem !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            .expense-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.5rem !important;
+                padding: 1rem !important;
+            }
+
+            /* Progress bars - Mobile */
+            .progress-container {
+                margin: 1rem 0 !important;
+            }
+
+            .progress-bar {
+                height: 8px !important;
+                border-radius: 4px;
+            }
+
+            /* Spacing adjustments - Mobile */
+            .mb-4 { margin-bottom: 1.5rem !important; }
+            .mt-4 { margin-top: 1.5rem !important; }
+            .py-4 { padding: 1.5rem 0 !important; }
+            .px-4 { padding: 0 1rem !important; }
+        }
+
+        /* Extra Small Devices */
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.5rem !important;
+            }
+
+            .content-area {
+                padding: 0.5rem !important;
+            }
+
+            .card {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .form-container {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .mobile-menu-toggle {
+                left: 0.5rem !important;
+                padding: 0.5rem !important;
+            }
+
+            /* Form improvements for very small screens */
+            input, select, textarea {
+                font-size: 16px !important; /* Prevent zoom on iOS */
+                padding: 0.875rem !important;
+            }
+
+            .btn {
+                padding: 0.875rem !important;
+                font-size: 0.95rem !important;
+            }
+        }
+
+        /* Tablet Portrait */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-container {
+                padding: 1.5rem !important;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .sidebar {
+                width: 220px !important;
+            }
+
+            .content-area {
+                margin-left: 220px !important;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            /* Touch devices */
+            button, .btn, a, input[type="submit"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Larger tap targets */
+            .nav-tab {
+                padding: 1rem !important;
+            }
+
+            /* Remove hover effects on touch devices */
+            .card:hover,
+            .stat-card:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .mobile-menu-toggle,
+            .header {
+                display: none !important;
+            }
+
+            .content-area {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            body {
+                color: #000 !important;
+                background: #fff !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -952,10 +1289,18 @@
     <!-- Dodatni prostor ispod fiksnog headera -->
     <div style="height: 80px;"></div>
     
+    <!-- Mobile Menu Toggle Button -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()" style="display: none;">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Mobile Sidebar Overlay -->
+    <div class="mobile-sidebar-overlay" onclick="closeMobileSidebar()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+    
     <div class="container">
         <div class="profile-container" style="display: flex; gap: 2rem; position: relative;">
             <!-- Sidebar -->
-            <aside class="sidebar" style="flex: 1; max-width: 250px; background: rgba(22, 22, 26, 0.7); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: var(--box-shadow); border: 1px solid var(--border-light); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+            <aside class="sidebar" id="mobileSidebar" style="flex: 1; max-width: 250px; background: rgba(22, 22, 26, 0.7); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: var(--box-shadow); border: 1px solid var(--border-light); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
                 <div class="profile-info">
                     <img src="https://ui-avatars.com/api/?name=Korisnik&background=3b82f6&color=fff&size=128" 
                          alt="Profilna slika" 
@@ -3626,6 +3971,59 @@
 
             // Pozovi početno ažuriranje budžeta
             updateBudgetDisplay();
+        });
+    </script>
+    
+    <!-- Mobile Sidebar JavaScript -->
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.querySelector('.mobile-sidebar-overlay');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (sidebar.classList.contains('active')) {
+                closeMobileSidebar();
+            } else {
+                sidebar.classList.add('active');
+                overlay.style.display = 'block';
+                toggle.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        }
+        
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.querySelector('.mobile-sidebar-overlay');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            sidebar.classList.remove('active');
+            overlay.style.display = 'none';
+            toggle.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+        
+        // Close sidebar when clicking on navigation items (mobile)
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 768) {
+                const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        setTimeout(closeMobileSidebar, 300); // Small delay for smooth transition
+                    });
+                });
+            }
+            
+            // Show mobile menu toggle on small screens
+            function checkScreenSize() {
+                const toggle = document.querySelector('.mobile-menu-toggle');
+                if (window.innerWidth <= 768) {
+                    toggle.style.display = 'block';
+                } else {
+                    toggle.style.display = 'none';
+                    closeMobileSidebar(); // Close sidebar if screen becomes larger
+                }
+            }
+            
+            checkScreenSize();
+            window.addEventListener('resize', checkScreenSize);
         });
     </script>
     
