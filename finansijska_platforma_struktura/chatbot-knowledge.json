@@ -1,0 +1,22 @@
+{
+    "greeting": "Zdravo! Ja sam vaš AI finansijski asistent. Kako vam mogu pomoći?",
+    "default": "Izvinite, trenutno ne mogu da pronađem odgovor na vaše pitanje. Molim vas kontaktirajte našu korisničku podršku za detaljnije informacije.",
+    
+    "investicije": "Investiranje je proces ulaganja novca sa ciljem ostvarivanja budućeg profita. Preporučujem da počnete sa diversifikovanim portfoliom koji uključuje:\n\n1. Akcije (40-60%)\n2. Obveznice (20-30%)\n3. Nekretnine ili REIT fondove (10-20%)\n4. Gotovinu ili kratkoročne instrumente (5-10%)\n\nZa početak investiranja, razmotrite ETF fondove koji prate široko tržište.",
+    
+    "štednja": "Za efikasnu štednju preporučujem '50/30/20' pravilo:\n\n- 50% prihoda za osnovne potrebe\n- 30% za želje i dodatne troškove\n- 20% za štednju i investicije\n\nTakođe, razmotrite otvaranje namenskog štednog računa sa povoljnom kamatnom stopom.",
+    
+    "budžet": "Za kreiranje efikasnog budžeta, pratite ove korake:\n\n1. Izračunajte mesečne prihode\n2. Identifikujte fiksne troškove\n3. Odredite varijabilne troškove\n4. Postavite ciljeve štednje\n5. Koristite našu aplikaciju za praćenje\n\nPreporučujemo da redovno pratite i prilagođavate svoj budžet.",
+    
+    "kredit": "Pre uzimanja kredita, razmotrite:\n\n1. Kamatnu stopu i EKS\n2. Period otplate\n3. Mesečnu ratu u odnosu na prihode\n4. Dodatne troškove i naknade\n\nNe bi trebalo da rata kredita prelazi 30% vaših mesečnih prihoda.",
+    
+    "porezi": "Osnovne informacije o porezima:\n\n1. Porez na dohodak (10-20%)\n2. PDV (20% standardna stopa)\n3. Porez na imovinu (različite stope)\n4. Porez na kapitalni dobitak (15%)\n\nKonsultujte poreskog savetnika za detaljnije informacije.",
+    
+    "kriptovalute": "Investiranje u kriptovalute nosi visok rizik:\n\n1. Izuzetno volatilno tržište\n2. Potrebno temeljno istraživanje\n3. Investirajte samo onoliko koliko možete da izgubite\n4. Diversifikujte portfolio\n\nPreporučujemo da kriptovalute čine maksimalno 5-10% vašeg investicionog portfolia.",
+    
+    "osiguranje": "Osnovni tipovi osiguranja koje bi trebalo razmotriti:\n\n1. Životno osiguranje\n2. Zdravstveno osiguranje\n3. Osiguranje imovine\n4. Osiguranje od nezgode\n\nKonsultujte osiguravajuću kuću za najbolju polisu za vaše potrebe.",
+    
+    "penzija": "Za planiranje penzije:\n\n1. Počnite štedeti što ranije\n2. Iskoristite državni penzioni fond\n3. Razmotrite privatne penzione fondove\n4. Investirajte dugoročno\n\nCilj je da imate 70-80% trenutnih primanja kada odete u penziju.",
+    
+    "inflacija": "Inflacija utiče na vrednost novca tokom vremena. Za zaštitu od inflacije:\n\n1. Investirajte u realna dobra\n2. Kupujte državne obveznice\n3. Ulažite u akcije kompanija\n4. Diversifikujte portfolio\n\nProsečna godišnja stopa inflacije je oko 2-3%."
+}

@@ -1,10 +1,15 @@
 import reflex as rx
 from finansijska_platforma_struktura.components.navbar import navbar
 from finansijska_platforma_struktura.components.dashboard_widgets import stat_card, info_card
+from finansijska_platforma_struktura.components.chat_bot import chat_bot, chat_toggle_button
 from finansijska_platforma_struktura.states.finance_state import FinanceState
 
 def finance_overview():
     return rx.box(
+        rx.script(src="/js/kb.js"),  # Load knowledge base first
+        rx.script(src="/js/chat.js"),  # Then load chat implementation
+        rx.script(src="/js/user_notifications.js"),  # Load user notifications
+        rx.script(src="/js/notification_test.js"),  # Load notification test
         rx.heading(
             "Finansijski pregled", 
             size="lg", 
@@ -12,6 +17,30 @@ def finance_overview():
             background="var(--gradient-gold)",
             background_clip="text",
             webkit_text_fill_color="transparent",
+        ),
+        rx.button(
+            "Test notifikacije",
+            on_click=rx.client_side("""
+                if (typeof testNotification === 'function') {
+                    testNotification('Test notifikacija', 'Ovo je test notifikacija za proveru sistema.', 'Obaveštenje');
+                    alert('Notifikacija je poslata!');
+                } else if (typeof ChatBotKB !== 'undefined' && ChatBotKB.createTestNotification) {
+                    ChatBotKB.createTestNotification('Test notifikacija', 'Ovo je test notifikacija za proveru sistema.', 'Obaveštenje');
+                    alert('Notifikacija je poslata!');
+                } else {
+                    alert('Funkcija za testiranje notifikacija nije dostupna.');
+                }
+            """),
+            style={
+                "margin_bottom": "1rem",
+                "background": "var(--gold-gradient)",
+                "color": "var(--dark-text)",
+                "border": "none",
+                "font_weight": "600",
+                "padding": "0.5rem 1rem",
+                "border_radius": "4px",
+            },
+            id="testNotificationBtn",
         ),
         rx.grid(
             stat_card(
@@ -196,7 +225,7 @@ def index():
                     webkit_text_fill_color="transparent",
                 ),
                 rx.text(
-                    "Upravljajte vašim finansijama jednostavno i efikasno", 
+                    "Upravljajte vašim finansijama jednostavno i efikasno",
                     align="center", 
                     margin_bottom="6",
                     color="var(--muted-text)",
@@ -215,4 +244,7 @@ def index():
             width="100%",
             max_width="1200px",
         ),
+        # Dodaj chat bot i dugme
+        chat_bot(),
+        chat_toggle_button(),
     )

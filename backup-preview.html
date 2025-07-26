@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+š <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,64 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* Budget Widget Styles */
-        .budget-section {
-            background: var(--dark-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--border-radius);
-            padding: var(--spacing-md);
-            margin: var(--spacing-md) auto;
-            max-width: 800px;
-        }
-
-        .budget-header {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
-            color: var(--gold-medium);
-        }
-
-        .budget-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-md);
-        }
-
-        .budget-stat {
-            text-align: center;
-            padding: var(--spacing-sm);
-            background: var(--dark-accent);
-            border-radius: var(--border-radius);
-        }
-
-        .budget-label {
-            color: var(--muted-text);
-            font-size: 0.9em;
-            margin-bottom: 4px;
-        }
-
-        .budget-value {
-            color: var(--gold-medium);
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-
-        .budget-progress {
-            margin-top: var(--spacing-md);
-            height: 8px;
-            background: var(--dark-accent);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .budget-bar {
-            height: 100%;
-            background: var(--gradient-gold);
-            transition: width 0.3s ease;
-            width: 0;
-        }
-
         :root {
             /* Enhanced Gold Palette */
             --gold-bright: #FFD700; /* Svetlija zlatna */
@@ -1111,75 +1053,243 @@
             }
         }
 
-        /* Budžet sekcija stilovi */
-        .budget-widget {
-            background: var(--dark-card);
-            border: 1px solid var(--border-light);
-            border-radius: var(--border-radius-lg);
-            padding: var(--spacing-md);
-            margin: var(--spacing-md);
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-        }
-
-        .budget-widget:hover {
-            box-shadow: var(--box-shadow-hover);
-        }
-
-        .budget-header {
+        /* Plutajući chat bot stilovi */
+        .floating-chat-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            border: none;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            cursor: pointer;
+            z-index: 1001;
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
+            justify-content: center;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
         }
-
-        .budget-icon {
-            font-size: 1.5rem;
-            color: var(--gold-medium);
+        
+        .floating-chat-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.6);
         }
-
-        .budget-title {
-            color: var(--light-text);
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
+        
+        .floating-chat-btn i {
+            font-size: 24px;
+            color: #1a1a1a;
         }
-
-        .budget-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-md);
-            margin-top: var(--spacing-sm);
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            }
+            50% {
+                box-shadow: 0 4px 20px rgba(212, 175, 55, 0.8);
+            }
+            100% {
+                box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            }
         }
-
-        .budget-stat {
-            text-align: center;
-        }
-
-        .budget-stat-label {
-            color: var(--muted-text);
-            font-size: 0.875rem;
-        }
-
-        .budget-stat-value {
-            color: var(--light-text);
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
-
-        .budget-progress {
-            width: 100%;
-            height: 8px;
-            background: var(--dark-accent);
-            border-radius: 4px;
-            margin-top: var(--spacing-md);
+        
+        .chat-container {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            max-height: 80vh;
+            background: rgba(18, 18, 22, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .budget-progress-bar {
-            height: 100%;
+        
+        .chat-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: linear-gradient(45deg, #D4AF37, #FFD700);
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+        
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            color: #1a1a1a;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .close-chat:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--dark-bg);
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: var(--light-text);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            background: rgba(212, 175, 55, 0.5);
+            color: var(--dark-bg);
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: rgba(22, 22, 26, 0.8);
+            border-top: 1px solid var(--border-light);
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            background: rgba(30, 30, 35, 0.8);
+            color: var(--light-text);
+            font-size: 0.95rem;
+        }
+        
+        .chat-input input:focus {
+            outline: none;
+            border-color: var(--gold-medium);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+        
+        .chat-input input::placeholder {
+            color: var(--muted-text);
+        }
+        
+        .send-button {
             background: var(--gradient-gold);
-            transition: width 0.3s ease;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--dark-bg);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Chat suggestion buttons */
+        .chat-suggestion-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        
+        .chat-suggestion {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 18px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            color: var(--light-text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .chat-suggestion:hover {
+            background: rgba(212, 175, 55, 0.3);
+            transform: translateY(-1px);
+        }
+        
+        .typing {
+            color: #888;
+            font-style: italic;
+        }
+        
+        /* Responsive design za chat */
+        @media (max-width: 768px) {
+            .floating-chat-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 55px;
+                height: 55px;
+            }
+            
+            .chat-container {
+                width: calc(100vw - 40px);
+                height: 70vh;
+                right: 20px;
+                bottom: 85px;
+            }
         }
     </style>
 </head>
@@ -1298,7 +1408,8 @@
             });
             
             document.getElementById('supportBtn')?.addEventListener('click', () => {
-                document.getElementById('supportModal').style.display = 'block';
+                // Otvori plutajući chat umesto modala
+                toggleChat();
             });
             
             // Toggle profile dropdown
@@ -1331,7 +1442,7 @@
                 <div class="form-group">
                     <label for="loginPassword">Lozinka</label>
                     <div class="password-input">
-                        <input type="password" id="loginPassword" required autocomplete="off">
+                        <input type="password" id="loginPassword" name="loginPassword" required autocomplete="off">
                         <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">
                             <i class="far fa-eye"></i>
                         </button>
@@ -1375,7 +1486,7 @@
                 <div class="form-group">
                     <label for="regPassword">Lozinka</label>
                     <div class="password-input">
-                        <input type="password" id="regPassword" required autocomplete="off">
+                        <input type="password" id="regPassword" name="regPassword" required autocomplete="off">
                         <button type="button" class="toggle-password" onclick="togglePassword('regPassword')">
                             <i class="far fa-eye"></i>
                         </button>
@@ -1387,7 +1498,7 @@
                 </div>
                 <div class="form-group">
                     <label for="regConfirmPassword">Potvrdi lozinku</label>
-                    <input type="password" id="regConfirmPassword" required autocomplete="off">
+                    <input type="password" id="regConfirmPassword" name="regConfirmPassword" required autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label class="profile-picture-upload">
@@ -1441,31 +1552,6 @@
             </div>
         </div>
         
-        <!-- Budžet sekcija -->
-        <div class="budget-widget">
-            <div class="budget-header">
-                <i class="fas fa-chart-pie budget-icon"></i>
-                <h3 class="budget-title">Budžet Planer</h3>
-            </div>
-            <div class="budget-stats">
-                <div class="budget-stat">
-                    <div class="budget-stat-label">Mesečni budžet</div>
-                    <div class="budget-stat-value" id="monthlyBudget">€0</div>
-                </div>
-                <div class="budget-stat">
-                    <div class="budget-stat-label">Potrošeno</div>
-                    <div class="budget-stat-value" id="spentAmount">€0</div>
-                </div>
-                <div class="budget-stat">
-                    <div class="budget-stat-label">Preostalo</div>
-                    <div class="budget-stat-value" id="remainingAmount">€0</div>
-                </div>
-            </div>
-            <div class="budget-progress">
-                <div class="budget-progress-bar" id="budgetProgressBar"></div>
-            </div>
-        </div>
-        
         <!-- Sadržaj je premešten u modal prozor -->
         
             <div class="button-group">
@@ -1490,6 +1576,32 @@
         </div>
     </div>
 
+    <!-- Statistike sa animacijom brojčanika -->
+    <section style="background: var(--dark-bg); padding: var(--spacing-xl) 0; position: relative; overflow: hidden; margin-top: 0.5rem;">
+        <!-- Hero-style background effect -->
+        <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.05) 0%, transparent 40%); z-index: -1; opacity: 0.8;"></div>
+        
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: var(--spacing-md);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: center;">
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <h3 id="counterUsers" style="font-size: 3rem; font-weight: 800; background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);">0</h3>
+                    <p style="color: var(--muted-text); font-size: 1rem; margin-top: 0.5rem;">Aktivnih korisnika</p>
+                </div>
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <h3 style="font-size: 3rem; font-weight: 800; background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);">98%</h3>
+                    <p style="color: var(--muted-text); font-size: 1rem; margin-top: 0.5rem;">Zadovoljnih korisnika</p>
+                </div>
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <h3 style="font-size: 3rem; font-weight: 800; background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.5rem; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);">24/7</h3>
+                    <p style="color: var(--muted-text); font-size: 1rem; margin-top: 0.5rem;">Podrška dostupna</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Modals -->
     <div id="uploadModal" class="modal">
         <div class="modal-content" style="max-width: 650px;">
@@ -1500,12 +1612,11 @@
                 <h2><i class="fas fa-file-invoice-dollar"></i> Unos finansijskih podataka</h2>
                 <p class="form-description">Unesite vaše osnovne finansijske podatke kako bismo vam pomogli sa analizom.</p>
                 
-                <form id="financialDataForm" name="financialDataForm" onsubmit="event.preventDefault(); submitFinancialData();">
                 <div class="form-group">
                     <label for="monthlyIncome">Mesečni prihodi (RSD)</label>
                     <div class="input-with-icon">
                         <i class="fas fa-wallet"></i>
-                        <input type="number" id="monthlyIncome" name="monthlyIncome" placeholder="Unesite iznos" required autocomplete="off">
+                        <input type="number" id="monthlyIncome" placeholder="Unesite iznos" required>
                     </div>
                 </div>
                 
@@ -1513,12 +1624,12 @@
                     <label for="monthlyExpenses">Mesečni troškovi (RSD)</label>
                     <div class="input-with-icon">
                         <i class="fas fa-shopping-cart"></i>
-                        <input type="number" id="monthlyExpenses" name="monthlyExpenses" placeholder="Unesite iznos" required autocomplete="off">
+                        <input type="number" id="monthlyExpenses" placeholder="Unesite iznos" required>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="expenseCategories">Kategorije troškova (opciono)</label>
+                    <label>Kategorije troškova (opciono)</label>
                     <div id="expenseCategories">
                         <!-- Dynamic expense categories will be added here -->
                     </div>
@@ -1528,11 +1639,10 @@
                 </div>
                 
                 <div class="form-actions" style="margin-top: 2rem;">
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <button type="button" class="btn btn-primary" onclick="showGoalsSection()" style="width: 100%;">
                         Dalje <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
-                </form>
             </div>
             
             <!-- Step 2: Financial Goals -->
@@ -1586,15 +1696,15 @@
                     <h3 style="margin-top: 0; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.75rem; margin-bottom: 1.25rem; color: #1e293b;">Pregled vaših finansija</h3>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
                         <span>Mesečni prihodi:</span>
-                        <strong id="summaryIncome" data-budget="total-income">0 RSD</strong>
+                        <strong id="summaryIncome">0 RSD</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
                         <span>Mesečni troškovi:</span>
-                        <strong id="summaryExpenses" data-budget="total-expenses">0 RSD</strong>
+                        <strong id="summaryExpenses">0 RSD</strong>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; font-size: 1.1rem; color: #1e293b; font-weight: 600;">
                         <span>Raspoloživo mesečno:</span>
-                        <strong id="summaryAvailable" data-budget="remaining-budget">0 RSD</strong>
+                        <strong id="summaryAvailable">0 RSD</strong>
                     </div>
                 </div>
                 
@@ -1666,10 +1776,119 @@
                 <i class="fas fa-calculator" style="margin-right: 10px; color: #D4AF37;"></i>Finansijski kalkulator
             </h2>
             
-            <div class="calculator
-                        </button>
+            <div class="calculator-section" style="padding: 0 1.5rem 1.5rem;">
+                <div class="calculator-instructions" style="margin-bottom: 2rem; background: #FFF9E6; padding: 1.25rem; border-radius: 10px; border-left: 4px solid #D4AF37; color: #333333; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);">
+                    <h3 style="margin-top: 0; color: #D4AF37; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.75rem; display: flex; align-items: center;">
+                        <i class="fas fa-info-circle" style="margin-right: 8px; color: #D4AF37;"></i>Kako koristiti kalkulator:
+                    </h3>
+                    <ul style="margin: 0; padding-left: 1.5rem; color: #333333; line-height: 1.7;">
+                        <li style="margin-bottom: 0.5rem;"><span style="color: #D4AF37; font-weight: 600;">Period štednje</span> - Ukupan broj godina planirane štednje</li>
+                        <li style="margin-bottom: 0.5rem;"><span style="color: #D4AF37; font-weight: 600;">Godišnja uplata</span> - Iznos koji planirate da ulažete svake godine</li>
+                        <li><span style="color: #D4AF37; font-weight: 600;">Stopa prinosa</span> - Očekivani godišnji prinos (podrazumevano 7%)</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="investmentPeriod" style="display: block; margin-bottom: 0.5rem; color: #333333; font-weight: 600;">Period štednje (godine)</label>
+                    <div style="position: relative;">
+                        <input type="number" id="investmentPeriod" required 
+                               placeholder="Unesite broj godina" 
+                               min="1" 
+                               step="1"
+                               style="width: 100%; padding: 0.85rem 1rem; background: #ffffff; border: 2px solid #D4AF37; border-radius: 8px; color: #333333; font-size: 1rem; transition: all 0.3s ease;"
+                               onfocus="this.borderColor='#B8860B'; this.boxShadow='0 0 0 3px rgba(212, 175, 55, 0.2)';"
+                               onblur="this.borderColor='#D4AF37'; this.boxShadow='none';">
+                        <i class="fas fa-calendar-alt" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #D4AF37;"></i>
                     </div>
                 </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="annualDeposit" style="display: block; margin-bottom: 0.5rem; color: #333333; font-weight: 600;">Godišnja uplata (RSD)</label>
+                    <div style="position: relative;">
+                        <input type="number" id="annualDeposit" required 
+                               placeholder="Unesite iznos u RSD" 
+                               min="1" 
+                               step="1000"
+                               style="width: 100%; padding: 0.85rem 1rem; background: #ffffff; border: 2px solid #D4AF37; border-radius: 8px; color: #333333; font-size: 1rem; transition: all 0.3s ease;"
+                               onfocus="this.borderColor='#B8860B'; this.boxShadow='0 0 0 3px rgba(212, 175, 55, 0.2)';"
+                               onblur="this.borderColor='#D4AF37'; this.boxShadow='none';">
+                        <i class="fas fa-wallet" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #D4AF37;"></i>
+                    </div>
+                </div>
+                
+                <div class="note" style="background: #FFF9E6; color: #333333; border-left: 3px solid #D4AF37; padding: 0.85rem 1rem; border-radius: 8px; margin: 1.5rem 0; display: flex; align-items: center;">
+                    <i class="fas fa-info-circle" style="color: #D4AF37; font-size: 1.1rem; margin-right: 10px;"></i>
+                    <span>Podrazumevana godišnja kamatna stopa iznosi <strong style="color: #D4AF37;">7%</strong></span>
+                </div>
+                <button class="primary-button" onclick="calculateInvestment()" style="width: 100%; margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem; background: linear-gradient(135deg, #D4AF37 0%, #F1C40F 100%); border: none; border-radius: 8px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); color: #1a1a1f; font-weight: 600; transition: all 0.3s ease; cursor: pointer;" 
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(212, 175, 55, 0.4)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(212, 175, 55, 0.3)';">
+                    <i class="fas fa-calculator" style="margin-right: 8px;"></i>
+                    Izračunaj povrat
+                </button>
+                
+                <div id="investmentResult" style="display: none; margin-top: 2rem; background: #ffffff; border-radius: 10px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid #E5E7EB;">
+                    <h3 style="color: #D4AF37; border-bottom: 1px solid #E5E7EB; padding-bottom: 0.75rem; margin-top: 0; font-size: 1.4rem; display: flex; align-items: center;">
+                        <i class="fas fa-chart-line" style="margin-right: 10px; color: #D4AF37;"></i>Rezultati investicije
+                    </h3>
+                    <div class="chart-container" style="margin: 1.5rem 0;">
+                        <canvas id="investmentChart" style="width: 100%; height: 280px;"></canvas>
+                    </div>
+                    <div class="result-details" style="margin-top: 1.5rem; color: #333333;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #F3F4F6;">
+                            <span style="color: #4B5563;">Ukupno investirano:</span>
+                            <strong style="color: #1F2937; font-weight: 700;" id="totalInvested"></strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #F3F4F6;">
+                            <span style="color: #4B5563;">Ukupan povrat:</span>
+                            <strong style="color: #10B981; font-weight: 700;" id="totalReturn"></strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #F3F4F6;">
+                            <span style="color: #4B5563;">Ukupan profit:</span>
+                            <strong style="color: #10B981; font-weight: 700;" id="totalProfit"></strong>
+                        </div>
+                        <div style="display: none; justify-content: space-between; padding: 0.75rem 0;">
+                            <span style="color: #4B5563;">Kamatni dohodak:</span>
+                            <strong style="color: #10B981; font-weight: 700;" id="compoundInterest"></strong>
+                        </div>
+                        </div>
+
+                        <script>
+                            document.getElementById('compoundInterest').textContent = compoundInterest;
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="supportModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <h2 style="color: #D4AF37; text-align: center; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-headset"></i>
+                Tehnička podrška
+            </h2>
+            
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: var(--muted-text); font-size: 1.1rem; margin-bottom: 2rem;">
+                    Za tehničku podršku i pomoć oko finansijskih pitanja, molimo koristite naš AI chat bot koji se nalazi u donjem desnom uglu stranice.
+                </p>
+                
+                <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 2rem;">
+                    <h4 style="color: #D4AF37; margin-bottom: 1rem;">
+                        <i class="fas fa-robot"></i>
+                        AI Chat Asistent
+                    </h4>
+                    <p style="color: var(--light-text); margin: 0; font-size: 0.95rem;">
+                        Naš AI asistent može odgovoriti na pitanja o budžetu, štednji, investiranju i drugim finansijskim temama. Za složenija pitanja o ulaganju, automatski će vam preporučiti konsultaciju sa našim stručnjakom.
+                    </p>
+                </div>
+                
+                <button onclick="closeModal()" style="background: linear-gradient(45deg, #D4AF37, #FFD700); color: white; border: none; border-radius: 25px; padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-check"></i>
+                    Razumem
+                </button>
             </div>
         </div>
     </div>
@@ -1689,119 +1908,10 @@
     </div>
 
     <!-- Add Font Awesome -->
-    <script src="https://kit.fontawesome.com/3f190f6dbc.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
     <!-- Add Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Funkcija za ažuriranje prikaza budžeta
-        function updateBudgetDisplay() {
-            try {
-                // Učitaj i validiraj podatke iz localStorage-a
-                let budget = {};
-                let userBudget = {};
-                
-                try {
-                    const budgetStr = localStorage.getItem('budget');
-                    if (budgetStr) budget = JSON.parse(budgetStr);
-                } catch (e) {
-                    console.warn('Greška pri učitavanju budget podataka:', e);
-                }
-                
-                try {
-                    const userBudgetStr = localStorage.getItem('userBudget');
-                    if (userBudgetStr) userBudget = JSON.parse(userBudgetStr);
-                } catch (e) {
-                    console.warn('Greška pri učitavanju userBudget podataka:', e);
-                }
-
-                // Izračunaj vrednosti sa validacijom
-                const monthlyBudget = parseFloat(budget.monthlyBudget) || 
-                    parseFloat(userBudget.monthlyIncome) || 0;
-                
-                const spentAmount = parseFloat(budget.totalSpent) || 
-                    (parseFloat(userBudget.necessities || 0) + parseFloat(userBudget.hobby || 0)) || 0;
-                
-                const remainingAmount = Math.max(0, monthlyBudget - spentAmount);
-
-                // Ažuriraj DOM elemente samo ako postoje
-                const elements = {
-                    monthlyBudget: document.getElementById('monthlyBudget'),
-                    spentAmount: document.getElementById('spentAmount'),
-                    remainingAmount: document.getElementById('remainingAmount'),
-                    progressBar: document.getElementById('budgetProgressBar')
-                };
-
-                // Funkcija za animirano ažuriranje vrednosti
-                const updateWithAnimation = (element, newValue) => {
-                    if (!element) return;
-                    
-                    const oldValue = parseFloat(element.textContent.replace('€', '')) || 0;
-                    const duration = 1000; // 1 sekunda za animaciju
-                    const startTime = performance.now();
-                    
-                    const animate = (currentTime) => {
-                        const elapsed = currentTime - startTime;
-                        const progress = Math.min(elapsed / duration, 1);
-                        
-                        const currentValue = oldValue + (newValue - oldValue) * progress;
-                        element.textContent = `€${currentValue.toFixed(2)}`;
-                        
-                        if (progress < 1) {
-                            requestAnimationFrame(animate);
-                        }
-                    };
-                    
-                    requestAnimationFrame(animate);
-                };
-
-                // Ažuriraj vrednosti sa animacijom
-                updateWithAnimation(elements.monthlyBudget, monthlyBudget);
-                updateWithAnimation(elements.spentAmount, spentAmount);
-                updateWithAnimation(elements.remainingAmount, remainingAmount);
-
-                // Ažuriraj progres bar sa animacijom
-                if (elements.progressBar) {
-                    const percentage = monthlyBudget > 0 ? (spentAmount / monthlyBudget) * 100 : 0;
-                    elements.progressBar.style.transition = 'width 0.5s ease-out, background 0.3s ease';
-                    elements.progressBar.style.width = `${Math.min(100, percentage)}%`;
-                    
-                    // Koristi CSS varijable za boje
-                    if (percentage >= 90) {
-                        elements.progressBar.style.background = 'var(--gradient-gold-dark)';
-                    } else if (percentage >= 75) {
-                        elements.progressBar.style.background = 'var(--gradient-gold)';
-                    } else {
-                        elements.progressBar.style.background = 'var(--gradient-gold-light)';
-                    }
-                }
-
-                // Emituj custom event za sinhronizaciju
-                window.dispatchEvent(new CustomEvent('budget-updated', { 
-                    detail: { monthlyBudget, spentAmount, remainingAmount } 
-                }));
-
-            } catch (error) {
-                console.error('Greška pri ažuriranju prikaza budžeta:', error);
-            }
-        }
-
-        // Ažuriraj budžet kad se stranica učita
-        document.addEventListener('DOMContentLoaded', updateBudgetDisplay);
-
-        // Ažuriraj kad se promeni localStorage
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'budget' || e.key === 'userBudget' || e.key === 'currentUser') {
-                updateBudgetDisplay();
-            }
-        });
-        
-        // Ažuriraj kad se učita stranica i nakon prijave/odjave
-        document.addEventListener('DOMContentLoaded', updateBudgetDisplay);
-        window.addEventListener('auth-state-change', updateBudgetDisplay);
-
-        // Ažuriraj svakih 30 sekundi
-        setInterval(updateBudgetDisplay, 30000);
-
         // Funkcija za zatvaranje modala
         function closeModal() {
             // Zatvori sve modale
@@ -2322,28 +2432,22 @@
         
         // Add Expense Category
         function addExpenseCategory() {
-            const timestamp = Date.now();
-            const categoryId = 'category-' + timestamp;
-            const categoryNameId = 'categoryName-' + timestamp;
-            const categoryAmountId = 'categoryAmount-' + timestamp; 
-            
+            const categoryId = 'category-' + Date.now();
             const categoryHtml = `
                 <div class="form-row" id="${categoryId}" style="margin-bottom: 0.75rem;">
                     <div class="form-group" style="flex: 2;">
-                        <label for="${categoryNameId}" class="sr-only">Naziv kategorije</label>
                         <div class="input-with-icon">
                             <i class="fas fa-tag"></i>
-                            <input type="text" id="${categoryNameId}" name="${categoryNameId}" placeholder="Naziv kategorije" class="category-name" autocomplete="off">
+                            <input type="text" placeholder="Naziv kategorije" class="category-name">
                         </div>
                     </div>
                     <div class="form-group" style="flex: 1.5;">
-                        <label for="${categoryAmountId}" class="sr-only">Iznos kategorije</label>
                         <div class="input-with-icon">
                             <i class="fas fa-money-bill"></i>
-                            <input type="number" id="${categoryAmountId}" name="${categoryAmountId}" placeholder="Iznos (RSD)" class="category-amount" autocomplete="off">
+                            <input type="number" placeholder="Iznos (RSD)" class="category-amount">
                         </div>
                     </div>
-                    <button type="button" class="btn btn-outline" onclick="removeExpenseCategory('${categoryId}')" style="align-self: flex-end; margin-bottom: 0.75rem;" aria-label="Ukloni kategoriju">
+                    <button type="button" class="btn btn-outline" onclick="removeExpenseCategory('${categoryId}')" style="align-self: flex-end; margin-bottom: 0.75rem;">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
@@ -2402,56 +2506,23 @@
         
         // Submit Financial Data
         function submitFinancialData() {
-            console.log('🔄 Submitting financial data...');
             const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
             const expenses = parseFloat(document.getElementById('monthlyExpenses').value) || 0;
-            const goalDescription = document.getElementById('goalDescription')?.value || '';
+            const goalDescription = document.getElementById('goalDescription').value;
             
-            // Sačuvaj budžet u localStorage za sinhronizaciju
-            const budgetPlan = {
-                monthlyIncome: income,
-                necessities: parseInt(document.getElementById('necessitiesSlider')?.value || 0),
-                hobby: parseInt(document.getElementById('hobbySlider')?.value || 0),
-                savings: parseInt(document.getElementById('savingsSlider')?.value || 0),
-                lastUpdated: new Date().toISOString()
-            };
-            localStorage.setItem('userBudget', JSON.stringify(budgetPlan));
-            
-            // Update summary with proper currency format (€)
-            if (document.getElementById('summaryIncome')) {
-                document.getElementById('summaryIncome').textContent = '€' + income.toLocaleString();
-            }
-            if (document.getElementById('summaryExpenses')) {
-                document.getElementById('summaryExpenses').textContent = '€' + expenses.toLocaleString();
-            }
-            if (document.getElementById('summaryAvailable')) {
-                document.getElementById('summaryAvailable').textContent = '€' + (income - expenses).toLocaleString();
-            }
-            
-            // Sinhronizuj budžet sa drugim stranicama
-            if (window.BudgetSync) {
-                window.BudgetSync.synchronizeAllDisplays();
-            } else {
-                console.warn('BudgetSync nije dostupan. Čekam učitavanje...');
-                setTimeout(() => {
-                    if (window.BudgetSync) {
-                        window.BudgetSync.synchronizeAllDisplays();
-                    }
-                }, 1000);
-            }
+            // Update summary
+            document.getElementById('summaryIncome').textContent = income.toLocaleString() + ' RSD';
+            document.getElementById('summaryExpenses').textContent = expenses.toLocaleString() + ' RSD';
+            document.getElementById('summaryAvailable').textContent = (income - expenses).toLocaleString() + ' RSD';
             
             // Generate recommendation
             const recommendation = generateRecommendation(income, expenses, selectedGoals, expenseCategories);
-            if (document.getElementById('recommendationText')) {
-                document.getElementById('recommendationText').textContent = recommendation;
-            }
+            document.getElementById('recommendationText').textContent = recommendation;
             
             // Show results
             document.getElementById('goalsStep').classList.remove('active');
             document.getElementById('resultsStep').style.display = 'block';
             document.getElementById('resultsStep').classList.add('active');
-            
-            return false;
         }
         
         // Generate Recommendation
@@ -2754,400 +2825,314 @@
                     }
                 });
             }
-            // Chat elements
-            const chatContainer = document.getElementById('chatContainer');
-            const chatMessages = document.getElementById('chatMessages');
-            const userInput = document.getElementById('userInput');
-            const sendButton = document.getElementById('sendButton');
-            const closeChat = document.getElementById('closeChat');
-            const supportBtn = document.getElementById('supportBtn');
+        document.head.appendChild(style);
+        
+        // Chat bot JavaScript logika
+        let chatContainer;
+        let floatingChatBtn;
+        let chatMessages;
+        let chatInput;
+        
+        function initializeChat() {
+            chatContainer = document.getElementById('chatContainer');
+            floatingChatBtn = document.getElementById('chatToggle');
+            chatMessages = document.getElementById('chatMessages');
+            chatInput = document.getElementById('userInput');
             
-            // Baza znanja za odgovore u chatu
-            const knowledgeBase = {
-                budžet: {
-                    keywords: ['budžet', 'budzet', 'proračun', 'trošenje', 'troškovi', 'postavim budžet', 'kako da'],
-                    response: `Za postavljanje budžeta, pratite ove korake:<br><br>
-                    1. Idite na stranicu "Moj Profil"<br>
-                    2. Kliknite na tab "Pregled Budžeta"<br>
-                    3. Unesite vaš mesečni prihod<br>
-                    4. Prilagodite procenat za svaku kategoriju potrošnje<br>
-                    5. Kliknite na "Izračunaj budžet"<br><br>
-                    Nakon toga možete pratiti svoje troškove i štednju u svakoj kategoriji.`
-                },
-                prijava: {
-                    keywords: ['prijava', 'login', 'problema', 'ne mogu', 'lozinka', 'password', 'zaboravljena'],
-                    response: `Ako imate problema sa prijavom, probajte sledeće:<br><br>
-                    1. Proverite da li je vaša email adresa ispravno unesena<br>
-                    2. Proverite da li je Caps Lock uključen<br>
-                    3. Koristite opciju "Zaboravili ste lozinku?" za resetovanje<br>
-                    4. Očistite keš memoriju vašeg pretraživača<br><br>
-                    Ako i dalje imate problema, molimo kontaktirajte nas na info@goldenbalance.com`
-                },
-                investiranje: {
-                    keywords: ['investiranje', 'ulaganje', 'investicija', 'štednja', 'fond', 'akcije', 'berza', 'savet'],
-                    response: `Savet za investiranje:<br><br>
-                    1. Počnite sa hitnim fondom štednje (3-6 mesečnih troškova)<br>
-                    2. Iskoristite naš kalkulator investicija da vidite projekcije<br>
-                    3. Razmotrite diversifikaciju vaših investicija<br>
-                    4. Za početnike, indeksni fondovi su često najbolja opcija<br><br>
-                    Preporučujemo konsultaciju sa finansijskim savetnikom za personalizovani plan.`
-                },
-                default: {
-                    response: `Zdravo! Ja sam vaš finansijski asistent. Mogu vam pomoći sa pitanjima o:
-                    <br>- Upravljanju budžetom
-                    <br>- Rešavanju problema sa prijavom
-                    <br>- Osnovnim savetima za investiranje
-                    <br>- Korišćenju aplikacije
-                    <br><br>Kako vam mogu pomoći danas?`
-                }
-            };
+            // Event listeneri
+            if (floatingChatBtn) {
+                floatingChatBtn.addEventListener('click', toggleChat);
+            }
             
-            // Funkcija za pronalaženje odgovora u bazi znanja
-            function findAnswer(question) {
-                question = question.toLowerCase();
-                
-                // Proveri svaku kategoriju u bazi znanja
-                for (const category in knowledgeBase) {
-                    if (category === 'default') continue;
-                    
-                    // Proveri da li pitanje sadrži neku od ključnih reči
-                    const keywords = knowledgeBase[category].keywords;
-                    const found = keywords.some(keyword => question.includes(keyword.toLowerCase()));
-                    
-                    if (found) {
-                        return {
-                            response: knowledgeBase[category].response,
-                            isDefault: false
-                        };
+            document.getElementById('closeChat')?.addEventListener('click', toggleChat);
+            
+            if (chatInput) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
                     }
-                }
-                
-                // Ako nije pronađen odgovor, vrati null
-                return null;
-            }
-            
-            // Funkcija za prikazivanje predloženih pitanja
-            function showSuggestedQuestions() {
-                if (!chatMessages) return;
-                chatMessages.innerHTML = '';
-                const welcomeMessage = document.createElement('div');
-                welcomeMessage.classList.add('message', 'bot-message');
-                welcomeMessage.innerHTML = knowledgeBase.default.response;
-                chatMessages.appendChild(welcomeMessage);
-                const suggestions = ['Kako da postavim budžet?', 'Imam problem sa prijavom', 'Saveti za investiranje'];
-                const suggestionsContainer = document.createElement('div');
-                suggestionsContainer.classList.add('suggestions-container');
-                suggestions.forEach(suggestion => {
-                    const suggestionElement = document.createElement('div');
-                    suggestionElement.classList.add('suggestion');
-                    suggestionElement.textContent = suggestion;
-                    suggestionElement.onclick = () => sendMessage(suggestion);
-                    suggestionsContainer.appendChild(suggestionElement);
                 });
-                chatMessages.appendChild(suggestionsContainer);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
             
-            // Funkcija za čuvanje neodgovorenog pitanja u localStorage
-            function saveUnansweredQuestion(question, email = '', phone = 'Nije naveden') {
-                // Proveri da li već postoje sačuvana pitanja
-                const savedQuestions = JSON.parse(localStorage.getItem('unansweredQuestions') || '[]');
-                
-                // Dodaj novo pitanje
-                const newQuestion = {
-                    id: Date.now(),
-                    question: question,
-                    email: email || 'Nije naveden',
-                    phone: phone || 'Nije naveden',
-                    timestamp: new Date().toISOString(),
-                    status: 'new' // Može biti 'new', 'in_progress', 'resolved'
-                };
-                
-                // Dodaj novo pitanje na početak niza
-                savedQuestions.unshift(newQuestion);
-                
-                // Sačuvaj u localStorage
-                localStorage.setItem('unansweredQuestions', JSON.stringify(savedQuestions));
-                
-                // Event koji će obavestiti admin stranicu o novom pitanju
-                window.dispatchEvent(new Event('unansweredQuestionAdded'));
-                
-                return newQuestion.id; // Vraćamo ID za referencu ako je potrebno
-            }
+            document.getElementById('sendMessage')?.addEventListener('click', sendMessage);
             
-            // Funkcija za prikazivanje kontakt forme
-            function showContactForm(question) {
-                // Sačuvaj pitanje u privremenu promenljivu
-                window.currentQuestion = question;
+            // Dodaj dobrodošlicu poruku
+            addWelcomeMessage();
+        }
+        
+        function toggleChat() {
+            if (chatContainer) {
+                chatContainer.classList.toggle('active');
                 
-                // Kreiraj HTML za kontakt formu
-                const contactFormHTML = `
-                    <div class="contact-form">
-                        <p>Nažalost, trenutno nemam odgovor na vaše pitanje. Da biste dobili pomoć, molimo unesite sledeće podatke i naš broker će vas kontaktirati u najkraćem mogućem roku.</p>
-                        <div class="form-group">
-                            <label for="contactEmail">Vaša email adresa:</label>
-                            <input type="email" id="contactEmail" class="form-control" placeholder="unesite@email.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactPhone">Broj telefona (opciono):</label>
-                            <input type="tel" id="contactPhone" class="form-control" placeholder="+381 6x xxx xxxx">
-                        </div>
-                        <button id="submitContactForm" class="btn btn-primary">Pošalji zahtev</button>
+                // Fokusiraj na input kada se otvori chat
+                if (chatContainer.classList.contains('active') && chatInput) {
+                    setTimeout(() => chatInput.focus(), 300);
+                }
+            }
+        }
+        
+        function addWelcomeMessage() {
+            if (chatMessages && chatMessages.children.length === 0) {
+                const welcomeMessage = `
+                    <div class="ai-message">
+                        <strong>🤖 Golden Balance AI</strong><br>
+                        Dobrodošli! Ja sam vaš lični finansijski savetnik. Mogu da vam pomognem sa:
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Investicionim strategijama</li>
+                            <li>Budžetiranjem i štednjom</li>
+                            <li>Analizo tržišta</li>
+                            <li>Finansijskim planovima</li>
+                        </ul>
+                        Postavite mi bilo koje pitanje o finansijama!
                     </div>
                 `;
-                
-                // Dodaj formu u chat
-                const botMessageElement = document.createElement('div');
-                botMessageElement.classList.add('message', 'bot-message');
-                botMessageElement.innerHTML = contactFormHTML;
-                chatMessages.appendChild(botMessageElement);
-                
-                // Dodaj event listener za dugme za slanje
-                setTimeout(() => {
-                    const submitBtn = document.getElementById('submitContactForm');
-                    if (submitBtn) {
-                        submitBtn.addEventListener('click', submitContactForm);
-                    }
-                }, 100);
-                
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                chatMessages.innerHTML = welcomeMessage;
+            }
+        }
+        
+        function sendMessage() {
+            const message = chatInput?.value.trim();
+            if (!message) return;
+            
+            // Dodaj korisničku poruku
+            addMessage(message, 'user');
+            
+            // Očisti input
+            chatInput.value = '';
+            
+            // Simuliraj typing indikator
+            showTypingIndicator();
+            
+            // Generiši AI odgovor
+            setTimeout(() => {
+                hideTypingIndicator();
+                const aiResponse = generateAIResponse(message);
+                addMessage(aiResponse, 'ai');
+            }, 1500 + Math.random() * 1000); // Random delay 1.5-2.5s
+        }
+        
+        function addMessage(message, sender) {
+            if (!chatMessages) return;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender === 'user' ? 'user-message' : 'ai-message';
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `<strong>Vi:</strong><br>${message}`;
+            } else {
+                messageDiv.innerHTML = `<strong>🤖 Golden Balance AI:</strong><br>${message}`;
             }
             
-            // Funkcija za slanje kontakt podataka
-            function submitContactForm() {
-                const email = document.getElementById('contactEmail')?.value.trim();
-                const phone = document.getElementById('contactPhone')?.value.trim() || 'Nije naveden';
-                const question = window.currentQuestion || 'Nije navedeno pitanje';
-                
-                if (!email) {
-                    alert('Molimo unesite vašu email adresu.');
-                    return;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function showTypingIndicator() {
+            if (!chatMessages) return;
+            
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-message typing-indicator';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <strong>🤖 Golden Balance AI:</strong><br>
+                <span class="typing-dots">
+                    <span>.</span><span>.</span><span>.</span>
+                </span>
+            `;
+            
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Dodaj CSS za animaciju
+            const style = document.createElement('style');
+            style.textContent = `
+                .typing-dots span {
+                    animation: typing 1.4s infinite;
+                    animation-fill-mode: both;
                 }
-                
-                // Sačuvaj pitanje
-                const questionId = saveUnansweredQuestion(question, email, phone);
-                
-                // Prikaži poruku o uspehu
-                const successMessage = document.createElement('div');
-                successMessage.classList.add('message', 'bot-message');
-                successMessage.innerHTML = `
-                    <p>Hvala vam! Vaš upit je uspešno poslat. Broj vašeg tiket-a je: <strong>#${questionId}</strong></p>
-                    <p>Naš tim će vam se obratiti u najkraćem mogućem roku na email adresu: <strong>${email}</strong></p>
-                    <p>Hvala na strpljenju!</p>
-                `;
-                
-                // Zameni formu porukom o uspehu
-                const contactForm = document.querySelector('.contact-form');
-                if (contactForm) {
-                    contactForm.replaceWith(successMessage);
-                } else {
-                    chatMessages.appendChild(successMessage);
+                .typing-dots span:nth-child(2) { animation-delay: .2s; }
+                .typing-dots span:nth-child(3) { animation-delay: .4s; }
+                @keyframes typing {
+                    0%, 60%, 100% { opacity: 0.3; }
+                    30% { opacity: 1; }
                 }
+            `;
+            if (!document.getElementById('typingStyles')) {
+                style.id = 'typingStyles';
+                document.head.appendChild(style);
+            }
+        }
+        
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        function generateAIResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Finansijska pitanja i odgovori
+            if (message.includes('investicij') || message.includes('ulaganj')) {
+                return `Odličo pitanje o investicijama! 📊
                 
-                // Scroll to bottom
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+                Evo nekoliko ključnih principa za početak:
+                
+                🎯 <strong>Diversifikacija</strong> - Ne stavljajte sva jaja u jednu korpu
+                📈 <strong>Dugoročno planiranje</strong> - Vreme je vaš najbolji saveznik
+                💡 <strong>Dollar Cost Averaging</strong> - Redovno ulaganje umanjuje rizik
+                
+                Za početak preporučujem:
+                • S&P 500 indeksni fondovi (7% prosečni godišnji povrat)
+                • Diversifikovani ETF-ovi
+                • Kratkoročne državne obveznice za stabilnost
+                
+                Da li vas zanima neki specifičan tip investicije?`;
             }
             
-            // Funkcija za slanje poruke
-            function sendMessage(suggestedMessage) {
-                const messageText = suggestedMessage || (userInput ? userInput.value.trim() : '');
+            if (message.includes('budžet') || message.includes('štednja') || message.includes('štednja')) {
+                return `Budžetiranje je osnova finansijske stabilnosti! 💰
                 
-                if (!messageText) return;
+                Preporučujem <strong>50/30/20 pravilo</strong>:
+                • 50% - Osnovne potrebe (stanovanje, hrana, transport)
+                • 30% - Želje i zabava
+                • 20% - Štednja i investicije
                 
-                // Clear input
-                if (!suggestedMessage && userInput) {
-                    userInput.value = '';
-                }
+                <strong>Korisni saveti:</strong>
+                📱 Pratite troškove dnevno
+                🎯 Postavite specifične finansijske ciljeve
+                💳 Izbegavajte nepotrebne dugove
+                🏆 Nagradite sebe kada dostignete cilj
                 
-                // Create user message element
-                const userMessageElement = document.createElement('div');
-                userMessageElement.classList.add('message', 'user-message');
-                userMessageElement.textContent = messageText;
+                Želite li da vam pomognem sa kreiranjem ličnog budžeta?`;
+            }
+            
+            if (message.includes('kripto') || message.includes('bitcoin') || message.includes('ethereum')) {
+                return `Kriptovalute su veoma volatilan segment! ⚡
                 
-                // Add user message to chat
-                if (chatMessages) {
-                    chatMessages.appendChild(userMessageElement);
-                    
-                    // Show typing indicator
-                    const typingIndicator = document.createElement('div');
-                    typingIndicator.classList.add('message', 'bot-message', 'typing');
-                    typingIndicator.textContent = 'Kucam...';
-                    chatMessages.appendChild(typingIndicator);
-                    
-                    // Scroll to bottom
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                    
-                    // Simulate bot response
-                    setTimeout(() => {
-                        // Remove typing indicator
-                        chatMessages.removeChild(typingIndicator);
-                        
-                        // Find answer in knowledge base
-                        const answer = findAnswer(messageText);
-                        
-                        // Create bot message element
-                        const botMessageElement = document.createElement('div');
-                        botMessageElement.classList.add('message', 'bot-message');
-                        
-                        if (answer) {
-                            // If answer is found in knowledge base
-                            botMessageElement.innerHTML = answer.response;
-                            
-                            // Add helpful buttons
-                            const buttonsHTML = `
-                                <div class="chat-suggestion-buttons">
-                                    <button class="suggestion-btn" data-question="Da, hvala!">Da, hvala!</button>
-                                    <button class="suggestion-btn" data-question="Ne, imam još pitanja">Ne, imam još pitanja</button>
-                                </div>
-                            `;
-                            
-                            botMessageElement.innerHTML += buttonsHTML;
-                            
-                            // Add event listeners to buttons
-                            setTimeout(() => {
-                                document.querySelectorAll('.suggestion-btn').forEach(btn => {
-                                    btn.addEventListener('click', (e) => {
-                                        const question = e.target.getAttribute('data-question');
-                                        sendMessage(question);
-                                    });
-                                });
-                            }, 100);
-                        } else {
-                            // If no answer found, show contact form
-                            showContactForm(messageText);
-                        }
-                        
-                        // Add bot message to chat
-                        chatMessages.appendChild(botMessageElement);
-                        
-                        // Scroll to bottom
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                        
-                    }, 1500); // Simulate typing delay
-                }
+                <strong>Važne napomene:</strong>
+                ⚠️ Visok rizik - mogu izgubiti vrednost preko noći
+                📊 Uložite samo ono što možete da izgubite
+                🔍 Temeljno istražite pre ulaganja
+                
+                <strong>Za početnike:</strong>
+                • Počnite sa malim iznosima (5-10% portfelja)
+                • Fokusirajte se na Bitcoin i Ethereum
+                • Koristite renomirane menjačnice
+                
+                Konsultujte se sa Zoranom Dostićem za detaljnu analizu kripoto tržišta.`;
             }
-
-            // Show chat when support button is clicked
-            if (supportBtn) {
-                supportBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (chatContainer.style.display === 'block') {
-                        closeChatFunction();
-                        return;
-                    }
-                    chatContainer.style.display = 'block';
-                    setTimeout(() => {
-                        chatContainer.style.opacity = '1';
-                        chatContainer.style.transform = 'translateY(0)';
-                        showSuggestedQuestions();
-                        if (userInput) userInput.focus();
-                    }, 10);
-                });
+            
+            if (message.includes('nekretnin') || message.includes('stan') || message.includes('kuća')) {
+                return `Nekretnine su tradicionalno dobra investicija! 🏠
+                
+                <strong>Prednosti:</strong>
+                ✅ Fizička imovina
+                ✅ Redovni prihod od najma
+                ✅ Potencijal rasta vrednosti
+                
+                <strong>Šta treba razmotriti:</strong>
+                📍 Lokacija je ključna
+                💰 Potreban značajan početni kapital
+                🔧 Održavanje i upravljanje
+                📈 Tržišni ciklusi
+                
+                U Srbiji, nekretnine u Beogradu i Novom Sadu pokazuju stabilnost. 
+                
+                Da li razmatrate kupovinu za lično korišćenje ili kao investiciju?`;
             }
-
-            // Close chat function
-            function closeChatFunction() {
-                if (chatContainer) {
-                    chatContainer.style.opacity = '0';
-                    chatContainer.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        chatContainer.style.display = 'none';
-                    }, 300);
-                }
+            
+            if (message.includes('penzij') || message.includes('penzion')) {
+                return `Planiranje penzije nikad nije prerano! 👴👵
+                
+                <strong>Državna vs privatna penzija:</strong>
+                🏛️ Državna - obavezna, ali možda neće biti dovoljna
+                💼 Privatna - dobrovoljno dodatno obezbeđenje
+                
+                <strong>Strategije:</strong>
+                📊 Počnite što ranije (compound interest!)
+                💰 Odvojite 10-15% prihoda za penziju
+                🎯 Kombinujte različite penzijske fondove
+                
+                Za 30-godišnjaka koji ulaže 20.000 RSD mesečno:
+                U 35 godina = ~25 miliona RSD! 
+                
+                Želite li simulaciju za vaš slučaj?`;
             }
-
-
-            // Close chat when clicking the close button
-            if (closeChat) {
-                closeChat.addEventListener('click', closeChatFunction);
+            
+            if (message.includes('kredit') || message.includes('zajam') || message.includes('loan')) {
+                return `Krediti mogu biti korisni, ali pažljivo! 💳
+                
+                <strong>Kada uzeti kredit:</strong>
+                ✅ Za nekretnine (najčešće isplativo)
+                ✅ Za obrazovanje (investicija u sebe)
+                ✅ Za pokretanje biznisa (sa solidnim planom)
+                
+                <strong>Kada izbegavati:</strong>
+                ❌ Za luksuz i potrošnju
+                ❌ Visoka kamata (>10%)
+                ❌ Kada nemate stabilan prihod
+                
+                <strong>Korisni saveti:</strong>
+                📊 Uporedite ponude različitih banaka
+                💰 Nikad više od 30% prihoda za rate
+                📋 Pročitajte ceo ugovor
+                
+                Trebam li da vam pomognem sa kalkulatorom kredita?`;
             }
-
-
-            // Send message on button click
-            if (sendButton) {
-                sendButton.addEventListener('click', () => sendMessage());
+            
+            if (message.includes('zoran') || message.includes('dostić') || message.includes('konsultacij')) {
+                return `Zoran Dostić je naš glavni finansijski konsultant! 👨‍💼
+                
+                <strong>Ekspertiza:</strong>
+                📈 15+ godina iskustva na finansijskim tržištima
+                🎯 Specijalizovan za portfolio menadžment
+                💼 Konsultacije za privatne investitore
+                🏆 Sertifikovani finansijski planer
+                
+                <strong>Usluge:</strong>
+                • Personalizovane investicione strategije
+                • Analiza rizika i diverzifikacija
+                • Penzijsko planiranje
+                • Optimizacija poreske efikasnosti
+                
+                Za zakazivanje konsultacije koristite dugme "Zakaži konsultaciju" 
+                ili pozovite: +381 11 123-4567`;
             }
-
-
-            // Send message on Enter key
-            if (userInput) {
-                userInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        const messageText = userInput.value.trim();
-                        if (messageText) {
-                            sendMessage(messageText);
-                            userInput.value = ''; // Clear input after sending
-                        }
-                    }
-                });
+            
+            if (message.includes('hvala') || message.includes('thanks')) {
+                return `Nema na čemu! 😊 
+                
+                Uvek sam tu da pomognem sa vašim finansijskim pitanjima. 
+                Zapamtite - pametno upravljanje finansijama je ključ finansijske slobode!
+                
+                Da li imate još neko pitanje?`;
             }
+            
+            // Default odgovor
+            return `Hvala na pitanju! 🤔
+            
+            Kao vaš AI finansijski savetnik, mogu da vam pomognem sa:
+            
+            💰 <strong>Investicije:</strong> akcije, obveznice, fondovi, ETF-ovi
+            🏠 <strong>Nekretnine:</strong> kupovina, prodaja, rentabilnost  
+            📊 <strong>Budžetiranje:</strong> pravilno upravljanje troškovima
+            💳 <strong>Krediti:</strong> vrste, kamata, otplata
+            🎯 <strong>Finansijski ciljevi:</strong> kratkoročni i dugoročni planovi
+            
+            Molim vas postavite konkretnije finansijsko pitanje, ili se konsultujte 
+            sa našim ekspertom Zoranom Dostićem za detaljnu analizu.
+            
+            Kako mogu da vam pomognem danas?`;
+        }
+        
+        // Inicijalizuj chat kad se učita stranica
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sačekaj malo da se sve učita
+            setTimeout(initializeChat, 100);
         });
-
-        // Add styles for new elements
-        const style = document.createElement('style');
-        style.textContent = `
-            .form-group {
-                margin-bottom: 1rem;
-            }
-            .form-group label {
-                display: block;
-                margin-bottom: 0.5rem;
-                font-weight: 500;
-            }
-            .form-group input, .form-group select {
-                width: 100%;
-            }
-            .expense-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem;
-                border: 1px solid #e2e8f0;
-                border-radius: var(--border-radius);
-                margin-bottom: 0.5rem;
-            }
-            .remove-expense {
-                background: none;
-                border: none;
-                font-size: 1.25rem;
-                cursor: pointer;
-                color: #dc2626;
-            }
-            .chat-container {
-                height: 400px;
-                display: flex;
-                flex-direction: column;
-            }
-            .chat-messages {
-                flex-grow: 1;
-                overflow-y: auto;
-                padding: 15px;
-            }
-            .chat-input {
-                padding: 1rem;
-                display: flex;
-                gap: 0.5rem;
-            }
-            .chat-input input {
-                flex-grow: 1;
-            }
-            .user-message {
-                background-color: var(--primary-color);
-                color: white;
-                padding: 0.75rem;
-                border-radius: 0.5rem;
-                margin-bottom: 0.5rem;
-            }
-            .ai-message {
-                background-color: #f3f4f6;
-                padding: 0.75rem;
-                border-radius: 0.5rem;
-                margin-bottom: 0.5rem;
-            }
-        `;
-        document.head.appendChild(style);
+        
     </script>
     <!-- Loan Calculator Form -->
     <div class="modal" id="loanCalculatorModal">
@@ -3240,10 +3225,23 @@
                         <div class="result-value" id="finalValue">-</div>
                     </div>
                 </div>
-                <div class="chart-container" style="margin-top: 20px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.03); border: 1px solid rgba(203, 213, 225, 0.3);">
-                    <h4 style="margin-top: 0; margin-bottom: 20px; color: #1F2937; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 600;">📊 Rast investicije kroz godine</h4>
-                    <div style="width: 100%; height: 350px; position: relative;">
-                        <canvas id="investmentChart" style="width: 100%; height: 100%; border-radius: 12px;"></canvas>
+                <div class="chart-container" style="margin-top: 20px; background-color: #f8fafc; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h4 style="margin-top: 0; margin-bottom: 15px; color: #334155;">Rast investicije kroz godine</h4>
+                    <div id="investmentChartSimple" style="width: 100%; min-height: 350px; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+                            <div style="display: flex; align-items: center; margin-right: 20px;">
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: #1976d2; margin-right: 8px;"></span>
+                                <span>Ukupno uloženo</span>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <span style="display: inline-block; width: 15px; height: 15px; background-color: #2ecc71; margin-right: 8px;"></span>
+                                <span>Prinos investicije</span>
+                            </div>
+                        </div>
+                        
+                        <div id="graphContainer" style="display: flex; height: 280px; border-bottom: 1px solid #ccc; padding-bottom: 20px; margin-bottom: 10px; overflow-x: auto;">
+                            <!-- Ovde će se generisati grafikon kroz JavaScript -->
+                        </div>
                     </div>
                 </div>
                 <div class="form-actions" style="margin-top: 20px;">
@@ -3261,97 +3259,53 @@
         </div>
     </div>
 
-    <!-- AI Chat Interface -->
-    <div class="chat-container" id="chatContainer">
-        <div class="chat-header">
-            <h3><i class="fas fa-headset"></i> Tehnička Podrška</h3>
-            <button class="close-chat" id="closeChat">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="message bot-message">
-                Zdravo! Ja sam vaš finansijski asistent. Kako vam mogu pomoći danas?</div>
-            <div class="message bot-message" style="margin-top: 8px;">
-                <i class="fas fa-info-circle"></i> Ovo je chat za direktnu komunikaciju sa našim timom. Ovde možete postaviti pitanja o aplikaciji, finansijama ili zatražiti pomoć.</div>
-            <div class="chat-suggestion-buttons">
-                <button class="chat-suggestion" onclick="sendMessage('Kako da postavim budžet?')">Kako da postavim budžet?</button>
-                <button class="chat-suggestion" onclick="sendMessage('Imam problema sa prijavom')">Problem sa prijavom</button>
-                <button class="chat-suggestion" onclick="sendMessage('Želim savet za investiranje')">Savet za investiranje</button>
-            </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="userInput" placeholder="Postavite pitanje...">
-            <button class="send-button" id="sendMessage">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-
-    <style>
-        /* Chat Styles */
-        .typing {
-            color: #888;
-            font-style: italic;
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Modal funkcije
+        function openModal(modalId) {
+            console.log('Otvaram modal:', modalId);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                // Zatvori sve druge modale prvo
+                closeModal();
+                
+                // Postavi event listener za ESC taster
+                const handleKeyDown = (e) => {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                        document.removeEventListener('keydown', handleKeyDown);
+                    }
+                };
+                
+                // Dodaj event listener
+                document.addEventListener('keydown', handleKeyDown);
+                
+                // Prikaži željeni modal
+                modal.style.display = 'flex';
+                document.body.classList.add('modal-open');
+                
+                // Postavi event listener za klik izvan modala
+                modal.addEventListener('click', function outsideClick(e) {
+                    if (e.target === modal) {
+                        closeModal();
+                        modal.removeEventListener('click', outsideClick);
+                    }
+                });
+                
+                // Fokusiraj prvo input polje u modalu ako postoji
+                setTimeout(() => {
+                    const firstInput = modal.querySelector('input:not([type="hidden"]), select, textarea, button');
+                    if (firstInput) firstInput.focus();
+                }, 100);
+            } else {
+                console.error('Modal sa ID-jem', modalId, 'nije pronađen');
+            }
         }
         
-        .chat-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 380px;
-            height: 500px;
-            max-height: 80vh;
-            background: rgba(22, 22, 26, 0.98);
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            display: none; /* Početno sakriven */
-            flex-direction: column;
-            overflow: hidden;
-            z-index: 10000; /* Veći z-index da bude iznad svih elemenata */
-            border: 1px solid var(--border-light);
-            backdrop-filter: blur(10px);
-            transform: translateY(20px);
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            pointer-events: auto;
-        }
+        document.head.appendChild(style);
         
-        .chat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            background: var(--gradient-gold);
-            color: var(--dark-bg);
-            font-weight: 600;
-        }
-        
-        .chat-header h3 {
-            margin: 0;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .close-chat {
-            background: rgba(0, 0, 0, 0.2);
-            border: none;
-            border-radius: 50%;
-            color: var(--dark-bg);
-            cursor: pointer;
-            font-size: 1rem;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            padding: 0;
-            margin: 0;
-            position: relative;
-            z-index: 10001;
+        // Chat bot JavaScript logika
+        let chatContainer;
         }
         
         .close-chat:hover {
@@ -3885,257 +3839,112 @@
                 }
             }
             
-            // Kreiranje modernog Chart.js grafikona investicije
+            // Kreiranje HTML grafikona investicije
             function createInvestmentChart(data) {
-                console.log('Kreiranje Chart.js grafikona investicije...', data);
+                console.log('Kreiranje HTML grafikona investicije...', data);
                 
-                // Proveravamo da li je canvas dostupan
-                const canvasElement = document.getElementById('investmentChart');
-                if (!canvasElement) {
-                    console.error('Canvas element investmentChart nije pronađen!');
+                // Proveravamo da li je kontejner dostupan
+                const graphContainer = document.getElementById('graphContainer');
+                if (!graphContainer) {
+                    console.error('Kontejner za grafikon nije pronađen!');
                     return;
                 }
                 
-                const ctx = canvasElement.getContext('2d');
+                // Brišemo prethodni sadržaj
+                graphContainer.innerHTML = '';
                 
-                // Uništavamo postojeći grafikon ako postoji
-                const existingChart = Chart.getChart('investmentChart');
-                if (existingChart) {
-                    existingChart.destroy();
-                }
-                
-                // Filtriramo samo relevantne godine (preskačemo nultu godinu)
+                // Filtriramo samo relevantne godine (preskacemo nultu godinu i ostavljamo samo godinu 1+)
                 const relevantData = data.filter(item => item.year > 0);
                 
-                if (relevantData.length === 0) {
-                    console.error('Nema podataka za prikaz grafikona');
-                    return;
-                }
+                // Nalazimo maksimalnu vrednost za skaliranje
+                const maxValue = Math.max(...relevantData.map(item => item.value));
                 
-                // Pripremamo podatke za Chart.js
-                const labels = relevantData.map(item => `Godina ${item.year}`);
-                const investedData = relevantData.map(item => item.invested);
-                const valueData = relevantData.map(item => item.value);
-                
-                // Kreiramo gradijente za moderniji izgled
-                const gradientInvested = ctx.createLinearGradient(0, 0, 0, 300);
-                gradientInvested.addColorStop(0, 'rgba(59, 130, 246, 0.6)');
-                gradientInvested.addColorStop(1, 'rgba(59, 130, 246, 0.05)');
-                
-                const gradientTotal = ctx.createLinearGradient(0, 0, 0, 300);
-                gradientTotal.addColorStop(0, 'rgba(16, 185, 129, 0.6)');
-                gradientTotal.addColorStop(1, 'rgba(16, 185, 129, 0.05)');
-                
-                // Kreiramo novi moderan grafikon
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: '💰 Ukupno uloženo',
-                            data: investedData,
-                            borderColor: '#3B82F6',
-                            backgroundColor: gradientInvested,
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#3B82F6',
-                            pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                            pointHoverBackgroundColor: '#3B82F6',
-                            pointHoverBorderColor: '#ffffff',
-                            pointHoverBorderWidth: 3,
-                            borderJoinStyle: 'round'
-                        }, {
-                            label: '📈 Ukupna vrednost',
-                            data: valueData,
-                            borderColor: '#10B981',
-                            backgroundColor: gradientTotal,
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#10B981',
-                            pointBorderColor: '#ffffff',
-                            pointBorderWidth: 2,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                            pointHoverBackgroundColor: '#10B981',
-                            pointHoverBorderColor: '#ffffff',
-                            pointHoverBorderWidth: 3,
-                            borderJoinStyle: 'round'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
-                        },
-                        animation: {
-                            duration: 2500,
-                            easing: 'easeInOutQuart',
-                            delay: (context) => {
-                                return context.dataIndex * 100;
-                            }
-                        },
-                        layout: {
-                            padding: {
-                                top: 20,
-                                bottom: 10,
-                                left: 15,
-                                right: 15
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                align: 'center',
-                                labels: {
-                                    usePointStyle: true,
-                                    pointStyle: 'circle',
-                                    padding: 25,
-                                    color: '#374151',
-                                    font: {
-                                        family: "'Inter', 'Segoe UI', sans-serif",
-                                        size: 13,
-                                        weight: '600'
-                                    },
-                                    generateLabels: function(chart) {
-                                        const original = Chart.defaults.plugins.legend.labels.generateLabels;
-                                        const labels = original.call(this, chart);
-                                        
-                                        labels.forEach(label => {
-                                            label.fillStyle = label.strokeStyle;
-                                        });
-                                        
-                                        return labels;
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                enabled: true,
-                                backgroundColor: 'rgba(17, 24, 39, 0.95)',
-                                titleColor: '#F9FAFB',
-                                bodyColor: '#F9FAFB',
-                                borderColor: 'rgba(59, 130, 246, 0.3)',
-                                borderWidth: 1,
-                                cornerRadius: 12,
-                                padding: 16,
-                                bodySpacing: 8,
-                                titleSpacing: 8,
-                                displayColors: true,
-                                usePointStyle: true,
-                                mode: 'index',
-                                intersect: false,
-                                titleFont: {
-                                    family: "'Inter', 'Segoe UI', sans-serif",
-                                    size: 14,
-                                    weight: '600'
-                                },
-                                bodyFont: {
-                                    family: "'Inter', 'Segoe UI', sans-serif",
-                                    size: 13,
-                                    weight: '500'
-                                },
-                                callbacks: {
-                                    title: function(tooltipItems) {
-                                        return `📅 ${tooltipItems[0].label}`;
-                                    },
-                                    label: function(context) {
-                                        const dataset = context.dataset.label;
-                                        const value = formatCurrency(context.parsed.y);
-                                        
-                                        // Dodajemo procenat rasta za ukupnu vrednost
-                                        if (context.datasetIndex === 1 && context.dataIndex > 0) {
-                                            const investedValue = context.chart.data.datasets[0].data[context.dataIndex];
-                                            const growth = ((context.parsed.y - investedValue) / investedValue * 100).toFixed(1);
-                                            return `${dataset}: ${value} (+${growth}%)`;
-                                        }
-                                        
-                                        return `${dataset}: ${value}`;
-                                    },
-                                    afterLabel: function(context) {
-                                        if (context.datasetIndex === 1) {
-                                            const investedValue = context.chart.data.datasets[0].data[context.dataIndex];
-                                            const profit = context.parsed.y - investedValue;
-                                            return `💡 Profit: ${formatCurrency(profit)}`;
-                                        }
-                                        return '';
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: '📅 Godine',
-                                    color: '#4B5563',
-                                    font: {
-                                        family: "'Inter', 'Segoe UI', sans-serif",
-                                        size: 12,
-                                        weight: '600'
-                                    }
-                                },
-                                ticks: {
-                                    color: '#6B7280',
-                                    font: {
-                                        family: "'Inter', 'Segoe UI', sans-serif",
-                                        size: 11,
-                                        weight: '500'
-                                    },
-                                    maxRotation: 0
-                                },
-                                grid: {
-                                    display: false
-                                },
-                                border: {
-                                    display: false
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: '💰 Iznos (RSD)',
-                                    color: '#4B5563',
-                                    font: {
-                                        family: "'Inter', 'Segoe UI', sans-serif",
-                                        size: 12,
-                                        weight: '600'
-                                    }
-                                },
-                                ticks: {
-                                    color: '#6B7280',
-                                    font: {
-                                        family: "'Inter', 'Segoe UI', sans-serif",
-                                        size: 11,
-                                        weight: '500'
-                                    },
-                                    padding: 8,
-                                    callback: function(value) {
-                                        const formatter = new Intl.NumberFormat('sr-RS', {
-                                            style: 'currency',
-                                            currency: 'RSD',
-                                            minimumFractionDigits: 0,
-                                            notation: value >= 1000000 ? 'compact' : 'standard'
-                                        });
-                                        return formatter.format(value);
-                                    }
-                                },
-                                grid: {
-                                    color: 'rgba(107, 114, 128, 0.1)',
-                                    lineWidth: 1
-                                },
-                                border: {
-                                    display: false
-                                }
-                            }
-                        }
+                // Kreiramo vizuelni prikaz za svaku godinu
+                relevantData.forEach(item => {
+                    const yearContainer = document.createElement('div');
+                    yearContainer.style.display = 'flex';
+                    yearContainer.style.flexDirection = 'column';
+                    yearContainer.style.alignItems = 'center';
+                    yearContainer.style.minWidth = '80px';
+                    yearContainer.style.flex = '1';
+                    yearContainer.style.marginRight = '10px';
+                    
+                    // Bar graf
+                    const barContainer = document.createElement('div');
+                    barContainer.style.display = 'flex';
+                    barContainer.style.flexDirection = 'column-reverse';
+                    barContainer.style.width = '60px';
+                    barContainer.style.height = '100%';
+                    barContainer.style.position = 'relative';
+                    
+                    // Izračunavamo visinu za investirani deo i prinos kao procenat maksimalne vrednosti
+                    const investedHeight = (item.invested / maxValue) * 100;
+                    const returnHeight = (item.return / maxValue) * 100;
+                    
+                    // Dodajemo deo za uloženo
+                    const investedBar = document.createElement('div');
+                    investedBar.style.height = `${investedHeight}%`;
+                    investedBar.style.backgroundColor = '#1976d2';
+                    investedBar.style.width = '100%';
+                    investedBar.style.borderTopLeftRadius = '4px';
+                    investedBar.style.borderTopRightRadius = '4px';
+                    investedBar.style.position = 'relative';
+                    investedBar.title = `Uloženo: ${formatCurrency(item.invested)}`;
+                    barContainer.appendChild(investedBar);
+                    
+                    // Dodajemo deo za prinos
+                    if (item.return > 0) {
+                        const returnBar = document.createElement('div');
+                        returnBar.style.height = `${returnHeight}%`;
+                        returnBar.style.backgroundColor = '#2ecc71';
+                        returnBar.style.width = '100%';
+                        returnBar.style.borderTopLeftRadius = '4px';
+                        returnBar.style.borderTopRightRadius = '4px';
+                        returnBar.style.position = 'absolute';
+                        returnBar.style.bottom = `${investedHeight}%`;
+                        returnBar.style.left = '0';
+                        
+                        // Izračunavamo ROI
+                        const roi = (item.return / item.invested) * 100;
+                        returnBar.title = `Prinos: ${formatCurrency(item.return)} (ROI: ${roi.toFixed(2)}%)`;
+                        barContainer.appendChild(returnBar);
                     }
+                    
+                    yearContainer.appendChild(barContainer);
+                    
+                    // Dodajemo oznaku godine
+                    const yearLabel = document.createElement('div');
+                    yearLabel.textContent = `Godina ${item.year}`;
+                    yearLabel.style.marginTop = '8px';
+                    yearLabel.style.fontWeight = 'bold';
+                    yearLabel.style.fontSize = '12px';
+                    yearContainer.appendChild(yearLabel);
+                    
+                    // Dodajemo vrednost
+                    const valueLabel = document.createElement('div');
+                    valueLabel.textContent = formatCurrency(item.value, false);
+                    valueLabel.style.marginTop = '4px';
+                    valueLabel.style.fontSize = '11px';
+                    yearContainer.appendChild(valueLabel);
+                    
+                    graphContainer.appendChild(yearContainer);
                 });
+                
+                // Dodajemo liniju koja predstavlja rast investicije
+                const svgContainer = document.createElement('div');
+                svgContainer.style.position = 'absolute';
+                svgContainer.style.top = '0';
+                svgContainer.style.left = '0';
+                svgContainer.style.width = '100%';
+                svgContainer.style.height = '100%';
+                svgContainer.style.pointerEvents = 'none';
+                
+                // Dodajemo poruku ako nema podataka
+                if (relevantData.length === 0) {
+                    const noDataMsg = document.createElement('div');
+                    noDataMsg.textContent = 'Nema podataka za prikaz. Izračunajte investiciju.';
+                    graphContainer.appendChild(noDataMsg);
+                }
             }
             
             // Formatiranje valute
@@ -4178,11 +3987,558 @@
         
         // Chat funkcionalnost je prebačena u DOMContentLoaded event listener
         
-<!-- Duplicate chat-related function definitions removed for clarity and to prevent errors.
-     Only one set of chat logic should be present in the script.
-     Please keep only the main implementation of showSuggestedQuestions, findAnswer, showContactForm, sendMessage, etc.
-     Remove all other duplicate or conflicting definitions as shown here.
--->
+        // Funkcija za prikazivanje predloženih pitanja
+function showSuggestedQuestions() {
+    if (!chatMessages) return;
+    chatMessages.innerHTML = '';
+    const welcomeMessage = document.createElement('div');
+    welcomeMessage.classList.add('message', 'bot-message');
+    welcomeMessage.innerHTML = knowledgeBase.default.response;
+    chatMessages.appendChild(welcomeMessage);
+    const suggestions = ['Kako da postavim budžet?', 'Imam problem sa prijavom', 'Saveti za investiranje'];
+    const suggestionsContainer = document.createElement('div');
+    suggestionsContainer.classList.add('suggestions-container');
+    suggestions.forEach(suggestion => {
+        const suggestionElement = document.createElement('div');
+        suggestionElement.classList.add('suggestion');
+        suggestionElement.textContent = suggestion;
+        suggestionElement.onclick = () => sendMessage(suggestion);
+        suggestionsContainer.appendChild(suggestionElement);
+    });
+    chatMessages.appendChild(suggestionsContainer);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Funkcija za zatvaranje chata
+function closeChatFunction() {
+    if (chatContainer) {
+        chatContainer.style.opacity = '0';
+        chatContainer.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            chatContainer.style.display = 'none';
+        }, 300);
+    }
+}
+
+// Funkcija za pronalaženje odgovora u bazi znanja
+function findAnswer(question) {
+    question = question.toLowerCase();
+    
+    // Proveri svaku kategoriju u bazi znanja
+    for (const category in knowledgeBase) {
+        if (category === 'default') continue;
+        
+        // Proveri da li pitanje sadrži neku od ključnih reči
+        const keywords = knowledgeBase[category].keywords;
+        const found = keywords.some(keyword => question.includes(keyword.toLowerCase()));
+        
+        if (found) {
+            return {
+                response: knowledgeBase[category].response,
+                isDefault: false
+            };
+        }
+    }
+    
+    // Ako nije pronađen odgovor, vrati null
+    return null;
+}
+
+// Funkcija za prikazivanje kontakt forme
+function showContactForm(question) {
+    // Sačuvaj pitanje u privremenu promenljivu
+    window.currentQuestion = question;
+    
+    // Kreiraj HTML za kontakt formu
+    const contactFormHTML = `
+        <div class="contact-form">
+            <p>Nažalost, trenutno nemam odgovor na vaše pitanje. Da biste dobili pomoć, molimo unesite sledeće podatke i naš broker će vas kontaktirati u najkraćem mogućem roku.</p>
+            <div class="form-group">
+                <label for="contactEmail">Vaša email adresa:</label>
+                <input type="email" id="contactEmail" class="form-control" placeholder="unesite@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="contactPhone">Broj telefona (opciono):</label>
+                <input type="tel" id="contactPhone" class="form-control" placeholder="+381 6x xxx xxxx">
+            </div>
+            <button id="submitContactForm" class="btn btn-primary">Pošalji zahtev</button>
+        </div>
+    `;
+    
+    if (chatMessages) {
+        const botMessageElement = document.createElement('div');
+        botMessageElement.classList.add('message', 'bot-message');
+        botMessageElement.innerHTML = contactFormHTML;
+        chatMessages.appendChild(botMessageElement);
+        
+        // Dodaj event listener za dugme za slanje
+        setTimeout(() => {
+            const submitBtn = document.getElementById('submitContactForm');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', submitContactForm);
+            }
+        }, 100);
+    }
+    
+    // Scroll to bottom
+    if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Funkcija za slanje kontakt podataka
+function submitContactForm() {
+    const email = document.getElementById('contactEmail')?.value.trim();
+    const phone = document.getElementById('contactPhone')?.value.trim() || 'Nije naveden';
+    const question = window.currentQuestion || 'Nije navedeno pitanje';
+    
+    if (!email) {
+        alert('Molimo unesite vašu email adresu.');
+        return;
+    }
+    
+    // Sačuvaj pitanje
+    const questionId = saveUnansweredQuestion(question, email, phone);
+    
+    // Prikaži poruku o uspehu
+    const successMessage = document.createElement('div');
+    successMessage.classList.add('message', 'bot-message');
+    successMessage.innerHTML = `
+        <p>Hvala vam! Vaš upit je uspešno poslat. Broj vašeg tiket-a je: <strong>#${questionId}</strong></p>
+        <p>Naš tim će vam se obratiti u najkraćem mogućem roku na email adresu: <strong>${email}</strong></p>
+        <p>Hvala na strpljenju!</p>
+    `;
+    
+    // Zameni formu porukom o uspehu
+    const contactForm = document.querySelector('.contact-form');
+    if (contactForm) {
+        contactForm.replaceWith(successMessage);
+    } else if (chatMessages) {
+        chatMessages.appendChild(successMessage);
+    }
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Funkcija za čuvanje neodgovorenog pitanja u localStorage
+function saveUnansweredQuestion(question, email = '', phone = 'Nije naveden') {
+    // Proveri da li već postoje sačuvana pitanja
+    const savedQuestions = JSON.parse(localStorage.getItem('unansweredQuestions') || '[]');
+    
+    // Dodaj novo pitanje
+    const newQuestion = {
+        id: Date.now(),
+        question: question,
+        email: email || 'Nije naveden',
+        phone: phone || 'Nije naveden',
+        timestamp: new Date().toISOString(),
+        status: 'new' // Može biti 'new', 'in_progress', 'resolved'
+    };
+    
+    // Dodaj novo pitanje na početak niza
+    savedQuestions.unshift(newQuestion);
+    
+    // Sačuvaj u localStorage
+    localStorage.setItem('unansweredQuestions', JSON.stringify(savedQuestions));
+    
+    // Event koji će obavestiti admin stranicu o novom pitanju
+    window.dispatchEvent(new Event('unansweredQuestionAdded'));
+    
+    return newQuestion.id; // Vraćamo ID za referencu ako je potrebno
+}
+
+// Baza znanja za odgovore u chatu - glavna definicija
+if (typeof window.knowledgeBase === 'undefined') {
+    window.knowledgeBase = {
+    budžet: {
+        keywords: ['budžet', 'budzet', 'proračun', 'trošenje', 'troškovi', 'postavim budžet', 'kako da'],
+        response: `Za postavljanje budžeta, pratite ove korake:<br><br>
+        1. Idite na stranicu "Moj Profil"<br>
+        2. Kliknite na tab "Pregled Budžeta"<br>
+        3. Unesite vaš mesečni prihod<br>
+        4. Prilagodite procenat za svaku kategoriju potrošnje<br>
+        5. Kliknite na "Izračunaj budžet"<br><br>
+        Nakon toga možete pratiti svoje troškove i štednju u svakoj kategoriji.`
+    },
+    prijava: {
+        keywords: ['prijava', 'login', 'problema', 'ne mogu', 'lozinka', 'password', 'zaboravljena'],
+        response: `Ako imate problema sa prijavom, probajte sledeće:<br><br>
+        1. Proverite da li je vaša email adresa ispravno unesena<br>
+        2. Proverite da li je Caps Lock uključen<br>
+        3. Koristite opciju "Zaboravili ste lozinku?" za resetovanje<br>
+        4. Očistite keš memoriju vašeg pretraživača<br><br>
+        Ako i dalje imate problema, molimo kontaktirajte nas na info@goldenbalance.com`
+    },
+    investiranje: {
+        keywords: ['investiranje', 'ulaganje', 'investicija', 'štednja', 'fond', 'akcije', 'berza', 'savet'],
+        response: `Savet za investiranje:<br><br>
+        1. Počnite sa hitnim fondom štednje (3-6 mesečnih troškova)<br>
+        2. Iskoristite naš kalkulator investicija da vidite projekcije<br>
+        3. Razmotrite diversifikaciju vaših investicija<br>
+        4. Za početnike, indeksni fondovi su često najbolja opcija<br><br>
+        Preporučujemo konsultaciju sa finansijskim savetnikom za personalizovani plan.`
+    },
+    default: {
+        response: `Zdravo! Ja sam vaš finansijski asistent. Mogu vam pomoći sa pitanjima o:
+        <br>- Upravljanju budžetom
+        <br>- Rešavanju problema sa prijavom
+        <br>- Osnovnim savetima za investiranje
+        <br>- Korišćenju aplikacije
+        <br><br>Kako vam mogu pomoći danas?`
+    }
+};
+
+// Funkcija za pronalaženje odgovora na osnovu pitanja
+function findAnswer(question) {
+    question = question.toLowerCase();
+
+    // Provjera za ključne riječi u pitanju
+    for (const category in knowledgeBase) {
+        if (category === 'default') continue;
+
+        const item = knowledgeBase[category];
+        const found = item.keywords.some(keyword => question.includes(keyword));
+
+        if (found) {
+            return {
+                response: item.response,
+                isDefault: false
+            };
+        }
+    }
+
+    // Ako nema poklapanja, vrati null što označava da nije pronađen odgovor
+    return null;
+}
+
+// Funkcija za prikazivanje kontakt forme
+function showContactForm(question) {
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) return;
+    
+    const contactForm = `
+        <div class="contact-form">
+            <p>Nažalost, nisam siguran kako da vam pomognem sa pitanjem: "${question}"</p>
+            <p>Molimo popunite sledeći formular i naš tim će vam se javiti u najkraćem mogućem roku.</p>
+            <form id="supportForm">
+                <input type="hidden" name="question" value="${question}">
+                <div class="form-group">
+                    <label for="name">Ime i prezime:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email adresa:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Dodatne napomene (opciono):</label>
+                    <textarea id="message" name="message" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Pošalji upit</button>
+            </form>
+        </div>
+    `;
+
+    const formContainer = document.createElement('div');
+    formContainer.innerHTML = contactForm;
+    chatMessages.appendChild(formContainer);
+    
+    // Dodajemo event listener za formu
+    const supportForm = document.getElementById('supportForm');
+    if (supportForm) {
+        supportForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Simuliramo slanje podataka
+            const response = document.createElement('div');
+            response.classList.add('message', 'bot-message');
+            response.innerHTML = 'Hvala vam na upitu! Naš tim će vam se javiti u najkraćem mogućem roku.';
+            chatMessages.appendChild(response);
+            
+            // Brišemo formu
+            formContainer.remove();
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+    }
+    
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Glavna funkcija za slanje poruke
+function sendMessage(suggestedMessage) {
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    
+    if (!chatMessages || !userInput) return;
+    
+    const messageText = suggestedMessage || userInput.value.trim();
+    if (!messageText) return;
+    
+    // Dodajemo korisnikovu poruku u chat
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', 'user-message');
+    messageElement.textContent = messageText;
+    chatMessages.appendChild(messageElement);
+    
+    // Brišemo input samo ako nije predložena poruka (sugestija)
+    if (!suggestedMessage) {
+        userInput.value = '';
+    }
+    
+    // Prikazujemo indikator kucanja
+    const typingIndicator = document.createElement('div');
+    typingIndicator.classList.add('message', 'bot-message', 'typing');
+    typingIndicator.id = 'typingIndicator';
+    typingIndicator.textContent = 'Pišem...';
+    chatMessages.appendChild(typingIndicator);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Simuliramo kašnjenje odgovora
+    setTimeout(() => {
+        // Uklanjamo indikator kucanja
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) {
+            indicator.remove();
+        }
+
+        // Proveravamo da li postoji odgovor u bazi znanja
+        const answer = findAnswer(messageText);
+
+        if (answer) {
+            // Ako postoji odgovor u bazi znanja, prikažemo ga
+            const responseElement = document.createElement('div');
+            responseElement.classList.add('message', 'bot-message');
+            responseElement.innerHTML = answer.response;
+            chatMessages.appendChild(responseElement);
+        } else {
+            // Ako ne postoji odgovor, prikažemo kontakt formu
+            showContactForm(messageText);
+        }
+
+        // Skrolujemo na dno čata
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 1500); // Simuliramo vreme potrebno za pisanje odgovora
+}
+
+// Initialize chat when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const chatContainer = document.getElementById('chatContainer');
+    const chatToggle = document.getElementById('chatToggle');
+    const closeChat = document.getElementById('closeChat');
+    const chatMessages = document.getElementById('chatMessages');
+    const userInput = document.getElementById('userInput');
+    const sendButton = document.getElementById('sendButton');
+
+    // Function to initialize chat
+    function initializeChat() {
+        // Initialize event listeners
+        if (sendButton) {
+            sendButton.addEventListener('click', () => {
+                const messageText = userInput?.value.trim();
+                if (messageText) {
+                    sendMessage(messageText);
+                }
+            });
+        }
+
+
+        if (userInput) {
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const messageText = userInput.value.trim();
+                    if (messageText) {
+                        sendMessage(messageText);
+                    }
+                }
+            });
+        }
+
+        if (closeChat && chatContainer) {
+            closeChat.addEventListener('click', () => {
+                chatContainer.style.display = 'none';
+            });
+        }
+
+        // Show welcome message on first load
+        if (chatMessages && chatMessages.children.length === 0) {
+            showWelcomeMessage(chatMessages);
+        }
+    }
+
+
+    // Function to show welcome message
+    function showWelcomeMessage(container) {
+        const welcomeMessage = document.createElement('div');
+        welcomeMessage.className = 'message bot-message';
+        welcomeMessage.textContent = 'Dobar dan! Kako vam mogu pomoći danas?';
+        container.appendChild(welcomeMessage);
+
+        // Add quick suggestions
+        const suggestions = [
+            'Kako da postavim budžet?',
+            'Šta je to investicioni fond?',
+            'Kako da uštedim više novca?'
+        ];
+
+        const suggestionsContainer = document.createElement('div');
+        suggestionsContainer.className = 'suggestions';
+        
+        suggestions.forEach(suggestion => {
+            const button = document.createElement('button');
+            button.className = 'suggestion-btn';
+            button.textContent = suggestion;
+            button.onclick = () => sendMessage(suggestion);
+            suggestionsContainer.appendChild(button);
+        });
+
+        container.appendChild(suggestionsContainer);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // Initialize the chat
+    initializeChat();
+});
+
+// Baza znanja sa pitanjima i odgovorima
+        function findAnswer(question) {
+            const knowledgeBase = [
+                {
+                    keywords: ['budžet', 'postaviti budžet', 'kako postaviti budžet'],
+                    response: 'Za postavljanje budžeta, idite na sekciju "Budžet" u glavnom meniju. Tamo možete uneti svoje prihode i troškove kako biste pratili svoju finansijsku situaciju.'
+                },
+                {
+                    keywords: ['investicioni fond', 'šta je investicioni fond', 'kako funkcioniše investicioni fond'],
+                    response: 'Investicioni fond je oblik kolektivnog ulaganja gde više ulagača ulaže novac u zajednički fond koji se zatim ulaže u različite finansijske instrumente. Naš tim stručnjaka će vam rado pruži detaljnije informacije o dostupnim opcijama.'
+                },
+                {
+                    keywords: ['ušteda', 'kako uštedeti', 'štednja novca'],
+                    response: 'Za uštedu novca preporučujemo da prvo pratite svoje troškove, napravite realan budžet i identificirate oblasti gde možete smanjiti troškove. Takođe možete razmotriti različite štedne programe i investicione opcije koje nudimo.'
+                },
+                {
+                    keywords: ['kredit', 'kreditni rejting', 'kako dobiti kredit'],
+                    response: 'Za informacije o kreditima i kreditnom rejtingu, posetite našu sekciju "Krediti" gde možete pronaći sve potrebne informacije i kalkulatore. Takođe možete zakažati sastanak sa našim kreditnim savetnicima.'
+                },
+                {
+                    keywords: ['penziono osiguranje', 'štednja za penziju'],
+                    response: 'Za planiranje penzije imamo različite programe štednje i investicione opcije. Posetite našu sekciju "Penziono osiguranje" ili zakažite konsultacije sa našim penzionim savetnicima.'
+                }
+            ];
+
+            const lowerQuestion = question.toLowerCase();
+            const foundAnswer = knowledgeBase.find(item => 
+                item.keywords.some(keyword => lowerQuestion.includes(keyword))
+            );
+
+            return foundAnswer || null;
+        }
+
+        // Funkcija za prikaz kontakt forme
+        function showContactForm(question) {
+            const chatMessages = document.getElementById('chatMessages');
+            if (!chatMessages) return;
+            
+            const contactForm = `
+                <div class="contact-form">
+                    <p>Nažalost, nisam siguran kako da vam pomognem sa pitanjem: "${question}"</p>
+                    <p>Molimo popunite sledeći formular i naš tim će vam se javiti u najkraćem mogućem roku.</p>
+                    <form id="supportForm">
+                        <input type="hidden" name="question" value="${question}">
+                        <div class="form-group">
+                            <label for="name">Ime i prezime:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email adresa:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Dodatne napomene (opciono):</label>
+                            <textarea id="message" name="message" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Pošalji upit</button>
+                    </form>
+                </div>
+            `;
+            
+            const formContainer = document.createElement('div');
+            formContainer.innerHTML = contactForm;
+            chatMessages.appendChild(formContainer);
+            
+            // Dodajemo event listener za formu
+            const supportForm = document.getElementById('supportForm');
+            if (supportForm) {
+                supportForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Simuliramo slanje podataka
+                    const response = document.createElement('div');
+                    response.classList.add('message', 'bot-message');
+                    response.innerHTML = 'Hvala vam na upitu! Naš tim će vam se javiti u najkraćem mogućem roku.';
+                    chatMessages.appendChild(response);
+                    
+                    // Brišemo formu
+                    formContainer.remove();
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                });
+            }
+            
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Glavna funkcija za slanje poruke
+        function sendMessage(suggestedMessage) {
+            const chatMessages = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            
+            if (!chatMessages || !userInput) return;
+            
+            const messageText = suggestedMessage || userInput.value.trim();
+            if (!messageText) return;
+            
+            // Dodajemo korisnikovu poruku u chat
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user-message');
+            messageElement.textContent = messageText;
+            chatMessages.appendChild(messageElement);
+            
+            // Brišemo input samo ako nije predložena poruka (sugestija)
+            if (!suggestedMessage) {
+                userInput.value = '';
+            }
+            
+            // Prikazujemo indikator kucanja
+            const typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('message', 'bot-message', 'typing');
+            typingIndicator.id = 'typingIndicator';
+            typingIndicator.textContent = 'Pišem...';
+            chatMessages.appendChild(typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Simuliramo kašnjenje odgovora
+            setTimeout(() => {
+                // Uklanjamo indikator kucanja
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+
+                // Proveravamo da li postoji odgovor u bazi znanja
+                const answer = findAnswer(messageText);
+
+                if (answer) {
+                    // Ako postoji odgovor u bazi znanja, prikažemo ga
+                    const responseElement = document.createElement('div');
+                    responseElement.classList.add('message', 'bot-message');
+                    responseElement.innerHTML = answer.response;
+                    chatMessages.appendChild(responseElement);
+                } else {
+                    // Ako ne postoji odgovor, prikažemo kontakt formu
+                    showContactForm(messageText);
+                }
+
+                // Skrolujemo na dno čata
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500); // Simuliramo vreme potrebno za pisanje odgovora
+        }
         
         // Inicijalizacija chat-a kada se stranica učita
         document.addEventListener('DOMContentLoaded', function() {
@@ -4292,63 +4648,576 @@
         </div>
     </div>
 
+    <!-- Testimonijal sekcija -->
+    <section id="testimonials" style="background: var(--dark-bg); padding: var(--spacing-xl) 0; text-align: center; position: relative; overflow: hidden; margin-top: 0.5rem;">
+        <!-- Hero-style background effect -->
+        <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.05) 0%, transparent 40%); z-index: -1; opacity: 0.8;"></div>
+        
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: var(--spacing-md);">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 style="font-size: 3.75rem; font-weight: 800; margin-bottom: var(--spacing-md); background: linear-gradient(45deg, #FFD700, #D4AF37, #B8860B); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2); letter-spacing: -0.02em; line-height: 1.2; max-width: 900px; margin-left: auto; margin-right: auto;">
+                    Šta kažu naši korisnici
+                </h2>
+                <p style="font-size: 1.25rem; color: var(--muted-text); margin-bottom: var(--spacing-xl); max-width: 800px; margin-left: auto; margin-right: auto; padding: var(--spacing-md); background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); line-height: 1.7;">
+                    Pridružite se hiljadama zadovoljnih korisnika koji su transformisali svoje finansije uz Golden Balance
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                <!-- Testimonijal 1 -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: 2rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face&auto=format" 
+                             style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem; border: 2px solid rgba(255, 215, 0, 0.3);" alt="Marko P.">
+                        <div>
+                            <h4 style="color: var(--light-text); margin-bottom: 0.25rem; font-weight: 600;">Marko Petrović</h4>
+                            <p style="color: var(--muted-text); font-size: 0.9rem;">IT Menadžer, Beograd</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                    </div>
+                    <p style="color: var(--light-text); line-height: 1.7; font-style: italic;">
+                        "Golden Balance je potpuno promenio način na koji upravljam svojim finansijama. Sada imam jasnu sliku o svojim prihodima i rashodima, a budžet planer mi pomaže da štedim za buduće ciljeve."
+                    </p>
+                </div>
+
+                <!-- Testimonijal 2 -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: 2rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=60&h=60&fit=crop&crop=face&auto=format" 
+                             style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem; border: 2px solid rgba(255, 215, 0, 0.3);" alt="Ana M.">
+                        <div>
+                            <h4 style="color: var(--light-text); margin-bottom: 0.25rem; font-weight: 600;">Ana Marković</h4>
+                            <p style="color: var(--muted-text); font-size: 0.9rem;">Preduzetnica, Novi Sad</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                    </div>
+                    <p style="color: var(--light-text); line-height: 1.7; font-style: italic;">
+                        "Kao preduzetnica, potreban mi je pouzdan alat za praćenje poslovnih finansija. Golden Balance mi omogućava da lako pratim prihode, rashode i planiram investicije. Preporučujem svima!"
+                    </p>
+                </div>
+
+                <!-- Testimonijal 3 -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: 2rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face&auto=format" 
+                             style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem; border: 2px solid rgba(255, 215, 0, 0.3);" alt="Stefan J.">
+                        <div>
+                            <h4 style="color: var(--light-text); margin-bottom: 0.25rem; font-weight: 600;">Stefan Jovanović</h4>
+                            <p style="color: var(--muted-text); font-size: 0.9rem;">Finansijski savetnik, Kragujevac</p>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                        <i class="fas fa-star" style="color: #FFD700; text-shadow: 0 1px 3px rgba(255, 215, 0, 0.3);"></i>
+                    </div>
+                    <p style="color: var(--light-text); line-height: 1.7; font-style: italic;">
+                        "Kao finansijski savetnik, preporučujem Golden Balance svim svojim klijentima. Jednostavan je za korišćenje, ima sve potrebne funkcionalnosti i odličan je za početak finansijskog planiranja."
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+
+    <!-- Sekcija o nama -->
+    <section id="about" style="background: var(--dark-bg); padding: var(--spacing-xl) 0; position: relative; overflow: hidden; margin-top: 0.5rem;">
+        <!-- Hero-style background effect -->
+        <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.05) 0%, transparent 40%); z-index: -1; opacity: 0.8;"></div>
+        
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: var(--spacing-md);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+                <div>
+                    <h2 style="font-size: 3.75rem; font-weight: 800; margin-bottom: var(--spacing-lg); background: linear-gradient(45deg, #FFD700, #D4AF37, #B8860B); -webkit-background-clip: text; -moz-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2); letter-spacing: -0.02em; line-height: 1.2;">
+                        O Golden Balance
+                    </h2>
+                    <p style="font-size: 1.25rem; color: var(--muted-text); margin-bottom: var(--spacing-lg); padding: var(--spacing-md); background: rgba(30, 30, 30, 0.7); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); border: 1px solid rgba(255, 215, 0, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); line-height: 1.7;">
+                        Golden Balance je napredna finansijska platforma kreirana da vam pomogne da potpuno kontrolišete svoje finansije. 
+                        Naš tim stručnjaka za finansije i tehnologiju radi na tome da vam pruži alate koji su jednostavni za korišćenje, 
+                        ali dovoljno moćni da zadovolje sve vaše potrebe.
+                    </p>
+                    <p style="font-size: 1.25rem; color: var(--muted-text); margin-bottom: var(--spacing-xl); padding: var(--spacing-md); background: rgba(30, 30, 30, 0.7); border-radius: var(--border-radius); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); border: 1px solid rgba(255, 215, 0, 0.1); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); line-height: 1.7;">
+                        Verujemo da svako zaslužuje pristup profesionalnim finansijskim alatima, bez obzira na veličinu portfolija. 
+                        Zato smo Golden Balance učinili dostupnim svima koji žele da poboljšaju svoje finansijsko zdravlje.
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-md); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #FFD700, #D4AF37); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                                <i class="fas fa-shield-alt" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; font-weight: 600;">Sigurnost</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">Bank-level enkripcija</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem; background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-md); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #FFD700, #D4AF37); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                                <i class="fas fa-chart-line" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; font-weight: 600;">Analitika</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">Napredni izveštaji</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem; background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-md); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #FFD700, #D4AF37); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                                <i class="fas fa-users" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; font-weight: 600;">Podrška</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">24/7 stručna pomoć</p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; gap: 1rem; background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius); padding: var(--spacing-md); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #FFD700, #D4AF37); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                                <i class="fas fa-mobile-alt" style="color: var(--dark-bg); font-size: 1.2rem;"></i>
+                            </div>
+                            <div>
+                                <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; font-weight: 600;">Mobilnost</h4>
+                                <p style="color: var(--muted-text); font-size: 0.9rem;">Pristup svugde</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="position: relative;">
+                    <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius-lg); padding: 3rem; text-align: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); transform: rotate(3deg); position: relative; overflow: hidden;">
+                        <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent); pointer-events: none; z-index: -1;"></div>
+                        <div style="background: rgba(10, 10, 10, 0.8); border-radius: var(--border-radius); padding: 2rem; transform: rotate(-3deg); border: 1px solid rgba(255, 215, 0, 0.2);">
+                            <h3 style="font-size: 1.8rem; font-weight: 800; background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(255, 215, 0, 0.2);">Naša misija</h3>
+                            <p style="color: var(--muted-text); line-height: 1.7; font-style: italic;">
+                                "Učiniti finansijsko planiranje jednostavnim, dostupnim i efikasnim za sve ljude, 
+                                omogućavajući im da ostvare svoje finansijske ciljeve i sanjaju veću budućnost."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Footer sekcija -->
+    <footer style="background: var(--dark-bg); border-top: 1px solid rgba(255, 215, 0, 0.2); padding: var(--spacing-xl) 0 var(--spacing-md); position: relative; overflow: hidden; margin-top: 0.5rem;">
+        <!-- Hero-style background effect -->
+        <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(184, 134, 11, 0.05) 0%, transparent 40%); z-index: -1; opacity: 0.8;"></div>
+        
+        <div class="container" style="max-width: 1200px; margin: 0 auto; padding: var(--spacing-md);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; margin-bottom: 2rem;">
+                <!-- Logo i opis -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #FFD700, #D4AF37); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);">
+                            <i class="fas fa-coins" style="color: var(--dark-bg); font-size: 1.5rem;"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 800; background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                            Golden Balance
+                        </h3>
+                    </div>
+                    <p style="color: var(--muted-text); line-height: 1.7; margin-bottom: 1.5rem;">
+                        Vaša potpuna finansijska platforma za upravljanje budžetom, praćenje troškova i ostvarivanje finansijskih ciljeva.
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; background: rgba(30, 30, 30, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: var(--gold-bright); text-decoration: none; transition: all 0.3s ease; backdrop-filter: blur(4px);">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Linkovi -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; margin-bottom: 1.5rem;">Funkcionalnosti</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#dashboard" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Dashboard</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#budgets" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Budžet planer</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#analytics" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Analitika</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#calculator" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Investicioni kalkulator</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#consultation" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Konsultacije</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Podrška -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; margin-bottom: 1.5rem;">Podrška</h4>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#help" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Pomoć</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#faq" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Česta pitanja</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#contact" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Kontakt</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#privacy" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Privatnost</a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="#terms" style="color: var(--muted-text); text-decoration: none; transition: color 0.3s ease;">Uslovi korišćenja</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Kontakt -->
+                <div style="background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(255, 215, 0, 0.1); border-radius: var(--border-radius-lg); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                    <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                    <h4 style="background: linear-gradient(45deg, #FFD700, #D4AF37); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 600; margin-bottom: 1.5rem;">Kontakt</h4>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <i class="fas fa-envelope" style="color: var(--gold-bright); width: 16px;"></i>
+                            <span style="color: var(--muted-text);">info@goldenbalance.rs</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <i class="fas fa-phone" style="color: var(--gold-bright); width: 16px;"></i>
+                            <span style="color: var(--muted-text);">+381 11 123 4567</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <i class="fas fa-map-marker-alt" style="color: var(--gold-bright); width: 16px;"></i>
+                            <span style="color: var(--muted-text);">Knez Mihailova 42, Beograd</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div style="border-top: 1px solid rgba(255, 215, 0, 0.2); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; background: rgba(30, 30, 30, 0.7); border-radius: var(--border-radius); padding: var(--spacing-lg); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36); position: relative; overflow: hidden;">
+                <div style="content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 215, 0, 0.03), transparent); pointer-events: none; z-index: -1;"></div>
+                <p style="color: var(--muted-text); margin: 0;">
+                    © 2025 Golden Balance. Sva prava zadržana.
+                </p>
+                <p style="color: var(--muted-text); margin: 0; font-size: 0.9rem;">
+                    Kreiran sa ❤️ za vaše finansije
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Finalni crni prostor -->
+    <div style="background: var(--dark-bg); padding: 1.5rem 0;"></div>
+
     <script src="js/consultation.js"></script>
-    <script src="js/main.js"></script>
     <script>
         // Inicijalizacija modala i drugih skripti ako je potrebno
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Stranica je učitana');
             
-            // Učitaj i prikaži budžet iz localStorage
-            function initBudgetDisplay() {
-                try {
-                    // Pokušaj sinhronizaciju kroz BudgetSync
-                    if (window.BudgetSync) {
-                        console.log('🔄 Inicijalna sinhronizacija budžeta kroz BudgetSync...');
-                        window.BudgetSync.synchronizeAllDisplays();
-                        console.log('🔄 Budžet sinhronizacija pokrenuta!');
-                        return true;
-                    } else {
-                        // Direktno iz localStorage ako BudgetSync nije dostupan
-                        console.log('⚠️ BudgetSync nije dostupan, direktno učitavam iz localStorage...');
-                        const userBudget = JSON.parse(localStorage.getItem('userBudget'));
-                        
-                        if (userBudget && userBudget.monthlyIncome !== undefined) {
-                            const income = userBudget.monthlyIncome;
-                            const necessities = (income * (userBudget.necessities || 0)) / 100;
-                            const hobby = (income * (userBudget.hobby || 0)) / 100;
-                            const totalExpenses = necessities + hobby;
-                            
-                            // Ažuriraj elemente
-                            document.getElementById('summaryIncome').textContent = '€' + income.toLocaleString();
-                            document.getElementById('summaryExpenses').textContent = '€' + totalExpenses.toLocaleString();
-                            document.getElementById('summaryAvailable').textContent = '€' + (income - totalExpenses).toLocaleString();
-                            
-                            console.log('✅ Budžet uspešno učitan iz localStorage');
-                            return true;
-                        }
+            // Smooth scrolling za footer linkove
+            document.querySelectorAll('footer a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
                     }
-                } catch (error) {
-                    console.error('❌ Greška pri inicijalizaciji budžeta:', error);
+                });
+            });
+
+            // Hover efekti za social media linkove
+            document.querySelectorAll('footer a[style*="background: rgba(212, 175, 55, 0.1)"]').forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.background = 'var(--gradient-gold)';
+                    this.style.color = 'var(--dark-bg)';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.background = 'rgba(212, 175, 55, 0.1)';
+                    this.style.color = 'var(--gold-bright)';
+                });
+            });
+
+            // Hover efekti za footer linkove
+            document.querySelectorAll('footer a[style*="color: var(--muted-text)"]').forEach(link => {
+                link.addEventListener('mouseenter', function() {
+                    this.style.color = 'var(--gold-bright)';
+                });
+                
+                link.addEventListener('mouseleave', function() {
+                    this.style.color = 'var(--muted-text)';
+                });
+            });
+
+            // Animacija brojčanika za statistike
+            function animateCounter(element, finalValue, duration = 2000) {
+                let currentValue = 0;
+                const increment = finalValue / (duration / 16); // 60fps
+                
+                const updateCounter = () => {
+                    currentValue += increment;
+                    if (currentValue >= finalValue) {
+                        element.textContent = finalValue;
+                    } else {
+                        element.textContent = Math.floor(currentValue);
+                        requestAnimationFrame(updateCounter);
+                    }
+                };
+                
+                updateCounter();
+            }
+
+            // Intersection Observer za pokretanje animacije kada korisnik vidi statistike
+            const statsSection = document.querySelector('#counterUsers');
+            if (statsSection) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            // Animiraj brojčanik za korisnike do 1000
+                            animateCounter(document.getElementById('counterUsers'), 1000, 2500);
+                            observer.unobserve(entry.target); // Animiraj samo jednom
+                        }
+                    });
+                }, {
+                    threshold: 0.5 // Pokreni animaciju kada je 50% elementa vidljivo
+                });
+                
+                observer.observe(statsSection);
+            }
+            
+            // Support Chat funkcionalnost
+            window.sendSupportMessage = function(predefinedMessage) {
+                const chatMessages = document.getElementById('supportChatMessages');
+                const userInput = document.getElementById('supportUserInput');
+                
+                if (!chatMessages || !userInput) return;
+                
+                const messageText = predefinedMessage || userInput.value.trim();
+                if (!messageText) return;
+                
+                // Dodaj korisničku poruku
+                const userMessage = document.createElement('div');
+                userMessage.style.cssText = 'max-width: 80%; padding: 0.75rem 1rem; background: linear-gradient(45deg, #D4AF37, #FFD700); color: white; border-radius: 18px; border-bottom-right-radius: 5px; align-self: flex-end; margin-left: auto;';
+                userMessage.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; justify-content: flex-end;">
+                        <strong>Vi</strong>
+                        <i class="fas fa-user" style="color: white;"></i>
+                    </div>
+                    <p style="margin: 0; line-height: 1.4;">${messageText}</p>
+                `;
+                chatMessages.appendChild(userMessage);
+                
+                // Očisti input ako nije predefinisana poruka
+                if (!predefinedMessage) {
+                    userInput.value = '';
                 }
                 
-                return false;
-            }
+                // Skroluj na dno
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Prikaži "kuca..." indikator
+                const typingIndicator = document.createElement('div');
+                typingIndicator.id = 'typingIndicator';
+                typingIndicator.style.cssText = 'max-width: 80%; padding: 0.75rem 1rem; background: #f0f0f0; border-radius: 18px; border-bottom-left-radius: 5px; align-self: flex-start; display: flex; align-items: center; gap: 0.5rem;';
+                typingIndicator.innerHTML = `
+                    <i class="fas fa-robot" style="color: #D4AF37;"></i>
+                    <span style="color: #666; font-style: italic;">AI asistent kuca...</span>
+                `;
+                chatMessages.appendChild(typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simuliraj delay i pronađi odgovor
+                setTimeout(() => {
+                    // Ukloni indikator
+                    typingIndicator.remove();
+                    
+                    // Pronađi odgovor u bazi znanja
+                    const answer = findSupportAnswer(messageText);
+                    
+                    // Kreiraj bot poruku
+                    const botMessage = document.createElement('div');
+                    botMessage.style.cssText = 'max-width: 80%; padding: 0.75rem 1rem; background: #f0f0f0; border-radius: 18px; border-bottom-left-radius: 5px; align-self: flex-start;';
+                    
+                    if (answer) {
+                        botMessage.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <i class="fas fa-robot" style="color: #D4AF37;"></i>
+                                <strong style="color: #D4AF37;">AI Asistent</strong>
+                            </div>
+                            <p style="margin: 0; line-height: 1.4;">${answer.response}</p>
+                        `;
+                    } else {
+                        // Proveri da li je pitanje vezano za investiranje
+                        const lowerQuestion = messageText.toLowerCase();
+                        const investmentKeywords = ['ulaganje', 'investiranje', 'investicija', 'uložiti', 'investiraj', 'portfolio', 'portfelj', 'fond', 'akcije', 'obveznice', 'berza', 'tržište', 'profit', 'prinos', 'rizik'];
+                        const isInvestmentQuestion = investmentKeywords.some(keyword => 
+                            lowerQuestion.includes(keyword.toLowerCase())
+                        );
+                        
+                        if (isInvestmentQuestion) {
+                            botMessage.innerHTML = `
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-robot" style="color: #D4AF37;"></i>
+                                    <strong style="color: #D4AF37;">AI Asistent</strong>
+                                </div>
+                                <p style="margin: 0; line-height: 1.4;">Za vaše pitanje "${messageText}" preporučujem da se konsultujete sa našim stručnjakom!</p>
+                                <p style="margin: 0.5rem 0; line-height: 1.4; color: #D4AF37; font-weight: 600;">🎯 <strong>BESPLATNA KONSULTACIJA</strong> sa <strong>Zoranom Dosticom</strong></p>
+                                <p style="margin: 0.5rem 0 0 0; line-height: 1.4;">Zoran je licencirani finansijski savetnik sa preko 10 godina iskustva. Specijalizovan je za investicione strategije i finansijsko planiranje. Kliknite na dugme "Zakažite konsultacije" da zakažete termin!</p>
+                                <div style="margin-top: 1rem;">
+                                    <button onclick="closeModal(); openModal('consultationModal');" style="background: linear-gradient(45deg, #D4AF37, #FFD700); color: white; border: none; border-radius: 25px; padding: 0.75rem 1.5rem; cursor: pointer; font-weight: 600; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                                        <i class="fas fa-calendar-check" style="margin-right: 0.5rem;"></i>
+                                        Zakaži konsultaciju sa Zoranom
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            botMessage.innerHTML = `
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-robot" style="color: #D4AF37;"></i>
+                                    <strong style="color: #D4AF37;">AI Asistent</strong>
+                                </div>
+                                <p style="margin: 0; line-height: 1.4;">Izvinjavam se, trenutno nemam odgovor na vaše pitanje: "${messageText}"</p>
+                                <p style="margin: 0.5rem 0 0 0; line-height: 1.4; color: #666;">Za dodatnu pomoć možete kontaktirati našu korisničku podršku na email: <strong>support@goldenbalance.com</strong> ili pozovite: <strong>+381 11 123 4567</strong></p>
+                                <p style="margin: 0.5rem 0 0 0; line-height: 1.4; color: #666; font-style: italic;">Takođe možete zakažiti besplatnu konsultaciju sa našim finansijskim savetnikom Zoranom Dosticom!</p>
+                            `;
+                        }
+                    }
+                    
+                    chatMessages.appendChild(botMessage);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1500);
+            };
             
-            // Pozovi inicijalno učitavanje
-            if (!initBudgetDisplay()) {
-                // Pokušaj ponovo nakon 1 sekunde ako nije uspelo (možda main.js još nije učitan)
-                setTimeout(initBudgetDisplay, 1000);
+            // Funkcija za pronalaženje odgovora u bazi znanja
+            function findSupportAnswer(question) {
+                const knowledgeBase = [
+                    {
+                        keywords: ['index fond', 'index fondovi', 'etf', 'exchange traded fund', 'šta su index fondovi', 'šta je etf'],
+                        response: 'Index fondovi ili poznatiji kao ETF (Exchange Traded Funds) su grupacije akcija kompanija koje zajedno nude profit korisniku na ulaganja. ETF prati određeni indeks (kao što je S&P 500) i omogućava vam da investirate u ceo tržišni segment jednom kupovinom. Prednosti su niski troškovi, diverzifikacija i jednostavnost trgovanja.'
+                    },
+                    {
+                        keywords: ['budžet', 'postaviti budžet', 'kako postaviti budžet', 'planiranje budžeta', 'mesečni budžet'],
+                        response: 'Za postavljanje budžeta idite na sekciju "Profil" → "Moj Budžet". Tamo možete uneti svoje mesečne prihode i troškove. Platforma će automatski izračunati vašu finansijsku situaciju i dati preporuke za optimizaciju troškova. Preporučujemo pravilo 50/30/20: 50% za potrebe, 30% za želje, 20% za štednju.'
+                    },
+                    {
+                        keywords: ['investicioni fond', 'šta je investicioni fond', 'kako funkcioniše investicioni fond', 'investicije', 'fond', 'mutual fund'],
+                        response: 'Investicioni fond je oblik kolektivnog ulaganja gde više investitora ulaže novac u zajednički fond. Taj fond se zatim ulaže u različite finansijske instrumente (akcije, obveznice, nekretnine). Profesionalni upravljači biraju investicije. Prednosti su diverzifikacija rizika i profesionalno upravljanje. Za detaljnije informacije i personalizovane preporuke, preporučujem konsultaciju sa našim stručnjakom <strong>Zoranom Dosticom</strong>.'
+                    },
+                    {
+                        keywords: ['ušteda', 'kako uštedeti', 'štednja novca', 'saveti za štednju', 'kako štedeti', 'metode štednje'],
+                        response: 'Za uspešnu štednju preporučujemo: 1) Pratite sve troškove kroz naš sistem, 2) Napravite realan mesečni budžet, 3) Postavite konkretne ciljeve štednje, 4) Automatski odvojite 10-20% prihoda za štednju, 5) Smanjite nepotrebne troškove koje platforma identifikuje, 6) Koristite pravilo "plati sebe prvo".'
+                    },
+                    {
+                        keywords: ['kredit', 'kreditni rejting', 'kako dobiti kredit', 'kreditna sposobnost', 'kredit skoring', 'credit score'],
+                        response: 'Za poboljšanje kreditnog rejtinga: redovno plaćajte sve obaveze na vreme, ne koristite više od 30% kreditnog limita, održavajte stare račune otvorene, i redovno proveravajte kreditni izveštaj. Kreditni rejting utiče na kamatu koju ćete dobiti. Naši finansijski kalkulatori mogu vam pomoći da izračunate optimalnu kreditnu sposobnost.'
+                    },
+                    {
+                        keywords: ['penziono osiguranje', 'štednja za penziju', 'penzioni fond', 'penzija', 'retirement', 'treći stub'],
+                        response: 'Za planiranje penzije preporučujemo kombinaciju državnog penzionog sistema i privatne štednje. Počnite što ranije - čak i mala mesečna štednja može značajno rasti kroz godine. Razmotrите različite investicione opcije: dobrovoljni penzioni fond (treći stub), štedni računi, investicioni fondovi.'
+                    },
+                    {
+                        keywords: ['kalkulator', 'računanje', 'finansijski kalkulator', 'kalkulatori', 'investicioni kalkulator'],
+                        response: 'Naš finansijski kalkulator vam pomaže da izračunate: mesečne rate kredita, buduću vrednost štednje, potrebnu štednju za ciljeve, i analizu investicija. Pristupite kalkulatoru klikom na dugme "Finansijski kalkulator" na glavnoj stranici.'
+                    },
+                    {
+                        keywords: ['profil', 'kako da pristupim', 'moj nalog', 'registracija', 'prijava', 'nalog'],
+                        response: 'Da biste pristupili svom profilu, kliknite na dugme "Profil" u gornjem desnom uglu. Ako nemate nalog, kliknite "Registracija" da kreirate novi nalog. Nakon prijave moći ćete da koristite sve funkcionalnosti platforme uključujući praćenje budžeta i finansijske kalkulatore.'
+                    },
+                    {
+                        keywords: ['akcije', 'akcijska tržišta', 'kupovina akcija', 'šta su akcije', 'stock market', 'berza'],
+                        response: 'Akcije predstavljaju vlasništvo u kompaniji. Kada kupite akciju, postajete vlasnik malog dela te kompanije. Akcije mogu da rastu ili opadaju u vrednosti na osnovu performansi kompanije i tržišnih uslova. Pre investiranja u pojedinačne akcije, preporučujemo diverzifikaciju kroz ETF-ove ili investicione fondove.'
+                    },
+                    {
+                        keywords: ['obveznice', 'bondovi', 'državne obveznice', 'korporativne obveznice', 'šta su obveznice'],
+                        response: 'Obveznice su dužnički instrumenti - kada kupite obveznicu, pozajmljujete novac državi ili kompaniji koja će vam vratiti glavnicu plus kamatu. Obveznice su generalno sigurnija investicija od akcija, ali sa nižim potencijalnim prinosima. Dobra su za konzervativniji deo portfolija.'
+                    },
+                    {
+                        keywords: ['diverzifikacija', 'portfolio', 'portfelj', 'raspoređivanje rizika', 'asset allocation'],
+                        response: 'Diverzifikacija znači raspoređivanje investicija kroz različite tipove imovine (akcije, obveznice, nekretnine) i sektore kako bi se smanjio rizik. Pravilo "ne stavljaj sva jaja u jednu korpu". Preporučuje se portfolio sa 60% akcija i 40% obveznica za umeren rizik, ali zavisi od vaših godina i tolerancije na rizik. <strong>Zoran Dostica</strong>, naš glavni finansijski savetnik, može vam pomoći da kreirate optimalan portfolio za vaše potrebe.'
+                    },
+                    {
+                        keywords: ['inflacija', 'kupovna moć', 'rast cena', 'šta je inflacija'],
+                        response: 'Inflacija je rast opšteg nivoa cena kroz vreme, što smanjuje kupovnu moć novca. To znači da ćete sutra za isti novac moći da kupite manje nego danas. Investiranje je ključno za zaštitu od inflacije - historijski, akcije i nekretnine su najbolje štitile kupovnu moć dugom roku.'
+                    },
+                    {
+                        keywords: ['kako da uložim', 'ulaganje novca', 'gde da investiram', 'kako investirati', 'investiranje novca', 'uložiti novac', 'investiciona strategija', 'prvo ulaganje', 'početi sa investiranjem', 'investiranje za početnike'],
+                        response: 'Investiranje je važna odluka koja zahteva personalizovan pristup. Za vas imam odličnu preporuku! Možete zakazati <strong>BESPLATNU</strong> konsultaciju sa našim stručnjakom <strong>Zoranom Dosticom</strong>, licenciranim finansijskim savetnikom sa preko 10 godina iskustva. On će vam pomoći da kreirate investicionu strategiju prilagođenu vašim ciljevima i toleranciji na rizik. Kliknite na dugme "Zakažite konsultacije" da se povežete direktno sa njim!'
+                    },
+                    {
+                        keywords: ['finansijski savetnik', 'savet za investiranje', 'pomoć sa ulaganjem', 'investiciona pomoć', 'konsultacije', 'zoran dostica'],
+                        response: 'Naš glavni finansijski savetnik <strong>Zoran Dostica</strong> je licencirani stručnjak sa dugogodišnjim iskustvom u oblasti investiranja i finansijskog planiranja. Pruža besplatne konsultacije za sve korisnike Golden Balance platforme. Njegova ekspertiza obuhvata portfolio management, investicione strategije, planiranje penzije i upravljanje rizikom. Zakažite termin klikom na "Zakažite konsultacije"!'
+                    }
+                ];
+                
+                const lowerQuestion = question.toLowerCase();
+                
+                // Napredna pretraga - traži bilo koju ključnu reč u pitanju
+                const foundAnswer = knowledgeBase.find(item => 
+                    item.keywords.some(keyword => lowerQuestion.includes(keyword.toLowerCase()))
+                );
+                
+                return foundAnswer || null;
             }
-            
-            // Dodaj listener za promene u localStorage
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'userBudget' || e.key === 'budget') {
-                    console.log('🔄 Detektovana promena budžeta u drugom prozoru, ažuriram prikaz...');
-                    initBudgetDisplay();
-                }
-            });
         });
     </script>
+
+    <!-- Plutajući AI Chat Bot -->
+    <div class="chat-container" id="chatContainer" style="display: none;">
+        <div class="chat-header">
+            <h3><i class="fas fa-robot"></i> AI Finansijski Asistent</h3>
+            <button class="close-chat" id="closeChat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Poruke će se dodavati dinamički -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Postavite pitanje o finansijama...">
+            <button class="send-button" id="sendMessage">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Plutajuće AI Chat dugme -->
+    <button class="floating-chat-btn" id="chatToggle" title="Otvori AI Chat">
+        <i class="fas fa-comments"></i>
+    </button>
+
 </body>
 </html>

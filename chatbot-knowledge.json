@@ -1,0 +1,38 @@
+{
+    "budzet": {
+        "keywords": ["budžet", "budzet", "proračun", "trošenje", "troškovi", "postavim budžet", "kako da", "rashodi", "prihodi", "mesečni troškovi"],
+        "response": "Za upravljanje budžetom, pratite ove korake:<br><br>1. Pratite sve prihode i rashode<br>2. Postavite realne finansijske ciljeve<br>3. Koristite 50/30/20 pravilo:<br>- 50% za osnovne potrebe<br>- 30% za želje<br>- 20% za štednju i investicije<br><br>Želite li da vam pomognem da napravite personalizovani budžet?"
+    },
+    "investiranje": {
+        "keywords": ["investiranje", "ulaganje", "investicija", "štednja", "fond", "akcije", "berza", "kako investirati", "gde uložiti", "prinos"],
+        "response": "Za uspešno investiranje, evo ključnih principa:<br><br>1. Diversifikacija - Ne stavljajte sva jaja u jednu korpu<br>2. Dugoročno planiranje - Vreme je vaš saveznik<br>3. Redovno ulaganje - Smanjuje rizik tržišnih oscilacija<br><br>Preporučene opcije za početnike:<br>• Indeksni fondovi (ETF)<br>• Državne obveznice<br>• Investicioni fondovi<br><br>Za detaljnu strategiju, zakažite konsultaciju sa našim savetnikom."
+    },
+    "krediti": {
+        "keywords": ["kredit", "zajam", "pozajmica", "kamata", "rata", "otplata", "refinansiranje", "dug"],
+        "response": "Važni aspekti pri uzimanju kredita:<br><br>1. Kamatna stopa - uporedite ponude različitih banaka<br>2. Mesečna rata - ne bi trebala prelaziti 30% prihoda<br>3. Osiguranje - razmotrite opcije osiguranja kredita<br><br>🚫 Izbegavajte:<br>• Kredite za luksuz<br>• Visoke kamate (>10%)<br>• Zaduživanje bez stabilnih prihoda<br><br>Želite li da izračunamo vašu kreditnu sposobnost?"
+    },
+    "nekretnine": {
+        "keywords": ["nekretnina", "stan", "kuća", "kuca", "stambeni kredit", "hipoteka", "kupovina stana", "investicija u nekretnine"],
+        "response": "Saveti za investiranje u nekretnine:<br><br>1. Lokacija je ključna<br>2. Proverite tržišne cene u okruženju<br>3. Procenite dodatne troškove:<br>• Održavanje<br>• Porezi<br>• Osiguranje<br><br>Za kupovinu prve nekretnine:<br>1. Uštedite za učešće (min. 20%)<br>2. Proverite kreditnu sposobnost<br>3. Konsultujte se sa stručnjakom<br><br>Želite li procenu isplativosti kupovine?"
+    },
+    "penzija": {
+        "keywords": ["penzija", "penziono", "osiguranje", "stare dane", "penzijski fond", "dobrovoljna penzija"],
+        "response": "Planiranje penzije je ključno za finansijsku sigurnost:<br><br>1. Počnite što ranije - snaga kamate na kamatu<br>2. Strategije štednje:<br>• Državni penzijski fond<br>• Privatni penzijski fondovi<br>• Investicioni portfolijo<br><br>💡 Preporuka:<br>Odvajajte 15% mesečnih prihoda za penziju<br><br>Želite li da izračunamo koliko treba da štedite za željenu penziju?"
+    },
+    "porez": {
+        "keywords": ["porez", "porezi", "poreska prijava", "olakšice", "povraćaj poreza", "poreske obaveze"],
+        "response": "Važne informacije o porezima:<br><br>1. Poreske olakšice:<br>• Za početnike u poslovanju<br>• Za investiranje<br>• Za zapošljavanje<br><br>2. Rokovi za prijavu:<br>• Godišnji porez na dohodak<br>• Kvartalni izveštaji<br><br>Konsultujte se sa našim savetnikom za optimizaciju poreskih obaveza."
+    },
+    "osiguranje": {
+        "keywords": ["osiguranje", "polisa", "životno", "zdravstveno", "imovina", "vozilo"],
+        "response": "Ključne vrste osiguranja:<br><br>1. Životno osiguranje<br>2. Zdravstveno osiguranje<br>3. Osiguranje imovine<br>4. Auto osiguranje<br><br>🎯 Preporuke:<br>• Uporedite ponude različitih osiguravača<br>• Proverite pokriće i isključenja<br>• Razmotrite franšizu<br><br>Želite li pomoć pri izboru osiguranja?"
+    },
+    "kriptovalute": {
+        "keywords": ["kripto", "bitcoin", "ethereum", "blockchain", "kriptovalute", "trgovanje kriptovalutama"],
+        "response": "⚠️ Važno o kriptovalutama:<br><br>1. Visok rizik - velike oscilacije vrednosti<br>2. Uložite samo što možete izgubiti<br>3. Diverzifikujte portfolio<br><br>🎯 Za početnike:<br>• Počnite sa malim iznosima<br>• Koristite poznate platforme<br>• Edukujte se pre ulaganja<br><br>Zakažite konsultaciju za detaljnu analizu kripto tržišta."
+    },
+    "default": {
+        "keywords": [],
+        "response": "Kako vam mogu pomoći? Mogu vam pružiti informacije o:<br><br>• Upravljanju budžetom<br>• Investiranju<br>• Kreditima i zajmovima<br>• Penzionom planiranju<br>• Osiguranju<br>• Poreskom planiranju<br><br>Postavite mi pitanje iz bilo koje od ovih oblasti!"
+    }
+}

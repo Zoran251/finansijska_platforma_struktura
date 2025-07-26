@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Debug Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: #0E0E10;
+            color: #F8F8FF;
+        }
+        .test-section {
+            border: 1px solid #D4AF37;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background: rgba(22, 22, 26, 0.7);
+        }
+        .logo-display {
+            max-width: 200px;
+            height: auto;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .info-box {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            word-break: break-all;
+        }
+        button {
+            background: linear-gradient(135deg, #D4AF37, #A8861D);
+            color: #0E0E10;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Logo Debug Test</h1>
+    
+    <div class="test-section">
+        <h2>1. LocalStorage Info</h2>
+        <button onclick="checkLocalStorage()">Proveri localStorage</button>
+        <div id="localStorageInfo" class="info-box"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Logo Display</h2>
+        <button onclick="loadAndDisplayLogo()">Učitaj Logo</button>
+        <br>
+        <img id="testLogo" class="logo-display" alt="Test Logo" style="display: none;">
+        <div id="logoInfo" class="info-box"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test Upload i Optimizacija</h2>
+        <input type="file" id="testFileUpload" accept="image/*">
+        <button onclick="testOptimization()">Test Optimizaciju</button>
+        <br>
+        <img id="optimizedLogo" class="logo-display" alt="Optimized Logo" style="display: none;">
+        <div id="optimizationInfo" class="info-box"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Očisti localStorage</h2>
+        <button onclick="clearLogo()">Obriši Logo iz localStorage</button>
+        <button onclick="clearAll()">Obriši sve iz localStorage</button>
+        <div id="clearInfo" class="info-box"></div>
+    </div>
+    
+    <script>
+        function checkLocalStorage() {
+            const infoDiv = document.getElementById('localStorageInfo');
+            const logo = localStorage.getItem('site_logo');
+            
+            let html = '';
+            html += `<strong>localStorage.length:</strong> ${localStorage.length}<br>`;
+            html += `<strong>site_logo exists:</strong> ${logo ? 'DA' : 'NE'}<br>`;
+            
+            if (logo) {
+                html += `<strong>Logo type:</strong> ${logo.startsWith('data:') ? 'Data URL' : 'Regular URL'}<br>`;
+                html += `<strong>Logo length:</strong> ${logo.length} karaktera<br>`;
+                html += `<strong>Logo size:</strong> ${Math.round(logo.length / 1024)} KB<br>`;
+                html += `<strong>Logo preview:</strong> ${logo.substring(0, 100)}...<br>`;
+                
+                if (logo.startsWith('data:image/')) {
+                    const mimeMatch = logo.match(/data:image\/([^;]+)/);
+                    if (mimeMatch) {
+                        html += `<strong>Image format:</strong> ${mimeMatch[1]}<br>`;
+                    }
+                }
+            }
+            
+            // Proveri i sve ostale localStorage keys
+            html += '<br><strong>Svi localStorage keys:</strong><br>';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                html += `${key}: ${value.length} karaktera<br>`;
+            }
+            
+            infoDiv.innerHTML = html;
+        }
+        
+        function loadAndDisplayLogo() {
+            const logoElement = document.getElementById('testLogo');
+            const infoDiv = document.getElementById('logoInfo');
+            const savedLogo = localStorage.getItem('site_logo');
+            
+            let html = '';
+            
+            if (savedLogo) {
+                logoElement.src = savedLogo;
+                logoElement.style.display = 'block';
+                
+                logoElement.onload = function() {
+                    html += '<span style="color: #10b981;">✅ Logo uspešno učitan!</span><br>';
+                    html += `<strong>Natural width:</strong> ${this.naturalWidth}px<br>`;
+                    html += `<strong>Natural height:</strong> ${this.naturalHeight}px<br>`;
+                    infoDiv.innerHTML = html;
+                };
+                
+                logoElement.onerror = function() {
+                    html += '<span style="color: #ef4444;">❌ Greška pri učitavanju loga!</span><br>';
+                    html += `<strong>Error src:</strong> ${this.src.substring(0, 200)}...<br>`;
+                    logoElement.style.display = 'none';
+                    infoDiv.innerHTML = html;
+                };
+                
+                html += '<span style="color: #f59e0b;">⏳ Učitavam logo...</span><br>';
+                html += `<strong>Src set to:</strong> ${savedLogo.substring(0, 100)}...<br>`;
+            } else {
+                html += '<span style="color: #ef4444;">❌ Nema sačuvanog loga!</span><br>';
+                logoElement.style.display = 'none';
+            }
+            
+            infoDiv.innerHTML = html;
+        }
+        
+        function testOptimization() {
+            const fileInput = document.getElementById('testFileUpload');
+            const optimizedImg = document.getElementById('optimizedLogo');
+            const infoDiv = document.getElementById('optimizationInfo');
+            
+            if (!fileInput.files[0]) {
+                infoDiv.innerHTML = '<span style="color: #ef4444;">❌ Izaberite fajl prvo!</span>';
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            infoDiv.innerHTML = '<span style="color: #f59e0b;">⏳ Optimizujem sliku...</span>';
+            
+            // Optimizacija kao u admin panelu
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                const maxSize = 300;
+                let width = img.width;
+                let height = img.height;
+                
+                if (width > height) {
+                    if (width > maxSize) {
+                        height = (height * maxSize) / width;
+                        width = maxSize;
+                    }
+                } else {
+                    if (height > maxSize) {
+                        width = (width * maxSize) / height;
+                        height = maxSize;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                
+                optimizedImg.src = optimizedDataUrl;
+                optimizedImg.style.display = 'block';
+                
+                let html = '<span style="color: #10b981;">✅ Optimizacija završena!</span><br>';
+                html += `<strong>Original size:</strong> ${file.size} bytes (${Math.round(file.size / 1024)} KB)<br>`;
+                html += `<strong>Original dimensions:</strong> ${img.width}x${img.height}px<br>`;
+                html += `<strong>Optimized size:</strong> ${optimizedDataUrl.length} bytes (${Math.round(optimizedDataUrl.length / 1024)} KB)<br>`;
+                html += `<strong>Optimized dimensions:</strong> ${width}x${height}px<br>`;
+                html += `<strong>Compression ratio:</strong> ${Math.round((1 - optimizedDataUrl.length / file.size) * 100)}%<br>`;
+                
+                infoDiv.innerHTML = html;
+            };
+            
+            img.onerror = function() {
+                infoDiv.innerHTML = '<span style="color: #ef4444;">❌ Greška pri učitavanju slike!</span>';
+            };
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function clearLogo() {
+            localStorage.removeItem('site_logo');
+            document.getElementById('clearInfo').innerHTML = '<span style="color: #10b981;">✅ Logo obrisan iz localStorage!</span>';
+        }
+        
+        function clearAll() {
+            localStorage.clear();
+            document.getElementById('clearInfo').innerHTML = '<span style="color: #10b981;">✅ Sav localStorage obrisan!</span>';
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', function() {
+            checkLocalStorage();
+        });
+    </script>
+</body>
+</html>

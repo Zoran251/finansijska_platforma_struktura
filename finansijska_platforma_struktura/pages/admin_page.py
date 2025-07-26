@@ -357,36 +357,277 @@ def inquiries_tab():
         display=rx.cond(FinanceState.is_admin_logged_in, "none", "none"), # Privremeno isključeno
     )
 
-def admin_tabs():
+def notifications_tab():
     return rx.box(
         rx.vstack(
+            rx.heading(
+                "Upravljanje notifikacijama", 
+                size="lg", 
+                margin_bottom="4",
+                background="var(--gradient-gold)",
+                background_clip="text",
+                webkit_text_fill_color="transparent",
+            ),
+            rx.text(
+                "Kreiranje i slanje notifikacija korisnicima. Ove notifikacije će biti prikazane u njihovom notifikacionom centru.",
+                color="var(--muted-text)",
+                margin_bottom="4",
+            ),
             rx.box(
                 rx.hstack(
-                    rx.heading(
-                        "Admin Panel", 
-                        size="xl",
-                        background="var(--gradient-gold)",
-                        background_clip="text",
-                        webkit_text_fill_color="transparent",
-                    ),
-                    rx.spacer(),
                     rx.button(
                         rx.hstack(
-                            rx.icon("logout"),
-                            rx.text("Odjava"),
+                            rx.icon("refresh"),
+                            rx.text("Osveži notifikacije"),
                         ),
-                        on_click=FinanceState.admin_logout,
-                        style={
-                            "background": "var(--dark-accent)",
-                            "color": "var(--gold-pale)",
-                            "border": "1px solid var(--gold-dark)"
-                        },
+                        class_name="gold-button",
+                        margin_right="2",
                     ),
+                    rx.button(
+                        rx.hstack(
+                            rx.icon("add"),
+                            rx.text("Nova notifikacija"),
+                        ),
+                        on_click=FinanceState.toggle_notification_form,
+                        class_name="gold-button",
+                    ),
+                    rx.spacer(),
+                    rx.select(
+                        ["Sve notifikacije", "Zakazani sastanci", "Obaveštenja", "Važno"],
+                        placeholder="Filtriraj po tipu",
+                        width="200px",
+                        background="rgba(31, 41, 55, 0.4)",
+                        border="1px solid var(--border-light)",
+                        color="var(--light-text)",
+                    ),
+                    justify="space-between",
+                    width="100%",
+                    margin_bottom="4",
+                ),
+                width="100%",
+                class_name="notifications-actions",
+            ),
+            
+            # Forma za kreiranje nove notifikacije
+            rx.box(
+                rx.form(
+                    rx.vstack(
+                        rx.heading(
+                            "Nova notifikacija", 
+                            size="md", 
+                            margin_bottom="2",
+                            background="var(--gradient-gold)",
+                            background_clip="text",
+                            webkit_text_fill_color="transparent",
+                        ),
+                        rx.form_control(
+                            rx.form_label("Naslov notifikacije"),
+                            rx.input(
+                                placeholder="Unesite naslov notifikacije",
+                                name="notification_title",
+                                background="rgba(31, 41, 55, 0.4)",
+                                border="1px solid var(--border-light)",
+                                color="var(--light-text)",
+                                value=FinanceState.notification_title,
+                                on_change=FinanceState.set_notification_title,
+                            ),
+                            is_required=True,
+                        ),
+                        rx.form_control(
+                            rx.form_label("Poruka notifikacije"),
+                            rx.text_area(
+                                placeholder="Unesite poruku notifikacije",
+                                name="notification_message",
+                                background="rgba(31, 41, 55, 0.4)",
+                                border="1px solid var(--border-light)",
+                                color="var(--light-text)",
+                                height="100px",
+                                value=FinanceState.notification_message,
+                                on_change=FinanceState.set_notification_message,
+                            ),
+                            is_required=True,
+                        ),
+                        rx.form_control(
+                            rx.form_label("Tip notifikacije"),
+                            rx.select(
+                                ["Obaveštenje", "Zakazani sastanak", "Važno"],
+                                placeholder="Izaberite tip notifikacije",
+                                name="notification_type",
+                                background="rgba(31, 41, 55, 0.4)",
+                                border="1px solid var(--border-light)",
+                                color="var(--light-text)",
+                                value=FinanceState.notification_type,
+                                on_change=FinanceState.set_notification_type,
+                            ),
+                            is_required=True,
+                        ),
+                        rx.form_control(
+                            rx.form_label("Primaoci"),
+                            rx.select(
+                                ["Svi korisnici", "Premium korisnici", "Standardni korisnici", "Pojedinačni korisnik"],
+                                placeholder="Izaberite primaoce",
+                                name="notification_recipients",
+                                background="rgba(31, 41, 55, 0.4)",
+                                border="1px solid var(--border-light)",
+                                color="var(--light-text)",
+                                value=FinanceState.notification_recipients,
+                                on_change=FinanceState.set_notification_recipients,
+                            ),
+                            is_required=True,
+                        ),
+                        rx.form_control(
+                            rx.form_label("Email korisnika (opciono)"),
+                            rx.input(
+                                placeholder="Unesite email za pojedinačnog korisnika",
+                                name="notification_user_email",
+                                background="rgba(31, 41, 55, 0.4)",
+                                border="1px solid var(--border-light)",
+                                color="var(--light-text)",
+                                value=FinanceState.notification_user_email,
+                                on_change=FinanceState.set_notification_user_email,
+                                disabled=rx.cond(FinanceState.notification_recipients != "Pojedinačni korisnik", True, False),
+                            ),
+                            is_required=False,
+                        ),
+                        rx.hstack(
+                            rx.button(
+                                "Odustani",
+                                on_click=FinanceState.toggle_notification_form,
+                                style={
+                                    "background": "var(--dark-accent)",
+                                    "color": "var(--gold-pale)",
+                                    "border": "1px solid var(--gold-dark)"
+                                },
+                            ),
+                            rx.button(
+                                "Pošalji notifikaciju",
+                                type_="submit",
+                                class_name="gold-button",
+                            ),
+                            justify="space-between",
+                            width="100%",
+                        ),
+                        spacing="4",
+                        width="100%",
+                    ),
+                    on_submit=FinanceState.send_notification,
+                ),
+                width="100%",
+                padding="1.5rem",
+                border="1px solid var(--border-light)",
+                border_radius="var(--border-radius)",
+                background="var(--dark-card)",
+                margin_bottom="1.5rem",
+                display=rx.cond(FinanceState.show_notification_form, "block", "none"),
+            ),
+            
+            # Lista postojećih notifikacija
+            rx.box(
+                rx.table(
+                    rx.thead(
+                        rx.tr(
+                            rx.th("ID", color="var(--gold-medium)"),
+                            rx.th("Datum", color="var(--gold-medium)"),
+                            rx.th("Naslov", color="var(--gold-medium)"),
+                            rx.th("Tip", color="var(--gold-medium)"),
+                            rx.th("Primaoci", color="var(--gold-medium)"),
+                            rx.th("Status", color="var(--gold-medium)"),
+                            rx.th("Akcije", color="var(--gold-medium)"),
+                        )
+                    ),
+                    rx.tbody(
+                        rx.tr(
+                            rx.td("1"),
+                            rx.td("15.07.2025"),
+                            rx.td("Važno obaveštenje o novim funkcionalnostima"),
+                            rx.td(rx.badge("Obaveštenje", color_scheme="blue")),
+                            rx.td("Svi korisnici"),
+                            rx.td(rx.badge("Poslato", color_scheme="green")),
+                            rx.td(
+                                rx.hstack(
+                                    rx.icon("visibility", cursor="pointer", _hover={"color": "var(--gold-medium)"}),
+                                    rx.icon("edit", cursor="pointer", _hover={"color": "var(--gold-medium)"}),
+                                    rx.icon("delete", cursor="pointer", _hover={"color": "red.400"}),
+                                    justify="center",
+                                )
+                            ),
+                            _hover={"background": "var(--dark-accent)"},
+                        ),
+                        rx.tr(
+                            rx.td("2"),
+                            rx.td("13.07.2025"),
+                            rx.td("Zakazani sastanak sa finansijskim savetnikom"),
+                            rx.td(rx.badge("Sastanak", color_scheme="orange")),
+                            rx.td("Premium korisnici"),
+                            rx.td(rx.badge("Poslato", color_scheme="green")),
+                            rx.td(
+                                rx.hstack(
+                                    rx.icon("visibility", cursor="pointer", _hover={"color": "var(--gold-medium)"}),
+                                    rx.icon("edit", cursor="pointer", _hover={"color": "var(--gold-medium)"}),
+                                    rx.icon("delete", cursor="pointer", _hover={"color": "red.400"}),
+                                    justify="center",
+                                )
+                            ),
+                            _hover={"background": "var(--dark-accent)"},
+                        ),
+                        rx.tr(
+                            rx.td("3"),
+                            rx.td("10.07.2025"),
+                            rx.td("Podsetnik o plaćanju"),
+                            rx.td(rx.badge("Važno", color_scheme="red")),
+                            rx.td("petar@example.com"),
+                            rx.td(rx.badge("Poslato", color_scheme="green")),
+                            rx.td(
+                                rx.hstack(
+                                    rx.icon("visibility", cursor="pointer", _hover={"color": "var(--gold-medium)"}),
+                                    rx.icon("edit", cursor="pointer", _hover={"color": "var(--gold-medium)"}),
+                                    rx.icon("delete", cursor="pointer", _hover={"color": "red.400"}),
+                                    justify="center",
+                                )
+                            ),
+                            _hover={"background": "var(--dark-accent)"},
+                        ),
+                    ),
+                    class_name="data-table",
                     width="100%",
                 ),
                 width="100%",
-                class_name="admin-header",
-                margin_bottom="var(--spacing-lg)",
+                overflow="auto",
+                max_height="500px",
+                class_name="notifications-list-container",
+            ),
+            width="100%",
+            align_items="stretch",
+        ),
+        width="100%",
+        display=rx.cond(FinanceState.is_admin_logged_in, "block", "none"),
+    )
+
+def admin_tabs():
+    return rx.box(
+        rx.vstack(
+            rx.hstack(
+                rx.heading(
+                    "Admin Panel", 
+                    size="xl", 
+                    background="var(--gradient-gold)",
+                    background_clip="text",
+                    webkit_text_fill_color="transparent",
+                ),
+                rx.spacer(),
+                rx.button(
+                    rx.hstack(
+                        rx.icon("logout"),
+                        rx.text("Odjava"),
+                    ),
+                    on_click=FinanceState.admin_logout,
+                    style={
+                        "background": "var(--dark-accent)",
+                        "color": "var(--gold-pale)",
+                        "border": "1px solid var(--gold-dark)"
+                    },
+                ),
+                width="100%",
             ),
             rx.box(
                 rx.hstack(
@@ -430,6 +671,20 @@ def admin_tabs():
                         class_name="tab-button",
                         id="inquiriesTabBtn",
                     ),
+                    rx.button(
+                        "Notifikacije",
+                        style={
+                            "margin_right": "1rem",
+                            "background": "transparent",
+                            "color": "var(--muted-text)",
+                            "border": "none",
+                            "font_weight": "600",
+                            "padding": "0.5rem 1rem"
+                        },
+                        class_name="tab-button",
+                        id="notificationsTabBtn",
+                        on_click=FinanceState.switch_to_notifications_tab,
+                    ),
                 ),
                 width="100%",
                 class_name="admin-tabs",
@@ -440,11 +695,70 @@ def admin_tabs():
             logo_management_tab(),
             data_view_tab(),
             inquiries_tab(),
+            notifications_tab(),
             width="100%",
             align_items="stretch",
         ),
         width="100%",
         display=rx.cond(FinanceState.is_admin_logged_in, "block", "none"),
+    )
+
+def admin_page_script():
+    return rx.script(
+        """
+        document.addEventListener('DOMContentLoaded', function() {
+            // Funkcija za prebacivanje između tabova
+            function setupTabs() {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabs = document.querySelectorAll('[id$="Tab"]');
+                
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        // Resetovanje stila za sve tabove
+                        tabButtons.forEach(btn => {
+                            btn.style.color = 'var(--muted-text)';
+                            btn.style.borderBottom = 'none';
+                            btn.classList.remove('active');
+                        });
+                        
+                        // Postavljanje aktivnog stila za trenutni tab
+                        this.style.color = 'var(--gold-bright)';
+                        this.style.borderBottom = '2px solid var(--gold-bright)';
+                        this.classList.add('active');
+                        
+                        // Sakrivanje svih sadržaja
+                        tabs.forEach(tab => {
+                            if (tab.id === this.id.replace('Btn', '')) {
+                                tab.style.display = 'block';
+                            } else {
+                                tab.style.display = 'none';
+                            }
+                        });
+                    });
+                });
+                
+                // Inicijalno prikazivanje prvog taba
+                if (tabButtons.length > 0) {
+                    tabButtons[0].click();
+                }
+            }
+            
+            // Pozivanje funkcije za postavljanje tabova
+            setupTabs();
+            
+            // Inicijalizacija admin notifikacija ako je dostupno
+            if (typeof AdminNotifications !== 'undefined') {
+                AdminNotifications.init();
+            }
+            
+            // Inicijalizacija admin konsultacija ako je dostupno
+            if (typeof initAdminConsultations === 'function') {
+                initAdminConsultations();
+            }
+                AdminNotifications.init();
+            }
+        });
+        """
     )
 
 def admin():
@@ -472,4 +786,11 @@ def admin():
             ),
             width="100%",
         ),
+        # Dodavanje skripti za notifikacije
+        rx.script(src="/js/admin_notifications.js"),
+        rx.script(src="/js/user_notifications.js"),
+        rx.script(src="/js/notification_integration.js"),
+        rx.script(src="/js/admin_consultations.js"),
+        rx.script(src="/js/admin_consultation_filters.js"),
+        admin_page_script(),
     )

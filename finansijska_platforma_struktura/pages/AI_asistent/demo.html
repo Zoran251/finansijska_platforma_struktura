@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primer integracije AI asistenta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .header {
+            background-color: #1c3e6a;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .main-content {
+            flex: 2;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            min-width: 300px;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        h1, h2, h3 {
+            color: #1c3e6a;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border-left: 4px solid #1c3e6a;
+            padding: 15px;
+            font-family: monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .demo-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background-color: #1c3e6a;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #0e2b54;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI Asistent - Primeri integracije</h1>
+    </div>
+    
+    <div class="content">
+        <div class="main-content">
+            <h2>Kako integrisati AI asistenta</h2>
+            <p>
+                Dobrodošli na stranicu sa primerima integracije AI asistenta u vašu stranicu finansijske platforme. 
+                Na ovoj stranici možete videti kako jednostavno dodati finansijskog asistenta na bilo koju stranicu.
+            </p>
+            
+            <h3>Osnovna integracija</h3>
+            <p>Dodajte sledeći HTML kod na vašu stranicu gde želite da se pojavi asistent:</p>
+            <div class="code-block">
+                &lt;div id="ai-assistant-container"&gt;&lt;/div&gt;
+            </div>
+            
+            <p>Zatim dodajte reference na skripte:</p>
+            <div class="code-block">
+                &lt;script src="/AI_asistent/integration.js"&gt;&lt;/script&gt;<br>
+                &lt;script&gt;<br>
+                &nbsp;&nbsp;document.addEventListener('DOMContentLoaded', function() {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;AIAssistantIntegration.init();<br>
+                &nbsp;&nbsp;});<br>
+                &lt;/script&gt;
+            </div>
+            
+            <h3>Programsko korišćenje asistenta</h3>
+            <p>Možete programski slati upite asistentu:</p>
+            <div class="code-block">
+                // Slanje poruke koja će biti prikazana u chat interfejsu<br>
+                AIAssistantIntegration.sendProgrammaticMessage("Kako da investiram novac?");<br><br>
+                
+                // Dobijanje odgovora bez prikazivanja u interfejsu<br>
+                const response = AIAssistantIntegration.getResponseOnly("Šta je složena kamata?");<br>
+                console.log(response);
+            </div>
+            
+            <h3>Demo dugmad</h3>
+            <p>Isprobajte neke od funkcionalnosti:</p>
+            <div class="demo-buttons">
+                <button onclick="AIAssistantIntegration.sendProgrammaticMessage('Kako da investiram novac?')">Pitaj o investiranju</button>
+                <button onclick="AIAssistantIntegration.sendProgrammaticMessage('Objasni mi šta je složena kamata')">Pitaj o složenoj kamati</button>
+                <button onclick="AIAssistantIntegration.sendProgrammaticMessage('Kako da se pripremim za penziju?')">Pitaj o penziji</button>
+                <button onclick="testGetResponseOnly()">Test getResponseOnly()</button>
+                <button onclick="testIdentifyTopic()">Test identifyTopic()</button>
+            </div>
+            
+            <script>
+                function testGetResponseOnly() {
+                    const response = AIAssistantIntegration.getResponseOnly("Šta je složena kamata?");
+                    alert("Odgovor na 'Šta je složena kamata?':\n\n" + response.substring(0, 200) + "...");
+                }
+                
+                function testIdentifyTopic() {
+                    const topics = [
+                        "Kako da investiram novac?",
+                        "Šta je složena kamata?",
+                        "Kako da se pripremim za penziju?",
+                        "Šta treba da znam o kreditima?"
+                    ];
+                    
+                    let result = "Rezultati identifikacije tema:\n\n";
+                    topics.forEach(topic => {
+                        const category = AIAssistantIntegration.identifyTopic(topic);
+                        result += `"${topic}" => ${category}\n`;
+                    });
+                    
+                    alert(result);
+                }
+            </script>
+        </div>
+        
+        <div class="sidebar">
+            <div id="ai-assistant-container"></div>
+        </div>
+    </div>
+    
+    <script src="kb.js"></script>
+    <script src="chat.js"></script>
+    <script src="integration.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            AIAssistantIntegration.init();
+        });
+    </script>
+</body>
+</html>

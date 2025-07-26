@@ -356,8 +356,14 @@
                 <button id="dataTabBtn" class="tab-button" style="margin-right: 1rem; background: transparent; color: var(--muted-text); border: none; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer;">
                     <i class="fas fa-database"></i> Pregled Podataka
                 </button>
+                <button id="notificationsTabBtn" class="tab-button" style="margin-right: 1rem; background: transparent; color: var(--muted-text); border: none; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer;">
+                    <i class="fas fa-bell"></i> Notifikacije
+                </button>
                 <button id="inquiriesTabBtn" class="tab-button" style="margin-right: 1rem; background: transparent; color: var(--muted-text); border: none; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer;">
                     <i class="fas fa-envelope"></i> Upiti korisnika
+                </button>
+                <button id="consultationsTabBtn" class="tab-button" style="margin-right: 1rem; background: transparent; color: var(--muted-text); border: none; font-weight: 600; padding: 0.5rem 1rem; cursor: pointer;">
+                    <i class="fas fa-calendar-check"></i> Konsultacije
                 </button>
             </div>
             
@@ -393,6 +399,9 @@
                     </div>
                     
                     <button type="submit" id="saveLogo">Sačuvaj Logo</button>
+                    <button type="button" onclick="testLogo()" style="background: #dc3545; margin-left: 10px; padding: 10px 20px; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                        Test Logo
+                    </button>
                 </form>
             </div>
             
@@ -451,6 +460,113 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Notifications Tab -->
+            <div id="notificationsTab" class="admin-tab-content" style="display: none;">
+                <h2>Upravljanje Notifikacijama</h2>
+                <p>Ovde možete kreirati i slati notifikacije korisnicima. Ove notifikacije će biti prikazane u njihovom notifikacionom centru.</p>
+                
+                <div style="display: flex; justify-content: space-between; margin-bottom: var(--spacing-lg);">
+                    <button id="refreshNotificationsBtn">
+                        <i class="fas fa-sync-alt"></i> Osveži notifikacije
+                    </button>
+                    <button id="newNotificationBtn">
+                        <i class="fas fa-plus"></i> Nova notifikacija
+                    </button>
+                </div>
+                
+                <div id="notificationForm" style="display: block; margin-bottom: var(--spacing-lg); padding: 1.5rem; border: 1px solid var(--border-light); border-radius: var(--border-radius); background: rgba(31, 41, 55, 0.2);">
+                    <h3>Nova notifikacija</h3>
+                    <form id="createNotificationForm">
+                        <div class="form-group">
+                            <label for="notificationTitle">Naslov notifikacije</label>
+                            <input type="text" id="notificationTitle" name="notificationTitle" placeholder="Unesite naslov notifikacije" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notificationMessage">Poruka notifikacije</label>
+                            <textarea id="notificationMessage" name="notificationMessage" placeholder="Unesite poruku notifikacije" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notificationType">Tip notifikacije</label>
+                            <select id="notificationType" name="notificationType">
+                                <option value="Obaveštenje">Obaveštenje</option>
+                                <option value="Važno">Važno</option>
+                                <option value="Upozorenje">Upozorenje</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="notificationRecipients">Primaoci</label>
+                            <select id="notificationRecipients" name="notificationRecipients">
+                                <option value="Svi korisnici">Svi korisnici</option>
+                                <option value="Pojedinačni korisnik">Pojedinačni korisnik</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="userEmailGroup" style="display: none;">
+                            <label for="userEmail">Email korisnika</label>
+                            <input type="email" id="userEmail" name="userEmail" placeholder="Unesite email korisnika">
+                        </div>
+                        
+                        <button type="submit">Pošalji notifikaciju</button>
+                    </form>
+                </div>
+                
+                <div id="notificationsList">
+                    <h3>Prethodne notifikacije</h3>
+                    <div class="table-responsive">
+                        <table class="notifications-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--border-light); text-align: left;">
+                                    <th style="padding: 0.75rem;">Datum</th>
+                                    <th style="padding: 0.75rem;">Naslov</th>
+                                    <th style="padding: 0.75rem;">Poruka</th>
+                                    <th style="padding: 0.75rem;">Tip</th>
+                                    <th style="padding: 0.75rem;">Primaoci</th>
+                                    <th style="padding: 0.75rem;">Akcije</th>
+                                </tr>
+                            </thead>
+                            <tbody id="notificationsTableBody">
+                                <!-- Ovde će biti prikazane notifikacije -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Consultations Tab -->
+            <div id="consultationsTab" class="admin-tab-content" style="display: none;">
+                <h2>Konsultacije na čekanju</h2>
+                <p>Ovde možete pregledati zahteve za konsultacije koji čekaju na odobrenje.</p>
+                
+                <div style="display: flex; justify-content: flex-start; margin-bottom: var(--spacing-lg);">
+                    <button id="refreshConsultationsBtn">
+                        <i class="fas fa-sync-alt"></i> Osveži konsultacije
+                    </button>
+                </div>
+                
+                <div id="consultationsList">
+                    <h3>Zahtevi za konsultacije</h3>
+                    <div class="table-responsive">
+                        <table class="consultations-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: var(--dark-accent); color: var(--gold-bright);">
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-light);">Datum i vreme</th>
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-light);">Klijent</th>
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-light);">Kontakt</th>
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-light);">Tip</th>
+                                    <th style="padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-light);">Akcije</th>
+                                </tr>
+                            </thead>
+                            <tbody id="consultationsTableBody">
+                                <!-- Ovde će biti prikazane konsultacije na čekanju -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -482,7 +598,18 @@
             }
         }
         
-        // Inicijalno učitavanje sačuvanog loga ako postoji
+        // TEST funkcija za logo
+        function testLogo() {
+            const testLogoUrl = 'https://via.placeholder.com/100x100/FFD700/000000?text=TEST';
+            localStorage.setItem('site_logo', testLogoUrl);
+            
+            // Ažuriraj trenutni logo
+            currentLogo.src = testLogoUrl;
+            
+            alert('Test logo je postavljen! Otvorite preview-fixed.html da vidite da li radi.');
+        }
+        
+        // Učitavanje sačuvanog loga - JEDNOSTAVNO
         function loadSavedLogo() {
             const savedLogo = localStorage.getItem('site_logo');
             if (savedLogo) {
@@ -516,41 +643,110 @@
             adminSection.style.display = 'none';
         });
         
-        // Pregled loga iz URL-a
+        // Pregled loga iz URL-a - BEZ STRIKTNE VALIDACIJE
         logoUrl.addEventListener('input', function() {
             const url = this.value.trim();
-            if (url && isValidImageUrl(url)) {
+            if (url) {
+                // Pokušaj da prikažeš bilo koji URL
                 logoPreview.src = url;
                 logoPreview.style.display = 'block';
                 noPreview.style.display = 'none';
+                console.log('URL logo preview postavljen:', url);
             } else {
                 logoPreview.style.display = 'none';
                 noPreview.style.display = 'block';
             }
         });
         
-        // Pregled učitanog loga
+        // Pregled učitanog loga sa optimizacijom
         logoUpload.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    logoPreview.src = e.target.result;
+                // Proveri veličinu fajla
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    alert('Slika je prevelika. Maksimalna veličina je 5MB.');
+                    return;
+                }
+                
+                // Funkcija za optimizaciju slike
+                function optimizeImage(file, callback) {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
+                    
+                    img.onload = function() {
+                        // Ograniči dimenzije na maksimalno 300x300 piksela
+                        const maxSize = 300;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > height) {
+                            if (width > maxSize) {
+                                height = (height * maxSize) / width;
+                                width = maxSize;
+                            }
+                        } else {
+                            if (height > maxSize) {
+                                width = (width * maxSize) / height;
+                                height = maxSize;
+                            }
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        // Nacrtaj optimizovanu sliku
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Konvertuj u data URL sa kompresijom
+                        const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+                        console.log('🔧 Slika optimizovana:', {
+                            originalSize: file.size,
+                            optimizedSize: optimizedDataUrl.length,
+                            compression: `${Math.round((1 - optimizedDataUrl.length / file.size) * 100)}%`
+                        });
+                        
+                        callback(optimizedDataUrl);
+                    };
+                    
+                    img.onerror = function() {
+                        console.error('❌ Greška pri učitavanju slike za optimizaciju');
+                        // Fallback na originalnu sliku
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            callback(e.target.result);
+                        };
+                        reader.readAsDataURL(file);
+                    };
+                    
+                    // Učitaj sliku
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+                
+                // Optimizuj sliku pre prikaza
+                optimizeImage(file, function(optimizedDataUrl) {
+                    logoPreview.src = optimizedDataUrl;
                     logoPreview.style.display = 'block';
                     noPreview.style.display = 'none';
                     // Praznimo URL polje jer koristimo učitanu sliku
                     logoUrl.value = '';
-                };
-                reader.readAsDataURL(file);
+                    console.log('✅ Logo optimizovan i prikazan u preview-u');
+                });
             }
         });
         
         // Tab kontrola
         const logoTabBtn = document.getElementById('logoTabBtn');
         const dataTabBtn = document.getElementById('dataTabBtn');
+        const notificationsTabBtn = document.getElementById('notificationsTabBtn');
         const inquiriesTabBtn = document.getElementById('inquiriesTabBtn');
         const logoTab = document.getElementById('logoTab');
         const dataTab = document.getElementById('dataTab');
+        const notificationsTab = document.getElementById('notificationsTab');
         const inquiriesTab = document.getElementById('inquiriesTab');
         const refreshDataBtn = document.getElementById('refreshDataBtn');
         const dataEntries = document.getElementById('data-entries');
@@ -561,6 +757,7 @@
         logoTabBtn.addEventListener('click', function() {
             logoTab.style.display = 'block';
             dataTab.style.display = 'none';
+            notificationsTab.style.display = 'none';
             inquiriesTab.style.display = 'none';
             
             logoTabBtn.classList.add('active');
@@ -571,6 +768,10 @@
             dataTabBtn.style.color = 'var(--muted-text)';
             dataTabBtn.style.borderBottom = 'none';
             
+            notificationsTabBtn.classList.remove('active');
+            notificationsTabBtn.style.color = 'var(--muted-text)';
+            notificationsTabBtn.style.borderBottom = 'none';
+            
             inquiriesTabBtn.classList.remove('active');
             inquiriesTabBtn.style.color = 'var(--muted-text)';
             inquiriesTabBtn.style.borderBottom = 'none';
@@ -579,6 +780,7 @@
         dataTabBtn.addEventListener('click', function() {
             dataTab.style.display = 'block';
             logoTab.style.display = 'none';
+            notificationsTab.style.display = 'none';
             inquiriesTab.style.display = 'none';
             
             dataTabBtn.classList.add('active');
@@ -588,6 +790,10 @@
             logoTabBtn.classList.remove('active');
             logoTabBtn.style.color = 'var(--muted-text)';
             logoTabBtn.style.borderBottom = 'none';
+            
+            notificationsTabBtn.classList.remove('active');
+            notificationsTabBtn.style.color = 'var(--muted-text)';
+            notificationsTabBtn.style.borderBottom = 'none';
             
             inquiriesTabBtn.classList.remove('active');
             inquiriesTabBtn.style.color = 'var(--muted-text)';
@@ -601,6 +807,7 @@
             inquiriesTab.style.display = 'block';
             logoTab.style.display = 'none';
             dataTab.style.display = 'none';
+            notificationsTab.style.display = 'none';
             
             inquiriesTabBtn.classList.add('active');
             inquiriesTabBtn.style.color = 'var(--gold-bright)';
@@ -614,8 +821,43 @@
             dataTabBtn.style.color = 'var(--muted-text)';
             dataTabBtn.style.borderBottom = 'none';
             
+            notificationsTabBtn.classList.remove('active');
+            notificationsTabBtn.style.color = 'var(--muted-text)';
+            notificationsTabBtn.style.borderBottom = 'none';
+            
+            dataTabBtn.classList.remove('active');
+            dataTabBtn.style.color = 'var(--muted-text)';
+            dataTabBtn.style.borderBottom = 'none';
+            
             // Prikaz upita prilikom prebacivanja na tab
             loadInquiries();
+        });
+        
+        // Event listener za tab notifikacija
+        notificationsTabBtn.addEventListener('click', function() {
+            notificationsTab.style.display = 'block';
+            logoTab.style.display = 'none';
+            dataTab.style.display = 'none';
+            inquiriesTab.style.display = 'none';
+            
+            notificationsTabBtn.classList.add('active');
+            notificationsTabBtn.style.color = 'var(--gold-bright)';
+            notificationsTabBtn.style.borderBottom = '2px solid var(--gold-bright)';
+            
+            logoTabBtn.classList.remove('active');
+            logoTabBtn.style.color = 'var(--muted-text)';
+            logoTabBtn.style.borderBottom = 'none';
+            
+            dataTabBtn.classList.remove('active');
+            dataTabBtn.style.color = 'var(--muted-text)';
+            dataTabBtn.style.borderBottom = 'none';
+            
+            inquiriesTabBtn.classList.remove('active');
+            inquiriesTabBtn.style.color = 'var(--muted-text)';
+            inquiriesTabBtn.style.borderBottom = 'none';
+            
+            // Učitavanje notifikacija prilikom prebacivanja na tab
+            loadNotifications();
         });
         
         // Funkcija za učitavanje i formatiranje podataka iz localStorage
@@ -722,35 +964,68 @@
         // Dugme za osvežavanje podataka
         refreshDataBtn.addEventListener('click', loadLocalStorageData);
         
-        // Čuvanje loga
+        // Čuvanje loga - JEDNOSTAVNO BEZ VALIDACIJE
         logoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             let logoSource = '';
             
-            // Prioritet ima učitana slika, zatim URL
-            if (logoPreview.style.display === 'block') {
+            // Prioritet: učitana slika, zatim URL - BEZ striktne validacije
+            if (logoPreview.style.display === 'block' && logoPreview.src) {
                 logoSource = logoPreview.src;
-                
-                // Čuvanje loga u localStorage
-                localStorage.setItem('site_logo', logoSource);
-                
-                // Ažuriranje prikaza trenutnog loga
-                currentLogo.src = logoSource;
-                
-                // Prikazivanje poruke o uspešnom čuvanju
-                saveSuccess.style.display = 'block';
-                setTimeout(() => {
-                    saveSuccess.style.display = 'none';
-                }, 3000);
-                
-                // Praznimo polja forme
-                logoUrl.value = '';
+                console.log('💾 Čuvam logo iz preview-a:', logoSource.substring(0, 100) + '...');
+                console.log('Logo type:', logoSource.startsWith('data:') ? 'data URL' : 'regular URL');
+                console.log('Logo size:', logoSource.length, 'karaktera');
+            } else if (logoUrl.value.trim()) {
+                logoSource = logoUrl.value.trim();
+                console.log('💾 Čuvam logo direktno iz URL-a:', logoSource);
+            }
+            
+            if (logoSource) {
+                try {
+                    // Sačuvaj u localStorage
+                    localStorage.setItem('site_logo', logoSource);
+                    console.log('✅ Logo sačuvan u localStorage');
+                    
+                    // Verifikuj da li je stvarno sačuvan
+                    const verificirajLogo = localStorage.getItem('site_logo');
+                    if (verificirajLogo) {
+                        console.log('✅ Verifikacija: Logo uspešno sačuvan');
+                        console.log('Sačuvani logo length:', verificirajLogo.length);
+                    } else {
+                        console.error('❌ Verifikacija: Logo nije sačuvan!');
+                    }
+                    
+                    // Ažuriraj prikaz
+                    currentLogo.src = logoSource;
+                    
+                    // Trigeruj storage event za sinhronizaciju
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'site_logo',
+                        newValue: logoSource,
+                        url: window.location.href
+                    }));
+                    console.log('📡 Storage event poslat za sinhronizaciju');
+                    
+                    // Prikaži poruku
+                    saveSuccess.style.display = 'block';
+                    setTimeout(() => {
+                        saveSuccess.style.display = 'none';
+                    }, 3000);
+                    
+                    // Očisti formu
+                    logoUrl.value = '';
+                } catch (error) {
+                    console.error('❌ Greška pri čuvanju loga:', error);
+                    alert('Greška pri čuvanju loga. Pokušajte sa manjom slikom.');
+                }
                 logoUpload.value = '';
                 logoPreview.style.display = 'none';
                 noPreview.style.display = 'block';
+                
+                alert('Logo je uspešno sačuvan!\n\nURL: ' + logoSource.substring(0, 60) + '...');
             } else {
-                alert('Molimo vas da postavite logo pre nego što ga sačuvate.');
+                alert('Molimo postavite logo pre čuvanja.');
             }
         });
         
@@ -877,6 +1152,852 @@
             
             // Dodaj event listener za filter upita
             document.getElementById('inquiriesFilter')?.addEventListener('change', loadInquiries);
+            
+            // Inicijalizacija notifikacionih funkcija
+            initNotifications();
+        });
+        
+        // Inicijalizacija notifikacionih funkcionalnosti
+        function initNotifications() {
+            // Dodavanje event listenera za notifikacione elemente
+            const refreshNotificationsBtn = document.getElementById('refreshNotificationsBtn');
+            const newNotificationBtn = document.getElementById('newNotificationBtn');
+            const notificationForm = document.getElementById('notificationForm');
+            const createNotificationForm = document.getElementById('createNotificationForm');
+            const notificationRecipients = document.getElementById('notificationRecipients');
+            const userEmailGroup = document.getElementById('userEmailGroup');
+            
+            // Event listener za dugme za osvežavanje notifikacija
+            if (refreshNotificationsBtn) {
+                refreshNotificationsBtn.addEventListener('click', loadNotifications);
+            }
+            
+            // Event listener za promenu tipa primaoca
+            if (notificationRecipients) {
+                notificationRecipients.addEventListener('change', function() {
+                    if (this.value === 'Pojedinačni korisnik') {
+                        userEmailGroup.style.display = 'block';
+                    } else {
+                        userEmailGroup.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Event listener za slanje notifikacije
+            if (createNotificationForm) {
+                createNotificationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const title = document.getElementById('notificationTitle').value;
+                    const message = document.getElementById('notificationMessage').value;
+                    const type = document.getElementById('notificationType').value;
+                    const recipients = document.getElementById('notificationRecipients').value;
+                    const userEmail = document.getElementById('userEmail').value;
+                    
+                    if (recipients === 'Pojedinačni korisnik' && !userEmail) {
+                        alert('Unesite email korisnika kojem šaljete notifikaciju.');
+                        return;
+                    }
+                    
+                    sendNotification({
+                        title: title,
+                        message: message,
+                        type: type,
+                        recipients: recipients,
+                        userEmail: recipients === 'Pojedinačni korisnik' ? userEmail : null,
+                        date: new Date().toISOString(),
+                        status: 'Poslato'
+                    });
+                    
+                    // Resetovanje forme nakon uspešnog slanja
+                    createNotificationForm.reset();
+                    userEmailGroup.style.display = 'none';
+                    
+                    // Osvežavanje liste notifikacija
+                    loadNotifications();
+                });
+            }
+        }
+        
+        // Funkcija za slanje notifikacije
+        function sendNotification(notification) {
+            // Validacija obaveznih polja
+            if (!notification.title || !notification.message) {
+                alert('Naslov i poruka notifikacije su obavezni.');
+                return false;
+            }
+            
+            // Dobavljanje postojećih notifikacija iz localStorage
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            
+            // Kreiranje nove notifikacije
+            const newNotification = {
+                id: 'notif_' + Date.now(),
+                title: notification.title,
+                message: notification.message,
+                type: notification.type || 'Obaveštenje',
+                recipients: notification.recipients || 'Svi korisnici',
+                userEmail: notification.userEmail || null,
+                date: notification.date || new Date().toISOString(),
+                status: notification.status || 'Poslato',
+                read: false
+            };
+            
+            // Dodavanje nove notifikacije u lokalnu bazu
+            notifications.unshift(newNotification); // Dodavanje na početak niza
+            localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+            
+            // Dodavanje notifikacije u korisnički localStorage (simulacija)
+            if (newNotification.recipients === 'Svi korisnici') {
+                // Simulacija slanja svim korisnicima KOJI SU ADMINI
+                // U produkciji bi se ovo filtriralo na serveru, ali ovde simuliramo
+                // da samo admin dobija ove notifikacije, a ne obični korisnici
+                const adminEmail = 'zorandostica2@gmail.com';
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                const isAdmin = currentUser.email === adminEmail || localStorage.getItem('admin_logged_in') === 'true';
+                
+                if (isAdmin) {
+                    const userNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
+                    userNotifications.unshift({
+                        id: 'user_' + Date.now(),
+                        title: newNotification.title,
+                        message: newNotification.message,
+                        type: newNotification.type,
+                        timestamp: new Date().toISOString(),
+                        read: false,
+                        forAdmin: true // Označavamo da je notifikacija za admina
+                    });
+                    localStorage.setItem('userNotifications', JSON.stringify(userNotifications));
+                }
+            } else if (newNotification.recipients === 'Pojedinačni korisnik' && newNotification.userEmail) {
+                // Simulacija slanja pojedinačnom korisniku
+                const userNotifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
+                
+                // Provera duplikata - sprečavamo slanje istih notifikacija o konsultaciji
+                const isDuplicate = userNotifications.some(notif => 
+                    notif.title === newNotification.title && 
+                    notif.userEmail === newNotification.userEmail &&
+                    notif.message.includes('LINK ZA PRISTUP ONLINE SASTANKU') &&
+                    newNotification.message.includes('LINK ZA PRISTUP ONLINE SASTANKU')
+                );
+                
+                if (isDuplicate) {
+                    console.log('⚠️ Duplikat notifikacije sprečen:', newNotification.title);
+                    return false;
+                }
+                
+                // Dodavanje notifikacije u userNotifications - ovo ide klijentu
+                // Provera da li poruka sadrži Zoom link
+                let messageToShow = newNotification.message;
+                
+                // Posebno formatiranje ako imamo online sastanak sa linkom - KREIRANJE KLIKABILNOG LINKA
+                if (messageToShow.includes('LINK ZA PRISTUP ONLINE SASTANKU')) {
+                    // Pronalaženje Zoom linkova i pretvaranje u klikabilne linkove
+                    messageToShow = messageToShow.replace(
+                        /(https:\/\/[^\s\n]+)/g, 
+                        '<a href="$1" target="_blank" style="color: #007bff; text-decoration: underline; font-weight: bold; display: inline-block; margin: 5px 0;">📞 Pristupite Zoom sastanku</a>'
+                    );
+                }
+                
+                userNotifications.unshift({
+                    id: 'user_' + Date.now(),
+                    title: newNotification.title,
+                    message: messageToShow,
+                    type: newNotification.type,
+                    timestamp: new Date().toISOString(),
+                    read: false,
+                    hasZoomLink: messageToShow.includes('LINK ZA PRISTUP ONLINE SASTANKU'),
+                    userEmail: newNotification.userEmail // Dodajemo email korisnika da znamo kome pripada
+                });
+                localStorage.setItem('userNotifications', JSON.stringify(userNotifications));
+                
+                // Dodavanje kopije notifikacije u admin notifikacije ako je admin prijavljen
+                const adminEmail = 'zorandostica2@gmail.com';
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                const isAdmin = currentUser.email === adminEmail || localStorage.getItem('admin_logged_in') === 'true';
+                
+                if (isAdmin) {
+                    // Ovo je samo kopija za admina da vidi šta je poslato
+                    const adminUserNotifications = JSON.parse(localStorage.getItem('adminUserNotifications') || '[]');
+                    adminUserNotifications.unshift({
+                        id: 'admin_copy_' + Date.now(),
+                        title: `Kopija: ${newNotification.title}`,
+                        message: newNotification.message,
+                        type: newNotification.type,
+                        timestamp: new Date().toISOString(),
+                        read: false,
+                        sentTo: newNotification.userEmail
+                    });
+                    localStorage.setItem('adminUserNotifications', JSON.stringify(adminUserNotifications));
+                }
+                
+                // U stvarnoj aplikaciji bi se ovde komuniciralo sa serverom
+                console.log(`Notifikacija poslata korisniku: ${newNotification.userEmail}, sadržaj: ${newNotification.message}`);
+            }
+            
+            alert('Notifikacija je uspešno poslata!');
+            return true;
+        }
+        
+        // Funkcija za učitavanje notifikacija
+        function loadNotifications() {
+            const notificationsTableBody = document.getElementById('notificationsTableBody');
+            if (!notificationsTableBody) return;
+            
+            // Dobavljanje notifikacija iz localStorage
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            
+            // Prazna tabela ako nema notifikacija
+            if (notifications.length === 0) {
+                notificationsTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 1rem;">Nema notifikacija za prikaz</td></tr>`;
+                return;
+            }
+            
+            // Sortiranje notifikacija (najnovije prvo)
+            notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Generisanje HTML-a za svaku notifikaciju
+            notificationsTableBody.innerHTML = '';
+            notifications.forEach(notification => {
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid var(--border-light)';
+                
+                // Formatiranje datuma
+                const date = new Date(notification.date);
+                const formattedDate = `${date.getDate().toString().padStart(2, '0')}.${(date.getMonth() + 1).toString().padStart(2, '0')}.${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                
+                // Formatiranje poruke da uključuje kliketabilan link
+                let formattedMessage = notification.message || '';
+                if (formattedMessage && formattedMessage.includes('https://us05web.zoom.us/')) {
+                    // Izdvajamo Zoom link iz poruke
+                    const linkMatch = formattedMessage.match(/(https:\/\/us05web\.zoom\.us\/[^\s]+)/);
+                    if (linkMatch) {
+                        const zoomLink = linkMatch[1];
+                        formattedMessage = formattedMessage.replace(zoomLink, `<a href="${zoomLink}" target="_blank" style="color: var(--gold-bright); text-decoration: underline;">📞 Zoom link</a>`);
+                    }
+                }
+                
+                row.innerHTML = `
+                    <td style="padding: 0.75rem;">${formattedDate}</td>
+                    <td style="padding: 0.75rem;">${notification.title}</td>
+                    <td style="padding: 0.75rem; max-width: 300px; word-wrap: break-word;">${formattedMessage}</td>
+                    <td style="padding: 0.75rem;">${notification.type}</td>
+                    <td style="padding: 0.75rem;">${notification.recipients === 'Pojedinačni korisnik' ? notification.userEmail : 'Svi korisnici'}</td>
+                    <td style="padding: 0.75rem;">
+                        <button class="delete-notification-btn" data-id="${notification.id}" style="background: var(--dark-accent); color: var(--gold-pale); border: 1px solid var(--gold-dark); padding: 0.5rem; font-size: 0.9rem;">
+                            <i class="fas fa-trash"></i> Obriši
+                        </button>
+                    </td>
+                `;
+                
+                notificationsTableBody.appendChild(row);
+            });
+            
+            // Dodavanje event listenera za dugme za brisanje
+            document.querySelectorAll('.delete-notification-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    deleteNotification(id);
+                });
+            });
+        }
+        
+        // Funkcija za brisanje notifikacije
+        function deleteNotification(id) {
+            if (confirm('Da li ste sigurni da želite da obrišete ovu notifikaciju?')) {
+                const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                const updatedNotifications = notifications.filter(notification => notification.id !== id);
+                localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
+                
+                // Osvežavanje prikaza notifikacija
+                loadNotifications();
+            }
+        }
+        
+        // Inicijalizacija funkcionalnosti za konsultacije
+        function initConsultations() {
+            // Elementi konsultacija
+            const consultationsTabBtn = document.getElementById('consultationsTabBtn');
+            const consultationsTab = document.getElementById('consultationsTab');
+            const refreshConsultationsBtn = document.getElementById('refreshConsultationsBtn');
+            
+            // Event listener za tab konsultacija
+            if (consultationsTabBtn) {
+                consultationsTabBtn.addEventListener('click', function() {
+                    logoTab.style.display = 'none';
+                    dataTab.style.display = 'none';
+                    notificationsTab.style.display = 'none';
+                    inquiriesTab.style.display = 'none';
+                    consultationsTab.style.display = 'block';
+                    
+                    // Resetovanje stilova svih tabova
+                    logoTabBtn.classList.remove('active');
+                    logoTabBtn.style.color = 'var(--muted-text)';
+                    logoTabBtn.style.borderBottom = 'none';
+                    
+                    dataTabBtn.classList.remove('active');
+                    dataTabBtn.style.color = 'var(--muted-text)';
+                    dataTabBtn.style.borderBottom = 'none';
+                    
+                    notificationsTabBtn.classList.remove('active');
+                    notificationsTabBtn.style.color = 'var(--muted-text)';
+                    notificationsTabBtn.style.borderBottom = 'none';
+                    
+                    inquiriesTabBtn.classList.remove('active');
+                    inquiriesTabBtn.style.color = 'var(--muted-text)';
+                    inquiriesTabBtn.style.borderBottom = 'none';
+                    
+                    // Aktivacija taba konsultacija
+                    consultationsTabBtn.classList.add('active');
+                    consultationsTabBtn.style.color = 'var(--gold-bright)';
+                    consultationsTabBtn.style.borderBottom = '2px solid var(--gold-bright)';
+                    
+                    // Učitavanje konsultacija
+                    loadConsultations();
+                });
+            }
+            
+            // Event listener za dugme za osvežavanje konsultacija
+            if (refreshConsultationsBtn) {
+                refreshConsultationsBtn.addEventListener('click', loadConsultations);
+            }
+            
+            // Pokretanje inicijalnog učitavanja konsultacija
+            loadConsultations();
+        }
+            
+        
+        // Event listener za kreiranje nove konsultacije
+        // Uklonjen jer se konsultacije kreiru samo kroz formu na preview-fixed.html
+        
+        // Funkcija za čuvanje konsultacije
+        // Uklonjena jer se konsultacije kreiru samo kroz formu na preview-fixed.html        // Funkcija za učitavanje konsultacija na čekanju
+        function loadConsultations() {
+            const consultationsTableBody = document.getElementById('consultationsTableBody');
+            if (!consultationsTableBody) return;
+            
+            // Dobavljanje konsultacija iz localStorage
+            const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+            
+            // Filtriranje samo konsultacija na čekanju
+            const pendingConsultations = consultations.filter(consult => consult.status === 'pending');
+            
+            // Sortiranje konsultacija (nadolazeće prvo)
+            pendingConsultations.sort((a, b) => {
+                const dateA = new Date(`${a.date}T${a.time}`);
+                const dateB = new Date(`${b.date}T${b.time}`);
+                return dateA - dateB;
+            });
+            
+            // Provera da li ima konsultacija za prikaz
+            if (pendingConsultations.length === 0) {
+                consultationsTableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 1rem;">Nema zahteva za konsultacije</td></tr>`;
+                return;
+            }
+            
+            // Generisanje HTML-a za svaku konsultaciju na čekanju
+            consultationsTableBody.innerHTML = '';
+            pendingConsultations.forEach(consultation => {
+                // Formatiranje datuma i vremena
+                const consultDate = new Date(`${consultation.date}T${consultation.time}`);
+                const formattedDate = consultDate.toLocaleDateString('sr-RS');
+                const formattedTime = consultDate.toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+                
+                // Kreiranje reda tabele
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid var(--border-light)';
+                
+                row.innerHTML = `
+                    <td style="padding: 0.75rem;">${formattedDate}<br>${formattedTime}</td>
+                    <td style="padding: 0.75rem;">${consultation.client}</td>
+                    <td style="padding: 0.75rem;">${consultation.email}<br>${consultation.phone}</td>
+                    <td style="padding: 0.75rem;">
+                        ${consultation.type}<br>
+                        ${consultation.link ? `<a href="${consultation.link}" target="_blank" style="color: var(--gold-bright); text-decoration: none; font-size: 0.85em;">📞 Zoom link</a>` : ''}
+                    </td>
+                    <td style="padding: 0.75rem;">
+                        <button class="approve-consultation-btn" data-id="${consultation.id}" style="background: var(--dark-accent); color: #10b981; border: 1px solid #10b981; padding: 0.5rem; margin-right: 0.3rem;">
+                            <i class="fas fa-check"></i> Odobri
+                        </button>
+                        <button class="reject-consultation-btn" data-id="${consultation.id}" style="background: var(--dark-accent); color: #ef4444; border: 1px solid #ef4444; padding: 0.5rem; margin-right: 0.3rem;">
+                            <i class="fas fa-times"></i> Odbij
+                        </button>
+                        <button class="delete-consultation-btn" data-id="${consultation.id}" style="background: var(--dark-accent); color: #ef4444; border: 1px solid #ef4444; padding: 0.5rem;" title="Obriši zahtev">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                
+                consultationsTableBody.appendChild(row);
+            });
+            
+            // Dodavanje event listenera za dugme za odobravanje konsultacije
+            document.querySelectorAll('.approve-consultation-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    updateConsultationApproval(id, 'approved');
+                });
+            });
+            
+            // Dodavanje event listenera za dugme za odbijanje konsultacije
+            document.querySelectorAll('.reject-consultation-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    updateConsultationApproval(id, 'rejected');
+                });
+            });
+            
+            // Dodavanje event listenera za dugme za brisanje
+            document.querySelectorAll('.delete-consultation-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    deleteConsultation(id);
+                });
+            });
+        }
+        
+        // Funkcija za ažuriranje statusa konsultacije
+        function updateConsultationStatus(id, newStatus) {
+            // Dobavljanje konsultacija iz localStorage
+            const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+            
+            // Pronalaženje konsultacije sa odgovarajućim ID-om
+            const index = consultations.findIndex(consult => consult.id === id);
+            
+            // Ako je konsultacija pronađena
+            if (index !== -1) {
+                // Ažuriranje statusa
+                consultations[index].status = newStatus;
+                
+                // Čuvanje ažuriranih konsultacija
+                localStorage.setItem('consultations', JSON.stringify(consultations));
+                
+                // Osvežavanje prikaza
+                loadConsultations();
+                
+                // Kreiranje notifikacije o promeni statusa
+                const consultation = consultations[index];
+                const formattedDate = new Date(`${consultation.date}T${consultation.time}`).toLocaleDateString('sr-RS');
+                const formattedTime = new Date(`${consultation.date}T${consultation.time}`).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+                
+                let statusText = '';
+                switch(newStatus) {
+                    case 'pending':
+                        statusText = 'na čekanju';
+                        break;
+                    case 'approved':
+                        statusText = 'odobrena';
+                        break;
+                    case 'rejected':
+                        statusText = 'odbijena';
+                        break;
+                    case 'completed':
+                        statusText = 'završena';
+                        break;
+                    case 'cancelled':
+                        statusText = 'otkazana';
+                        break;
+                }
+                
+                // Slanje notifikacije samo adminu
+                sendNotification({
+                    title: `Status konsultacije ažuriran`,
+                    message: `Konsultacija sa klijentom ${consultation.client} zakazana za ${formattedDate} u ${formattedTime} je sada ${statusText}.`,
+                    type: 'Obaveštenje',
+                    recipients: 'Pojedinačni korisnik',
+                    userEmail: ADMIN_EMAIL, // Samo admin dobija ovu notifikaciju
+                    date: new Date().toISOString(),
+                    status: 'Poslato'
+                });
+            }
+        }
+        
+        // Funkcija za ažuriranje odobrenja konsultacije
+        function updateConsultationApproval(id, approvalStatus) {
+            // Dobavljanje konsultacija iz localStorage
+            const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+            
+            // Pronalaženje konsultacije sa odgovarajućim ID-om
+            const index = consultations.findIndex(consult => consult.id === id);
+            
+            // Ako je konsultacija pronađena
+            if (index !== -1) {
+                // Ažuriranje statusa odobrenja
+                consultations[index].approval = approvalStatus;
+                
+                // Ažuriranje statusa u skladu sa odobrenjem
+                if (approvalStatus === 'approved') {
+                    consultations[index].status = 'approved';
+                } else if (approvalStatus === 'rejected') {
+                    consultations[index].status = 'rejected';
+                }
+                
+                // Čuvanje ažuriranih konsultacija
+                localStorage.setItem('consultations', JSON.stringify(consultations));
+                
+                // Osvežavanje prikaza
+                loadConsultations();
+                
+                // Kreiranje notifikacije o promeni statusa odobrenja
+                const consultation = consultations[index];
+                const formattedDate = new Date(`${consultation.date}T${consultation.time}`).toLocaleDateString('sr-RS');
+                const formattedTime = new Date(`${consultation.date}T${consultation.time}`).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+                
+                let approvalText = approvalStatus === 'approved' ? 'odobrena' : 'odbijena';
+                
+                // Slanje notifikacije samo adminu
+                sendNotification({
+                    title: `Konsultacija ${approvalText}`,
+                    message: `Konsultacija sa klijentom ${consultation.client} zakazana za ${formattedDate} u ${formattedTime} je ${approvalText}.`,
+                    type: 'Obaveštenje',
+                    recipients: 'Pojedinačni korisnik',
+                    userEmail: ADMIN_EMAIL, // Samo admin dobija ovu notifikaciju
+                    date: new Date().toISOString(),
+                    status: 'Poslato'
+                });
+                
+                // Ako je konsultacija odobrena, automatski šalji notifikaciju korisniku sa Zoom linkom
+                if (approvalStatus === 'approved') {
+                    // Proveri da li je korisnik već obavešten da ne šaljemo duplikate
+                    if (!consultation.notified) {
+                        let clientMessage = `Poštovani/a ${consultation.client},\n\nVaša konsultacija je odobrena i zakazana za ${formattedDate} u ${formattedTime}.`;
+                        
+                        // Dodavanje Zoom linka u poruku - FORMATIRAN KAO KLIKABILAN LINK
+                        if (consultation.link) {
+                            clientMessage += `\n\n🎯 LINK ZA PRISTUP ONLINE SASTANKU:\n<a href="${consultation.link}" target="_blank" style="color: #007bff; text-decoration: underline; font-weight: bold;">${consultation.link}</a>\n\nMolimo vas sačuvajte ovaj link i pristupite mu u vreme zakazane konsultacije.`;
+                        }
+                        
+                        // Slanje notifikacije korisniku
+                        sendNotification({
+                            title: 'Konsultacija odobrena ✅',
+                            message: clientMessage,
+                            type: 'Obaveštenje',
+                            recipients: 'Pojedinačni korisnik',
+                            userEmail: consultation.email,
+                            date: new Date().toISOString(),
+                            status: 'Poslato'
+                        });
+                        
+                        // Označavanje da je korisnik obavešten
+                        consultations[index].notified = true;
+                        localStorage.setItem('consultations', JSON.stringify(consultations));
+                        
+                        console.log(`✅ Notifikacija poslata korisniku ${consultation.email} za konsultaciju ${consultation.id}`);
+                    } else {
+                        console.log(`ℹ️ Korisnik ${consultation.email} je već obavešten o konsultaciji ${consultation.id}`);
+                    }
+                }
+            }
+        }
+        
+        // Funkcija za obaveštavanje klijenta o potvrđenoj konsultaciji
+        function notifyClient(id) {
+            // Dobavljanje konsultacija iz localStorage
+            const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+            
+            // Pronalaženje konsultacije sa odgovarajućim ID-om
+            const index = consultations.findIndex(consult => consult.id === id);
+            
+            // Ako je konsultacija pronađena
+            if (index !== -1) {
+                const consultation = consultations[index];
+                
+                // Provera da li je konsultacija odobrena
+                if (consultation.approval !== 'approved') {
+                    alert('Samo odobrene konsultacije mogu biti poslate klijentu!');
+                    return;
+                }
+                
+                // Provera da li je klijent već obavešten
+                if (consultation.notified) {
+                    alert('Klijent je već obavešten o ovoj konsultaciji!');
+                    return;
+                }
+                
+                // Označavanje da je klijent obavešten
+                consultations[index].notified = true;
+                
+                // Čuvanje ažuriranih konsultacija
+                localStorage.setItem('consultations', JSON.stringify(consultations));
+                
+                const formattedDate = new Date(`${consultation.date}T${consultation.time}`).toLocaleDateString('sr-RS');
+                const formattedTime = new Date(`${consultation.date}T${consultation.time}`).toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+                
+                // Priprema poruke za klijenta
+                let message = `Poštovani/a ${consultation.client},\n\nVaša konsultacija je zakazana za ${formattedDate} u ${formattedTime}.`;
+                
+                // Obavezno dodavanje linka za online sastanak ako je tip konsultacije Online
+                if (consultation.type === 'Online') {
+                    // Proveravamo da li konsultacija ima link
+                    if (!consultation.link || consultation.link.trim() === '') {
+                        // Ako nema linka, dodajemo podrazumevani
+                        const defaultZoomLink = 'https://zoom.us/j/12345678901?pwd=abcdefgh';
+                        
+                        // Ažuriramo konsultaciju sa podrazumevanim linkom
+                        consultations[index].link = defaultZoomLink;
+                        localStorage.setItem('consultations', JSON.stringify(consultations));
+                        
+                        // Obaveštenje za admina
+                        alert(`Dodat je podrazumevani Zoom link (${defaultZoomLink}) jer konsultacija nije imala definisan link.`);
+                        
+                        // Dodajemo link u poruku - POSEBNO FORMATIRANJE ZA BOLJU VIDLJIVOST SA KLIKABILNIM LINKOM
+                        message += `\n\n---------------------------------\nLINK ZA PRISTUP ONLINE SASTANKU:\n<a href="${defaultZoomLink}" target="_blank" style="color: #007bff; text-decoration: underline; font-weight: bold;">📞 Pristupite Zoom sastanku</a>\n---------------------------------`;
+                    } else {
+                        // Imamo link, dodajemo ga u poruku - POSEBNO FORMATIRANJE ZA BOLJU VIDLJIVOST SA KLIKABILNIM LINKOM
+                        message += `\n\n---------------------------------\nLINK ZA PRISTUP ONLINE SASTANKU:\n<a href="${consultation.link}" target="_blank" style="color: #007bff; text-decoration: underline; font-weight: bold;">📞 Pristupite Zoom sastanku</a>\n---------------------------------`;
+                    }
+                }
+                
+                // Slanje notifikacije klijentu
+                sendNotification({
+                    title: `Konsultacija je potvrđena`,
+                    message: message,
+                    type: 'Obaveštenje',
+                    recipients: 'Pojedinačni korisnik',
+                    userEmail: consultation.email,
+                    date: new Date().toISOString(),
+                    status: 'Poslato'
+                });
+                
+                // Osvežavanje prikaza
+                loadConsultations();
+                
+                // Detaljna informacija za admina o poslatoj notifikaciji
+                console.log("POSLATA NOTIFIKACIJA:", {
+                    title: `Konsultacija je potvrđena`,
+                    message: message,
+                    email: consultation.email,
+                    link: consultation.link
+                });
+                
+                // Obaveštenje adminu sa detaljima o linku
+                let linkInfo = consultation.type === 'Online' ? 
+                    `\n\nLINK ZA SASTANAK: ${consultation.link}` : 
+                    '';
+                
+                alert(`Obaveštenje o konsultaciji uspešno poslato klijentu na email: ${consultation.email}${linkInfo}`);
+            }
+        }
+        
+        // Funkcija za pregled detalja konsultacije
+        function viewConsultationDetails(id) {
+            // Dobavljanje konsultacija iz localStorage
+            const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+            
+            // Pronalaženje konsultacije sa odgovarajućim ID-om
+            const consultation = consultations.find(consult => consult.id === id);
+            
+            // Ako je konsultacija pronađena
+            if (consultation) {
+                // Formatiranje datuma i vremena
+                const consultDate = new Date(`${consultation.date}T${consultation.time}`);
+                const formattedDate = consultDate.toLocaleDateString('sr-RS');
+                const formattedTime = consultDate.toLocaleTimeString('sr-RS', { hour: '2-digit', minute: '2-digit' });
+                
+                // Kreiranje modalnog prozora
+                const modal = document.createElement('div');
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                modal.style.zIndex = '1000';
+                modal.style.display = 'flex';
+                modal.style.justifyContent = 'center';
+                modal.style.alignItems = 'center';
+                
+                // Kreiranje sadržaja modalnog prozora
+                const modalContent = document.createElement('div');
+                modalContent.style.backgroundColor = 'var(--bg-dark)';
+                modalContent.style.padding = '2rem';
+                modalContent.style.borderRadius = 'var(--border-radius)';
+                modalContent.style.maxWidth = '600px';
+                modalContent.style.width = '90%';
+                modalContent.style.maxHeight = '80vh';
+                modalContent.style.overflowY = 'auto';
+                modalContent.style.border = '1px solid var(--border-light)';
+                
+                // Status konsultacije
+                let statusText = '';
+                let statusColor = '';
+                switch(consultation.status) {
+                    case 'pending':
+                        statusText = 'Na čekanju';
+                        statusColor = '#f59e0b';
+                        break;
+                    case 'approved':
+                        statusText = 'Odobrena';
+                        statusColor = '#10b981';
+                        break;
+                    case 'rejected':
+                        statusText = 'Odbijena';
+                        statusColor = '#ef4444';
+                        break;
+                    case 'completed':
+                        statusText = 'Završena';
+                        statusColor = '#6366f1';
+                        break;
+                    case 'cancelled':
+                        statusText = 'Otkazana';
+                        statusColor = '#ef4444';
+                        break;
+                }
+                
+                // Status odobrenja
+                let approvalText = '';
+                let approvalColor = '';
+                switch(consultation.approval) {
+                    case 'pending':
+                        approvalText = 'Na čekanju';
+                        approvalColor = '#f59e0b';
+                        break;
+                    case 'approved':
+                        approvalText = 'Odobrena';
+                        approvalColor = '#10b981';
+                        break;
+                    case 'rejected':
+                        approvalText = 'Odbijena';
+                        approvalColor = '#ef4444';
+                        break;
+                }
+                
+                // Sadržaj modalnog prozora
+                modalContent.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="margin: 0; color: var(--gold-bright);">Detalji konsultacije</h2>
+                        <button id="closeModal" style="background: transparent; border: none; color: var(--light-text); font-size: 1.5rem; cursor: pointer;">×</button>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Status:</span>
+                        <span style="color: ${statusColor}; font-weight: bold;">${statusText}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Odobrenje:</span>
+                        <span style="color: ${approvalColor}; font-weight: bold;">${approvalText}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Klijent obavešten:</span>
+                        <span style="color: var(--light-text); font-weight: bold;">${consultation.notified ? 'Da' : 'Ne'}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Kreirao:</span>
+                        <span style="color: var(--light-text);">${consultation.createdBy || ADMIN_EMAIL}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Datum i vreme:</span>
+                        <span style="color: var(--light-text);">${formattedDate} u ${formattedTime}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Klijent:</span>
+                        <span style="color: var(--light-text);">${consultation.client}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Email:</span>
+                        <span style="color: var(--light-text);">${consultation.email}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Telefon:</span>
+                        <span style="color: var(--light-text);">${consultation.phone}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Tip konsultacije:</span>
+                        <span style="color: var(--light-text);">${consultation.type}</span>
+                    </div>
+                    
+                    ${consultation.link && consultation.type === 'Online' ? `
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Link za sastanak:</span>
+                        <div style="margin-top: 0.5rem;">
+                            <a href="${consultation.link}" target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background: var(--gold-dark); color: var(--bg-dark); text-decoration: none; border-radius: var(--border-radius); font-weight: bold;">
+                                <i class="fas fa-video"></i> Pristupi online sastanku
+                            </a>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <span style="color: var(--gold-pale);">Napomene:</span>
+                        <div style="color: var(--light-text); padding: 0.5rem; background: rgba(31, 41, 55, 0.4); border-radius: var(--border-radius); margin-top: 0.5rem;">${consultation.notes || 'Nema dodatnih napomena'}</div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                        <button id="contactClientBtn" style="padding: 0.5rem 1rem; background: var(--dark-accent); color: var(--gold-pale); border: 1px solid var(--gold-dark); border-radius: var(--border-radius); cursor: pointer;">
+                            <i class="fas fa-envelope"></i> Kontaktiraj klijenta
+                        </button>
+                    </div>
+                `;
+                
+                // Dodavanje modalnog prozora u DOM
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+                
+                // Event listener za zatvaranje modalnog prozora
+                document.getElementById('closeModal').addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                });
+                
+                // Event listener za dugme za kontakt klijenta
+                document.getElementById('contactClientBtn').addEventListener('click', function() {
+                    // Možemo otvoriti klijentov email ili pokazati kontakt informacije
+                    const emailSubject = `Konsultacija zakazana za ${formattedDate}`;
+                    let emailBody = `Poštovani/a ${consultation.client},\n\nOvo je poruka u vezi Vaše konsultacije zakazane za ${formattedDate} u ${formattedTime}.`;
+                    
+                    // Dodavanje linka za online sastanak ako postoji
+                    if (consultation.link && consultation.type === 'Online') {
+                        emailBody += `\n\nLink za pristup online sastanku: ${consultation.link}`;
+                    }
+                    
+                    emailBody += `\n\nSrdačan pozdrav,\nVaš finansijski savetnik`;
+                    
+                    // Možemo otvoriti klijentov email (u stvarnoj aplikaciji)
+                    // window.open(`mailto:${consultation.email}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`);
+                    
+                    // Za sada ćemo samo prikazati informacije
+                    alert(`Kontakt informacije klijenta:\nEmail: ${consultation.email}\nTelefon: ${consultation.phone}`);
+                });
+                
+                // Event listener za klik izvan modalnog prozora
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        document.body.removeChild(modal);
+                    }
+                });
+            }
+        }
+        
+        // Funkcija za brisanje konsultacije
+        function deleteConsultation(id) {
+            if (confirm('Da li ste sigurni da želite da obrišete ovu konsultaciju?')) {
+                // Dobavljanje konsultacija iz localStorage
+                const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
+                
+                // Filtriranje konsultacija
+                const updatedConsultations = consultations.filter(consult => consult.id !== id);
+                
+                // Čuvanje ažuriranih konsultacija
+                localStorage.setItem('consultations', JSON.stringify(updatedConsultations));
+                
+                // Osvežavanje prikaza
+                loadConsultations();
+            }
+        }
+        
+        // Inicijalizacija funkcija za konsultacije pri učitavanju stranice
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ostali inicijalizacioni kod već postoji...
+            
+            // Inicijalizacija funkcija za konsultacije
+            initConsultations();
         });
     </script>
 </body>

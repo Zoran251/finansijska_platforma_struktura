@@ -4,6 +4,35 @@ from finansijska_platforma_struktura.components.sidebar import sidebar
 from finansijska_platforma_struktura.components.dashboard_widgets import budget_category_widget
 from finansijska_platforma_struktura.states.finance_state import FinanceState
 
+# Primarni endpoint za profil stranicu - koristi se za rutiranje
+@rx.page(route="/profile", title="Korisnički profil | Golden Balance")
+def profile_index():
+    """Glavna profil stranica - služi kao entry point."""
+    return user_profile()
+
+# Alternativni endpoint za kompatibilnost sa starim linkovima
+@rx.page(route="/profile_page", title="Korisnički profil | Golden Balance")
+def profile_page_compat():
+    """Kompatibilnost sa starim rutama."""
+    return user_profile()
+
+# Dodatne rute za direktan pristup specifičnim tabovima
+@rx.page(route="/profile/budget", title="Moj Budžet | Golden Balance")
+def profile_budget():
+    """Direktan pristup tabu 'Moj Budžet'."""
+    # Postavlja localStorage vrednost koja će aktivirati Moj Budžet tab (indeks 1)
+    return rx.box(
+        rx.script("""
+        localStorage.setItem('activeProfileTab', '1');
+        window.location.href = '/profile';
+        """),
+        rx.center(
+            rx.spinner(size="xl", color="gold", thickness="4px"),
+            rx.text("Učitavanje budžeta..."),
+            height="100vh",
+        )
+    )
+
 def user_profile():
     return rx.box(
         rx.vstack(
@@ -1400,11 +1429,62 @@ def profile():
             width="100%",
             max_width="1400px",
         ),
+        rx.script(src="/js/profile_tabs.js"),
+        rx.script("""
+        // Script za aktivaciju "Moj Budžet" kartice
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Profile page loaded, checking for active tab");
+            // Funkcija za aktivaciju kartice
+            function activateTab(tabIndex) {
+                // Pronađi sve tab elemente
+                const tabElements = document.querySelectorAll('.profile-tab');
+                console.log("Found tabs:", tabElements.length);
+                
+                // Ako postoje tabovi i imamo validni indeks, simuliraj klik na željenu karticu
+                if (tabElements && tabElements.length > tabIndex && tabIndex >= 0) {
+                    console.log("Activating tab:", tabIndex);
+                    setTimeout(function() {
+                        tabElements[tabIndex].click();
+                    }, 300);
+                }
+            }
+            
+            // Proveri localStorage za vrednost aktivnog taba
+            const activeTab = localStorage.getItem('activeProfileTab');
+            console.log("Active tab from localStorage:", activeTab);
+            if (activeTab !== null) {
+                // Konvertuj u broj i aktiviraj tab
+                const tabIndex = parseInt(activeTab);
+                activateTab(tabIndex);
+                
+                // Očisti localStorage da ne bi uticalo na buduće posete
+                localStorage.removeItem('activeProfileTab');
+            }
+            
+            // Proveri da li treba da skrolujemo do određene sekcije
+            const scrollToSection = localStorage.getItem('scrollToSection');
+            if (scrollToSection) {
+                setTimeout(function() {
+                    const element = document.getElementById(scrollToSection);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                    localStorage.removeItem('scrollToSection');
+                }, 500);
+            }
+            
+            // Proveri da li treba otvoriti tab za unos troškova
+            const openExpenseTab = localStorage.getItem('openExpenseTab');
+            if (openExpenseTab === 'true') {
+                setTimeout(function() {
+                    // Ovde možemo dodati kod za otvaranje dodatnih tabova unutar budžet sekcije
+                    const expenseButton = document.querySelector('[data-expense-tab="true"]');
+                    if (expenseButton) {
+                        expenseButton.click();
+                    }
+                    localStorage.removeItem('openExpenseTab');
+                }, 700);
+            }
+        });
+        """),
     )
-
-
-
-
-
-
-

@@ -134,53 +134,197 @@ function drawInvestmentChart(yearlyData, activeModal = null) {
         canvasElement.chart.destroy();
     }
     
-    // Kreiramo novi grafikon
+    // Kreiramo gradijente za moderniji izgled
+    const gradientInvested = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientInvested.addColorStop(0, 'rgba(59, 130, 246, 0.8)');
+    gradientInvested.addColorStop(1, 'rgba(59, 130, 246, 0.2)');
+    
+    const gradientTotal = ctx.createLinearGradient(0, 0, 0, 400);
+    gradientTotal.addColorStop(0, 'rgba(16, 185, 129, 0.8)');
+    gradientTotal.addColorStop(1, 'rgba(16, 185, 129, 0.2)');
+    
+    // Kreiramo novi moderan grafikon
     canvasElement.chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: years,
             datasets: [
                 {
-                    label: 'Uloženo',
+                    label: '💰 Uloženo',
                     data: investedValues,
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
+                    backgroundColor: gradientInvested,
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    barThickness: 'flex',
+                    maxBarThickness: 40,
+                    tension: 0.4
                 },
                 {
-                    label: 'Ukupna vrednost',
+                    label: '📈 Ukupna vrednost',
                     data: totalValues,
-                    backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    borderWidth: 1
+                    backgroundColor: gradientTotal,
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                    barThickness: 'flex',
+                    maxBarThickness: 40,
+                    tension: 0.4
                 }
             ]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                intersect: false,
+                mode: 'index'
+            },
+            animation: {
+                duration: 2000,
+                easing: 'easeInOutQuart',
+                delay: (context) => {
+                    return context.dataIndex * 150;
+                }
+            },
+            layout: {
+                padding: {
+                    top: 20,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
+                }
+            },
             scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#6B7280',
+                        font: {
+                            family: "'Inter', 'Segoe UI', sans-serif",
+                            size: 12,
+                            weight: '500'
+                        },
+                        maxRotation: 0
+                    }
+                },
                 y: {
                     beginAtZero: true,
+                    grid: {
+                        color: 'rgba(107, 114, 128, 0.1)',
+                        lineWidth: 1
+                    },
+                    border: {
+                        display: false
+                    },
                     ticks: {
+                        color: '#6B7280',
+                        font: {
+                            family: "'Inter', 'Segoe UI', sans-serif",
+                            size: 11,
+                            weight: '400'
+                        },
+                        padding: 8,
                         callback: function(value) {
-                            return new Intl.NumberFormat('sr-RS', {
+                            const formatter = new Intl.NumberFormat('sr-RS', {
                                 style: 'currency',
                                 currency: 'RSD',
-                                minimumFractionDigits: 0
-                            }).format(value);
+                                minimumFractionDigits: 0,
+                                notation: value >= 1000000 ? 'compact' : 'standard'
+                            });
+                            return formatter.format(value);
                         }
                     }
                 }
             },
             plugins: {
+                legend: {
+                    position: 'top',
+                    align: 'center',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'circle',
+                        padding: 20,
+                        color: '#374151',
+                        font: {
+                            family: "'Inter', 'Segoe UI', sans-serif",
+                            size: 13,
+                            weight: '600'
+                        },
+                        generateLabels: function(chart) {
+                            const original = Chart.defaults.plugins.legend.labels.generateLabels;
+                            const labels = original.call(this, chart);
+                            
+                            labels.forEach(label => {
+                                label.fillStyle = label.strokeColor;
+                            });
+                            
+                            return labels;
+                        }
+                    }
+                },
                 tooltip: {
+                    enabled: true,
+                    backgroundColor: 'rgba(17, 24, 39, 0.95)',
+                    titleColor: '#F9FAFB',
+                    bodyColor: '#F9FAFB',
+                    borderColor: 'rgba(59, 130, 246, 0.3)',
+                    borderWidth: 1,
+                    cornerRadius: 12,
+                    padding: 16,
+                    bodySpacing: 8,
+                    titleSpacing: 8,
+                    displayColors: true,
+                    usePointStyle: true,
+                    titleFont: {
+                        family: "'Inter', 'Segoe UI', sans-serif",
+                        size: 14,
+                        weight: '600'
+                    },
+                    bodyFont: {
+                        family: "'Inter', 'Segoe UI', sans-serif",
+                        size: 13,
+                        weight: '500'
+                    },
                     callbacks: {
+                        title: function(tooltipItems) {
+                            return `📊 ${tooltipItems[0].label}`;
+                        },
                         label: function(context) {
-                            return context.dataset.label + ': ' + new Intl.NumberFormat('sr-RS', {
+                            const formatter = new Intl.NumberFormat('sr-RS', {
                                 style: 'currency',
                                 currency: 'RSD',
                                 minimumFractionDigits: 0
-                            }).format(context.raw);
+                            });
+                            
+                            const value = formatter.format(context.raw);
+                            const dataset = context.dataset.label;
+                            
+                            // Dodajemo procenat rasta za ukupnu vrednost
+                            if (context.datasetIndex === 1 && context.dataIndex > 0) {
+                                const investedValue = context.chart.data.datasets[0].data[context.dataIndex];
+                                const growth = ((context.raw - investedValue) / investedValue * 100).toFixed(1);
+                                return `${dataset}: ${value} (+${growth}%)`;
+                            }
+                            
+                            return `${dataset}: ${value}`;
+                        },
+                        afterLabel: function(context) {
+                            if (context.datasetIndex === 1) {
+                                const investedValue = context.chart.data.datasets[0].data[context.dataIndex];
+                                const profit = context.raw - investedValue;
+                                const formatter = new Intl.NumberFormat('sr-RS', {
+                                    style: 'currency',
+                                    currency: 'RSD',
+                                    minimumFractionDigits: 0
+                                });
+                                return `💡 Profit: ${formatter.format(profit)}`;
+                            }
+                            return '';
                         }
                     }
                 }
