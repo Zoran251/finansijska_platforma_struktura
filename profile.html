@@ -1522,6 +1522,7 @@
             .percent-slider {
                 touch-action: manipulation;
                 -webkit-appearance: none;
+                appearance: none;
             }
         }
 
@@ -3306,12 +3307,14 @@
                 e.preventDefault();
                 saveBudgetPlan();
             });
-            
             // Inicijalno ažuriranje ukupnog procenta
             updateTotalPercentage();
-        });
-
-        // Throttle funkcija za scroll eventi
+            
+        }); // Zatvaramo glavni DOMContentLoaded listener
+        
+        // Globalne funkcije (van DOMContentLoaded)
+        
+        // Throttle funkcija za optimizaciju performansi
         function throttle(func, delay) {
             let timeoutId;
             let lastExecTime = 0;
@@ -3331,7 +3334,18 @@
             };
         }
         
-        // Optimizovani scroll event za mobilne
+        // Debounce funkcija za optimizaciju performansi
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+    </script>
+        
+    <!-- Budget & Navigation JavaScript -->
+    <script>
         let ticking = false;
         function optimizedScrollHandler() {
             if (!ticking) {
@@ -4693,7 +4707,7 @@
 
             // Pozovi početno ažuriranje budžeta
             updateBudgetDisplay();
-        });
+        }); // Zatvaramo DOMContentLoaded listener
     </script>
     
     <!-- Mobile Sidebar JavaScript -->
