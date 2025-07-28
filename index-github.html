@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golden Balance - Finansijska Aplikacija</title>
+    <meta http-equiv="refresh" content="0; url=./preview-fixed.html">
+    <link rel="canonical" href="./preview-fixed.html">
+    <meta name="description" content="Golden Balance - Moderna finansijska aplikacija za upravljanje budžetom i konsultacije">
+    <meta name="keywords" content="budžet, finansije, konsultacije, planiranje, troškovi">
+    <meta property="og:title" content="Golden Balance - Finansijska Aplikacija">
+    <meta property="og:description" content="Moderna finansijska aplikacija za upravljanje budžetom i konsultacije">
+    <meta property="og:type" content="website">
+    <style>
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0E0E10, #16161A);
+            color: #F8F8FF;
+            text-align: center;
+            padding: 2rem;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .redirect-message {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #D4AF37, #C5A028);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(212, 175, 55, 0.3);
+            border-top: 4px solid #D4AF37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 1rem auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        a {
+            color: #D4AF37;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 8px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        a:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: #D4AF37;
+            text-decoration: none;
+        }
+        .subtitle {
+            color: rgba(248, 248, 255, 0.8);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #D4AF37;
+        }
+        .feature-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+        }
+        .feature-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-message">
+        <div class="logo">🏦 Golden Balance</div>
+        <h1>Dobrodošli u Golden Balance</h1>
+        <p class="subtitle">Moderna finansijska aplikacija za upravljanje budžetom</p>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <div class="feature-title">Budžet Planiranje</div>
+                <div class="feature-desc">Pratite prihode i troškove</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title">Mobile Optimized</div>
+                <div class="feature-desc">Potpuna responsivnost</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💼</div>
+                <div class="feature-title">Konsultacije</div>
+                <div class="feature-desc">Zakazivanje termina</div>
+            </div>
+        </div>
+        
+        <div class="spinner"></div>
+        <p>Aplikacija se učitava automatski...</p>
+        <p>Ako se stranica ne učita, <a href="./preview-fixed.html">kliknite ovde</a>.</p>
+    </div>
+    
+    <script>
+        // Backup redirect u slučaju da meta refresh ne radi
+        let redirectTimer = setTimeout(function() {
+            window.location.href = './preview-fixed.html';
+        }, 2000);
+        
+        // Proverava da li preview-fixed.html postoji
+        fetch('./preview-fixed.html', { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    console.log('preview-fixed.html is available');
+                } else {
+                    console.log('Fallback: redirecting to index');
+                }
+            })
+            .catch(error => {
+                console.log('Error checking preview-fixed.html:', error);
+            });
+            
+        // Immediate redirect za brzži pristup
+        if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
+            clearTimeout(redirectTimer);
+            window.location.replace('./preview-fixed.html');
+        }
+    </script>
+</body>
+</html>

@@ -1,19 +1,31 @@
-# ShootMaster Finansijska Platforma
+# Golden Balance - Finansijska Aplikacija
 
-Moderna web aplikacija za upravljanje ličnim i poslovnim finansijama napravljena pomoću Reflex Python framework-a.
+Moderna, mobilno-optimizovana finansijska aplikacija za praćenje budžeta i konsultacije.
 
-## Funkcionalnosti
+## 🌟 Demo
 
-- **Dashboard** - pregled ključnih finansijskih metrika
-- **Pregled finansija** - detaljna analiza prihoda i rashoda sa grafikonima
-- **Admin panel** - upravljanje korisnicima i sistemskim podešavanjima
-- **Korisnički profil** - personalizacija korisničkog naloga
+Aplikacija je dostupna na: [Golden Balance Demo](https://zoran251.github.io/finansijska_platforma_struktura/preview-fixed.html)
 
-## Tehnologije
+## 🚀 Funkcionalnosti
 
-- **Reflex** - Python framework za reaktivne web aplikacije
-- **Tailwind CSS** - za stilizovanje
-- **Charting biblioteke** - za vizualizaciju podataka
+### 💰 Finansijski Upravljanje
+- **Budžet Planiranje** - Postavite i pratite mesečni budžet
+- **Praćenje Troškova** - Kategorišite i analizirajte troškove
+- **Finansijski Pregledi** - Detaljni izvještaji o prihodima/troškovima
+- **Mobilno Optimizovano** - Potpuna responsivnost za sve uređaje
+
+### 💼 Konsultacije
+- **Zakazivanje Termina** - Jednostavno zakazivanje finansijskih konsultacija
+- **Admin Panel** - Upravljanje terminima i notifikacijama
+- **Real-time Chat** - Podrška uživo
+- **Automatske Notifikacije** - Email i browser notifikacije
+
+### 🔧 Tehnički Stack
+- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
+- **Storage**: localStorage + centralizirani DataManager
+- **Styling**: CSS Grid, Flexbox, Modern CSS features
+- **Icons**: Font Awesome 6
+- **Mobile-First**: Responsive design sa touch optimizacijom
 
 ## Pokretanje aplikacije
 
