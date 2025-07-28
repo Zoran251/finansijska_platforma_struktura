@@ -1,1461 +1,4401 @@
-import reflex as rx
-from finansijska_platforma_struktura.components.navbar import navbar
-from finansijska_platforma_struktura.components.sidebar import sidebar
-from finansijska_platforma_struktura.components.dashboard_widgets import budget_category_widget
-from finansijska_platforma_struktura.states.finance_state import FinanceState
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moj Profil - Finansijska Aplikacija</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --gold-bright: #D4AF37; /* Svetla zlatna */
+            --gold-medium: #C5A028; /* Srednja zlatna */
+            --gold-dark: #A8861D; /* Tamna zlatna */
+            --gold-pale: #E6C870; /* Bleda zlatna */
+            --gradient-gold: linear-gradient(135deg, #D4AF37, #C5A028, #A8861D); /* Zlatni gradijent */
+            --gradient-gold-light: linear-gradient(135deg, #E6C870, #D4AF37); /* Svetli zlatni gradijent */
+            --gradient-gold-dark: linear-gradient(135deg, #A8861D, #856614); /* Tamni zlatni gradijent */
+            --dark-bg: #0E0E10; /* Tamna pozadina */
+            --dark-card: #16161A; /* Tamna kartica */
+            --dark-accent: #222224; /* Tamni akcentni element */
+            --light-text: #F8F8FF; /* Svetli tekst */
+            --muted-text: #BBBBBB; /* Prigušeni tekst */
+            --border-light: rgba(212, 175, 55, 0.2);
+            --glass-effect: rgba(212, 175, 55, 0.03);
+            --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            --primary: var(--gold-bright);
+            --primary-dark: var(--gold-dark);
+            --danger: #ef4444;
+            --success: #10b981;
+            --gray-100: var(--dark-bg);
+            --gray-200: var(--dark-card);
+            --gray-500: var(--muted-text);
+            --gray-700: var(--light-text);
+            --shadow: var(--box-shadow);
+            --border-radius: 1rem;
+            --border-radius-lg: 1.5rem;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 0.75rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
 
-# Primarni endpoint za profil stranicu - koristi se za rutiranje
-@rx.page(route="/profile", title="Korisnički profil | Golden Balance")
-def profile_index():
-    """Glavna profil stranica - služi kao entry point."""
-    return user_profile()
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-# Alternativni endpoint za kompatibilnost sa starim linkovima
-@rx.page(route="/profile_page", title="Korisnički profil | Golden Balance")
-def profile_page_compat():
-    """Kompatibilnost sa starim rutama."""
-    return user_profile()
+        body {
+            background: var(--dark-bg);
+            position: relative;
+            min-height: 100vh;
+            color: var(--light-text);
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, transparent 30%, var(--dark-bg) 70%), 
+                        radial-gradient(circle at top left, var(--gold-bright), transparent 40%),
+                        radial-gradient(circle at bottom right, var(--gold-dark), transparent 40%),
+                        radial-gradient(circle at top right, var(--gold-medium), transparent 40%);
+            background-size: 100% 100%, 50% 50%, 50% 50%, 50% 50%;
+            background-position: center, top left, bottom right, top right;
+            filter: blur(60px);
+            opacity: 0.1;
+            z-index: -2;
+            transform: rotate(0deg);
+            animation: backgroundAnimation 30s infinite alternate ease-in-out;
+        }
+        
+        @keyframes backgroundAnimation {
+            0% {
+                transform: rotate(0deg) scale(1);
+            }
+            100% {
+                transform: rotate(5deg) scale(1.1);
+            }
+        }
 
-# Dodatne rute za direktan pristup specifičnim tabovima
-@rx.page(route="/profile/budget", title="Moj Budžet | Golden Balance")
-def profile_budget():
-    """Direktan pristup tabu 'Moj Budžet'."""
-    # Postavlja localStorage vrednost koja će aktivirati Moj Budžet tab (indeks 1)
-    return rx.box(
-        rx.script("""
-        localStorage.setItem('activeProfileTab', '1');
-        window.location.href = '/profile';
-        """),
-        rx.center(
-            rx.spinner(size="xl", color="gold", thickness="4px"),
-            rx.text("Učitavanje budžeta..."),
-            height="100vh",
-        )
-    )
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2.5rem;
+            width: 90%;
+            background: rgba(16, 16, 18, 0.3);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.03), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-def user_profile():
-    return rx.box(
-        rx.vstack(
-            rx.heading(
-                rx.hstack(
-                    rx.icon("person", color="var(--gold-bright)"),
-                    rx.text("Lični podaci"),
-                ),
-                size="lg", 
-                margin_bottom="4",
-                background="var(--gradient-gold)",
-                background_clip="text",
-                webkit_text_fill_color="transparent",
-                display="flex",
-                align_items="center",
-                gap="0.5rem",
-                class_name="section-title",
-            ),
-            rx.form(
-                rx.vstack(
-                    rx.grid(
-                        rx.form_control(
-                            rx.form_label("Ime"),
-                            rx.input(
-                                default_value="Marko",
-                                name="name",
-                                background="rgba(16, 16, 18, 0.5)",
-                                border="1px solid var(--border-light)",
-                                border_radius="var(--border-radius)",
-                                color="var(--light-text)",
-                                padding="0.75rem 1rem",
-                                _focus={
-                                    "outline": "none",
-                                    "border_color": "var(--gold-medium)",
-                                    "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                                },
-                            ),
-                            is_required=True,
-                        ),
-                        rx.form_control(
-                            rx.form_label("Prezime"),
-                            rx.input(
-                                default_value="Marković",
-                                name="surname",
-                                background="rgba(16, 16, 18, 0.5)",
-                                border="1px solid var(--border-light)",
-                                border_radius="var(--border-radius)",
-                                color="var(--light-text)",
-                                padding="0.75rem 1rem",
-                                _focus={
-                                    "outline": "none",
-                                    "border_color": "var(--gold-medium)",
-                                    "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                                },
-                            ),
-                            is_required=True,
-                        ),
-                        columns=[2],
-                        spacing="4",
-                        width="100%",
-                    ),
-                    rx.grid(
-                        rx.form_control(
-                            rx.form_label("Email adresa"),
-                            rx.input(
-                                default_value=FinanceState.user_email,
-                                name="email",
-                                type_="email",
-                                background="rgba(16, 16, 18, 0.5)",
-                                border="1px solid var(--border-light)",
-                                border_radius="var(--border-radius)",
-                                color="var(--light-text)",
-                                padding="0.75rem 1rem",
-                                _focus={
-                                    "outline": "none",
-                                    "border_color": "var(--gold-medium)",
-                                    "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                                },
-                            ),
-                            is_required=True,
-                        ),
-                        rx.form_control(
-                            rx.form_label("Broj telefona"),
-                            rx.input(
-                                default_value=FinanceState.user_phone,
-                                name="phone",
-                                background="rgba(16, 16, 18, 0.5)",
-                                border="1px solid var(--border-light)",
-                                border_radius="var(--border-radius)",
-                                color="var(--light-text)",
-                                padding="0.75rem 1rem",
-                                _focus={
-                                    "outline": "none",
-                                    "border_color": "var(--gold-medium)",
-                                    "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                                },
-                            ),
-                        ),
-                        columns=[2],
-                        spacing="4",
-                        width="100%",
-                    ),
-                    rx.form_control(
-                        rx.form_label("Adresa"),
-                        rx.input(
-                            default_value="",
-                            name="address",
-                            background="rgba(16, 16, 18, 0.5)",
-                            border="1px solid var(--border-light)",
-                            border_radius="var(--border-radius)",
-                            color="var(--light-text)",
-                            padding="0.75rem 1rem",
-                            _focus={
-                                "outline": "none",
-                                "border_color": "var(--gold-medium)",
-                                "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                            },
-                        ),
-                    ),
-                    rx.grid(
-                        rx.form_control(
-                            rx.form_label("Grad"),
-                            rx.input(
-                                default_value="",
-                                name="city",
-                                background="rgba(16, 16, 18, 0.5)",
-                                border="1px solid var(--border-light)",
-                                border_radius="var(--border-radius)",
-                                color="var(--light-text)",
-                                padding="0.75rem 1rem",
-                                _focus={
-                                    "outline": "none",
-                                    "border_color": "var(--gold-medium)",
-                                    "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                                },
-                            ),
-                        ),
-                        rx.form_control(
-                            rx.form_label("Poštanski broj"),
-                            rx.input(
-                                default_value="",
-                                name="postalCode",
-                                background="rgba(16, 16, 18, 0.5)",
-                                border="1px solid var(--border-light)",
-                                border_radius="var(--border-radius)",
-                                color="var(--light-text)",
-                                padding="0.75rem 1rem",
-                                _focus={
-                                    "outline": "none",
-                                    "border_color": "var(--gold-medium)",
-                                    "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                                },
-                            ),
-                        ),
-                        columns=[2],
-                        spacing="4",
-                        width="100%",
-                    ),
-                    rx.form_control(
-                        rx.form_label("Profilna slika"),
-                        rx.input(
-                            type_="file",
-                            name="profileImage",
-                            accept="image/*",
-                            background="rgba(16, 16, 18, 0.5)",
-                            border="1px solid var(--border-light)",
-                            border_radius="var(--border-radius)",
-                            color="var(--light-text)",
-                            padding="0.75rem 1rem",
-                            _focus={
-                                "outline": "none",
-                                "border_color": "var(--gold-medium)",
-                                "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                            },
-                        ),
-                    ),
-                    rx.divider(margin_y="4", border_color="var(--border-light)"),
-                    rx.heading(
-                        rx.hstack(
-                            rx.icon("lock", color="var(--gold-bright)"),
-                            rx.text("Promena lozinke"),
-                        ),
-                        size="md", 
-                        align_self="start", 
-                        margin_top="2",
-                        margin_bottom="4",
-                        background="var(--gradient-gold)",
-                        background_clip="text",
-                        webkit_text_fill_color="transparent",
-                    ),
-                    rx.form_control(
-                        rx.form_label("Trenutna lozinka"),
-                        rx.input(
-                            type_="password",
-                            background="rgba(16, 16, 18, 0.5)",
-                            border="1px solid var(--border-light)",
-                            border_radius="var(--border-radius)",
-                            color="var(--light-text)",
-                            padding="0.75rem 1rem",
-                            _focus={
-                                "outline": "none",
-                                "border_color": "var(--gold-medium)",
-                                "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                            },
-                        ),
-                    ),
-                    rx.form_control(
-                        rx.form_label("Nova lozinka"),
-                        rx.input(
-                            type_="password",
-                            background="rgba(16, 16, 18, 0.5)",
-                            border="1px solid var(--border-light)",
-                            border_radius="var(--border-radius)",
-                            color="var(--light-text)",
-                            padding="0.75rem 1rem",
-                            _focus={
-                                "outline": "none",
-                                "border_color": "var(--gold-medium)",
-                                "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                            },
-                        ),
-                    ),
-                    rx.form_control(
-                        rx.form_label("Potvrdi novu lozinku"),
-                        rx.input(
-                            type_="password",
-                            background="rgba(16, 16, 18, 0.5)",
-                            border="1px solid var(--border-light)",
-                            border_radius="var(--border-radius)",
-                            color="var(--light-text)",
-                            padding="0.75rem 1rem",
-                            _focus={
-                                "outline": "none",
-                                "border_color": "var(--gold-medium)",
-                                "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                            },
-                        ),
-                    ),
-                    rx.button(
-                        rx.hstack(
-                            rx.icon("save"),
-                            rx.text("Sačuvaj promene"),
-                        ),
-                        type_="submit", 
-                        margin_top="4",
-                        class_name="gold-button",
-                    ),
-                    align_items="stretch",
-                    width="100%",
-                ),
-                on_submit=FinanceState.update_profile,
-            ),
-            width="100%",
-            align_items="stretch",
-            padding="1.5rem",
-            background="var(--dark-card)",
-            border_radius="var(--border-radius)",
-            border="1px solid var(--border-light)",
-            box_shadow="var(--box-shadow)",
-        ),
-        width="100%",
-    )
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2.5rem;
+            background: rgba(16, 16, 18, 0.7);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            margin: 0 1rem 1rem 1rem;
+            border: 1px solid var(--border-light);
+        }
 
-def budget_planner():
-    return rx.box(
-        rx.vstack(
-            rx.heading(
-                rx.hstack(
-                    rx.icon("pie_chart", color="var(--gold-bright)"),
-                    rx.text("Planer budžeta"),
-                ),
-                size="lg", 
-                margin_bottom="4",
-                background="var(--gradient-gold)",
-                background_clip="text",
-                webkit_text_fill_color="transparent",
-                display="flex",
-                align_items="center",
-                gap="0.5rem",
-                class_name="section-title",
-            ),
-            rx.text(
-                "Unesite svoje mesečne prihode i prilagodite kategorije troškova prema vašim potrebama.",
-                color="var(--muted-text)",
-                font_size="1.1rem",
-                margin_bottom="4",
-                class_name="section-subtitle",
-            ),
-            rx.box(
-                rx.vstack(
-                    rx.heading(
-                        rx.hstack(
-                            rx.icon("attach_money", color="var(--gold-bright)"),
-                            rx.text("Unos prihoda"),
-                        ),
-                        size="md", 
-                        margin_bottom="1rem", 
-                        color="var(--gold-bright)"
-                    ),
-                    rx.hstack(
-                        rx.input(
-                            placeholder="Iznos mesečnog prihoda", 
-                            type_="number",
-                            default_value=FinanceState.income,
-                            background="rgba(16, 16, 18, 0.5)",
-                            border="1px solid var(--border-light)",
-                            border_radius="var(--border-radius)",
-                            color="var(--light-text)",
-                            padding="0.75rem 1rem",
-                            _focus={
-                                "outline": "none",
-                                "border_color": "var(--gold-medium)",
-                                "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                            },
-                        ),
-                        rx.button(
-                            rx.hstack(
-                                rx.icon("calculate"),
-                                rx.text("Izračunaj raspodelu"),
-                            ),
-                            class_name="gold-button",
-                            on_click=FinanceState.calculate_budget_distribution,
-                        ),
-                        width="100%",
-                    ),
-                    rx.text(
-                        "Unesite vaš ukupan mesečni prihod kako bismo vam pomogli sa planiranjem budžeta. "
-                        "Preporučeno je da uključite sve izvore prihoda za tačniju analizu.",
-                        color="var(--muted-text)",
-                        font_size="0.9rem",
-                        margin_top="2",
-                        class_name="input-hint",
-                    ),
-                ),
-                class_name="income-section",
-                width="100%",
-                margin_bottom="1.5rem",
-                padding="1.5rem",
-                background="var(--dark-card)",
-                border_radius="var(--border-radius)",
-                border="1px solid var(--border-light)",
-                box_shadow="var(--box-shadow)",
-            ),
-            rx.box(
-                rx.text(
-                    "Rasporedite svoj mesečni prihod po kategorijama. Ukupan zbir svih kategorija treba da bude 100%.",
-                    color="var(--muted-text)",
-                ),
-                padding="1rem",
-                background="rgba(212, 175, 55, 0.05)",
-                border_left="4px solid var(--gold-medium)",
-                border_radius="0.375rem",
-                margin_bottom="1.5rem",
-                class_name="budget-note",
-            ),
-            rx.hstack(
-                rx.stat(
-                    rx.stat_label("Ukupan procenat"),
-                    rx.stat_number("100%"),
-                    rx.stat_help_text(
-                        rx.hstack(
-                            rx.icon("check_circle", color="green.400"),
-                            rx.text("Idealan raspored"),
-                        ),
-                        color="green.400",
-                    ),
-                    width="50%",
-                ),
-                rx.stat(
-                    rx.stat_label("Ukupno raspoređeno"),
-                    rx.stat_number(f"€{FinanceState.income:.2f}"),
-                    rx.stat_help_text(
-                        "od ukupnog prihoda",
-                    ),
-                    width="50%",
-                ),
-                width="100%",
-                margin_bottom="1.5rem",
-                padding="1rem",
-                background="rgba(16, 16, 18, 0.5)",
-                border_radius="var(--border-radius)",
-                border="1px solid var(--border-light)",
-            ),
-            rx.grid(
-                *[budget_category_widget(category) for category in FinanceState.budget_categories],
-                columns=[1, 3],
-                spacing="4",
-                width="100%",
-                class_name="budget-categories",
-            ),
-            rx.button(
-                rx.hstack(
-                    rx.icon("save"),
-                    rx.text("Sačuvaj plan budžeta"),
-                ),
-                class_name="gold-button",
-                margin_top="1.5rem",
-                align_self="center",
-                on_click=FinanceState.save_budget_plan,
-            ),
-            width="100%",
-            align_items="stretch",
-            padding="1.5rem",
-            background="var(--dark-card)",
-            border_radius="var(--border-radius)",
-            border="1px solid var(--border-light)",
-            box_shadow="var(--box-shadow)",
-            margin_top="4",
-        ),
-        width="100%",
-    )
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
 
-def expense_tracker():
-    """Komponenta za praćenje troškova."""
-    return rx.box(
-        rx.vstack(
-            rx.heading(
-                rx.hstack(
-                    rx.icon("receipt_long", color="var(--gold-bright)"),
-                    rx.text("Praćenje troškova"),
-                ),
-                size="lg", 
-                margin_bottom="4",
-                background="var(--gradient-gold)",
-                background_clip="text",
-                webkit_text_fill_color="transparent",
-                display="flex",
-                align_items="center",
-                gap="0.5rem",
-                class_name="section-title",
-            ),
-            rx.tabs(
-                rx.tab_list(
-                    rx.tab(
-                        rx.hstack(
-                            rx.icon("calendar_today"),
-                            rx.text("Sve transakcije"),
-                        ),
-                        class_name="expense-tab",
-                    ),
-                    rx.tab(
-                        rx.hstack(
-                            rx.icon("add_circle"),
-                            rx.text("Dodaj trošak"),
-                        ),
-                        class_name="expense-tab",
-                    ),
-                    rx.tab(
-                        rx.hstack(
-                            rx.icon("payments"),
-                            rx.text("Dodaj prihod"),
-                        ),
-                        class_name="expense-tab",
-                    ),
-                    rx.tab(
-                        rx.hstack(
-                            rx.icon("filter_alt"),
-                            rx.text("Filteri"),
-                        ),
-                        class_name="expense-tab",
-                    ),
-                    class_name="expense-tab-list",
-                    justify_content="space-between",
-                    width="100%",
-                    overflow_x="auto",
-                    bg="rgba(16, 16, 18, 0.3)",
-                    border_bottom="1px solid var(--border-light)",
-                    padding="0 0.5rem",
-                ),
-                rx.tab_panels(
-                    rx.tab_panel(
-                        rx.box(
-                            rx.vstack(
-                                rx.heading("Pregled transakcija", size="md", margin_bottom="1rem", color="var(--gold-bright)"),
-                                rx.table(
-                                    rx.thead(
-                                        rx.tr(
-                                            rx.th("Datum", text_align="left"),
-                                            rx.th("Kategorija", text_align="left"),
-                                            rx.th("Opis", text_align="left"),
-                                            rx.th("Tip", text_align="center"),
-                                            rx.th("Iznos", text_align="right"),
-                                            rx.th("Akcije", text_align="right", width="100px"),
-                                        ),
-                                        bg="rgba(16, 16, 18, 0.3)",
-                                        border_bottom="1px solid var(--border-light)",
-                                    ),
-                                    rx.tbody(
-                                        rx.foreach(
-                                            FinanceState.transactions,
-                                            lambda transaction, i: rx.tr(
-                                                rx.td(transaction.date, text_align="left"),
-                                                rx.td(transaction.category, text_align="left"),
-                                                rx.td(transaction.description, text_align="left"),
-                                                rx.td(
-                                                    rx.badge(
-                                                        transaction.type.capitalize(),
-                                                        color_scheme="green" if transaction.type == "income" else "red",
-                                                        variant="subtle",
-                                                        padding="0.25rem 0.5rem",
-                                                        border_radius="4px",
-                                                    ),
-                                                    text_align="center",
-                                                ),
-                                                rx.td(
-                                                    f"{transaction.amount} €" if transaction.type == "income" else f"-{transaction.amount} €",
-                                                    text_align="right",
-                                                    color="green.400" if transaction.type == "income" else "red.400",
-                                                    font_weight="medium",
-                                                ),
-                                                rx.td(
-                                                    rx.hstack(
-                                                        rx.icon_button(
-                                                            "edit",
-                                                            color="var(--light-text)",
-                                                            size="xs",
-                                                            bg="transparent",
-                                                            _hover={"color": "var(--gold-bright)"},
-                                                            on_click=lambda: FinanceState.edit_transaction(i),
-                                                        ),
-                                                        rx.icon_button(
-                                                            "delete",
-                                                            color="var(--light-text)",
-                                                            size="xs",
-                                                            bg="transparent",
-                                                            _hover={"color": "red.500"},
-                                                            on_click=lambda: FinanceState.delete_transaction(i),
-                                                        ),
-                                                        justify="flex-end",
-                                                        spacing="2",
-                                                        width="100%",
-                                                    ),
-                                                    text_align="right",
-                                                ),
-                                                _hover={"bg": "rgba(212, 175, 55, 0.05)"},
-                                                border_bottom="1px solid var(--border-light)",
-                                            ),
-                                        ),
-                                    ),
-                                    overflow="auto",
-                                    width="100%",
-                                    border="1px solid var(--border-light)",
-                                    border_radius="var(--border-radius)",
-                                    color="var(--light-text)",
-                                    style={"borderCollapse": "collapse"},
-                                ),
-                            ),
-                            class_name="expense-table",
-                            width="100%",
-                            padding="1.5rem",
-                            background="var(--dark-card)",
-                            border_radius="var(--border-radius)",
-                            border="1px solid var(--border-light)",
-                            box_shadow="var(--box-shadow)",
-                        ),
-                    ),
-                    # Add expense tab panel
-                    rx.tab_panel(
-                        rx.box(
-                            rx.vstack(
-                                rx.heading("Dodaj novi trošak", size="md", margin_bottom="1rem", color="var(--gold-bright)"),
-                                rx.grid(
-                                    rx.form_control(
-                                        rx.form_label("Opis"),
-                                        rx.input(
-                                            placeholder="Unesite opis troška",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_description,
-                                            on_change=FinanceState.set_transaction_description,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Iznos (€)"),
-                                        rx.input(
-                                            placeholder="0.00",
-                                            type_="number",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_amount,
-                                            on_change=FinanceState.set_transaction_amount,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    columns=[2],
-                                    spacing="4",
-                                    width="100%",
-                                    class_name="expense-form-row",
-                                ),
-                                rx.grid(
-                                    rx.form_control(
-                                        rx.form_label("Kategorija"),
-                                        rx.select(
-                                            FinanceState.expense_categories,
-                                            placeholder="Izaberite kategoriju",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_category,
-                                            on_change=FinanceState.set_transaction_category,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Datum"),
-                                        rx.input(
-                                            type_="date",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_date,
-                                            on_change=FinanceState.set_transaction_date,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    columns=[2],
-                                    spacing="4",
-                                    width="100%",
-                                    class_name="expense-form-row",
-                                ),
-                                rx.button(
-                                    rx.hstack(
-                                        rx.icon("add"),
-                                        rx.text("Dodaj trošak"),
-                                    ),
-                                    class_name="gold-button",
-                                    margin_top="1rem",
-                                    align_self="flex-end",
-                                    on_click=lambda: FinanceState.add_transaction("expense"),
-                                ),
-                            ),
-                            class_name="expense-form",
-                            width="100%",
-                            padding="1.5rem",
-                            background="var(--dark-card)",
-                            border_radius="var(--border-radius)",
-                            border="1px solid var(--border-light)",
-                            box_shadow="var(--box-shadow)",
-                        ),
-                    ),
-                    # Add income tab panel
-                    rx.tab_panel(
-                        rx.box(
-                            rx.vstack(
-                                rx.heading("Dodaj novi prihod", size="md", margin_bottom="1rem", color="var(--gold-bright)"),
-                                rx.grid(
-                                    rx.form_control(
-                                        rx.form_label("Opis"),
-                                        rx.input(
-                                            placeholder="Unesite opis prihoda",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_description,
-                                            on_change=FinanceState.set_transaction_description,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Iznos (€)"),
-                                        rx.input(
-                                            placeholder="0.00",
-                                            type_="number",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_amount,
-                                            on_change=FinanceState.set_transaction_amount,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    columns=[2],
-                                    spacing="4",
-                                    width="100%",
-                                    class_name="expense-form-row",
-                                ),
-                                rx.grid(
-                                    rx.form_control(
-                                        rx.form_label("Kategorija"),
-                                        rx.select(
-                                            FinanceState.income_categories,
-                                            placeholder="Izaberite kategoriju",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_category,
-                                            on_change=FinanceState.set_transaction_category,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Datum"),
-                                        rx.input(
-                                            type_="date",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            value=FinanceState.transaction_date,
-                                            on_change=FinanceState.set_transaction_date,
-                                        ),
-                                        is_required=True,
-                                    ),
-                                    columns=[2],
-                                    spacing="4",
-                                    width="100%",
-                                    class_name="expense-form-row",
-                                ),
-                                rx.button(
-                                    rx.hstack(
-                                        rx.icon("add"),
-                                        rx.text("Dodaj prihod"),
-                                    ),
-                                    class_name="gold-button",
-                                    margin_top="1rem",
-                                    align_self="flex-end",
-                                    on_click=lambda: FinanceState.add_transaction("income"),
-                                ),
-                            ),
-                            class_name="expense-form",
-                            width="100%",
-                            padding="1.5rem",
-                            background="var(--dark-card)",
-                            border_radius="var(--border-radius)",
-                            border="1px solid var(--border-light)",
-                            box_shadow="var(--box-shadow)",
-                        ),
-                    ),
-                    # Add filters tab panel
-                    rx.tab_panel(
-                        rx.box(
-                            rx.vstack(
-                                rx.heading("Filteri za pretragu", size="md", margin_bottom="1rem", color="var(--gold-bright)"),
-                                rx.grid(
-                                    rx.form_control(
-                                        rx.form_label("Kategorija"),
-                                        rx.select(
-                                            ["Sve kategorije"] + FinanceState.expense_categories + FinanceState.income_categories,
-                                            placeholder="Izaberite kategoriju",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            default_value="Sve kategorije",
-                                        ),
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Tip"),
-                                        rx.select(
-                                            ["Sve transakcije", "Prihodi", "Troškovi"],
-                                            placeholder="Izaberite tip",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                            default_value="Sve transakcije",
-                                        ),
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Od datuma"),
-                                        rx.input(
-                                            type_="date",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                        ),
-                                    ),
-                                    rx.form_control(
-                                        rx.form_label("Do datuma"),
-                                        rx.input(
-                                            type_="date",
-                                            background="rgba(16, 16, 18, 0.5)",
-                                            border="1px solid var(--border-light)",
-                                            border_radius="var(--border-radius)",
-                                            color="var(--light-text)",
-                                        ),
-                                    ),
-                                    columns=[2],
-                                    spacing="4",
-                                    width="100%",
-                                    class_name="expense-form-row",
-                                ),
-                                rx.button(
-                                    rx.hstack(
-                                        rx.icon("search"),
-                                        rx.text("Primeni filtere"),
-                                    ),
-                                    class_name="gold-button",
-                                    margin_top="1rem",
-                                    align_self="flex-end",
-                                ),
-                            ),
-                            class_name="expense-form",
-                            width="100%",
-                            padding="1.5rem",
-                            background="var(--dark-card)",
-                            border_radius="var(--border-radius)",
-                            border="1px solid var(--border-light)",
-                            box_shadow="var(--box-shadow)",
-                        ),
-                    ),
-                ),
-                color_scheme="gold",
-                variant="soft-rounded",
-                width="100%",
-                isLazy=True,
-            ),
-            width="100%",
-            align_items="stretch",
-            padding="1.5rem",
-            background="var(--dark-card)",
-            border_radius="var(--border-radius)",
-            border="1px solid var(--border-light)",
-            box_shadow="var(--box-shadow)",
-            margin_top="4",
-            class_name="expenses-tracker",
-        ),
-        width="100%",
-    )
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
 
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            letter-spacing: 0.5px;
+            box-shadow: var(--box-shadow);
+        }
 
-def account_settings():
-    return rx.box(
-        rx.vstack(
-            rx.heading(
-                rx.hstack(
-                    rx.icon("settings", color="var(--gold-bright)"),
-                    rx.text("Podešavanja naloga"),
-                ),
-                size="lg", 
-                margin_bottom="4",
-                background="var(--gradient-gold)",
-                background_clip="text",
-                webkit_text_fill_color="transparent",
-                display="flex",
-                align_items="center",
-                gap="0.5rem",
-                class_name="section-title",
-            ),
-            rx.vstack(
-                rx.form_control(
-                    rx.form_label("Jezik"),
-                    rx.select(
-                        ["Srpski", "English", "Deutsch"],
-                        placeholder="Izaberite jezik",
-                        default_value="Srpski",
-                        background="rgba(16, 16, 18, 0.5)",
-                        border="1px solid var(--border-light)",
-                        border_radius="var(--border-radius)",
-                        color="var(--light-text)",
-                        _focus={
-                            "outline": "none",
-                            "border_color": "var(--gold-medium)",
-                            "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                        },
-                    ),
-                ),
-                rx.form_control(
-                    rx.form_label("Vremenska zona"),
-                    rx.select(
-                        ["(GMT+01:00) Beograd", "(GMT+00:00) London", "(GMT-05:00) New York"],
-                        placeholder="Izaberite vremensku zonu",
-                        default_value="(GMT+01:00) Beograd",
-                        background="rgba(16, 16, 18, 0.5)",
-                        border="1px solid var(--border-light)",
-                        border_radius="var(--border-radius)",
-                        color="var(--light-text)",
-                        _focus={
-                            "outline": "none",
-                            "border_color": "var(--gold-medium)",
-                            "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                        },
-                    ),
-                ),
-                rx.form_control(
-                    rx.form_label("Format datuma"),
-                    rx.select(
-                        ["DD.MM.YYYY", "MM/DD/YYYY", "YYYY-MM-DD"],
-                        placeholder="Izaberite format datuma",
-                        default_value="DD.MM.YYYY",
-                        background="rgba(16, 16, 18, 0.5)",
-                        border="1px solid var(--border-light)",
-                        border_radius="var(--border-radius)",
-                        color="var(--light-text)",
-                        _focus={
-                            "outline": "none",
-                            "border_color": "var(--gold-medium)",
-                            "box_shadow": "0 0 0 3px rgba(212, 175, 55, 0.15)"
-                        },
-                    ),
-                ),
-                rx.vstack(
-                    rx.heading(
-                        "Obaveštenja", 
-                        size="md", 
-                        margin_bottom="3",
-                        color="var(--gold-bright)",
-                    ),
-                    rx.hstack(
-                        rx.switch(is_checked=True),
-                        rx.text("Primaj email obaveštenja"),
-                        width="100%",
-                    ),
-                    rx.hstack(
-                        rx.switch(is_checked=True),
-                        rx.text("Primaj push obaveštenja"),
-                        width="100%",
-                    ),
-                    rx.hstack(
-                        rx.switch(is_checked=False),
-                        rx.text("Dvofaktorska autentifikacija"),
-                        width="100%",
-                    ),
-                    spacing="4",
-                    width="100%",
-                    padding="1rem",
-                    background="rgba(16, 16, 18, 0.5)",
-                    border_radius="var(--border-radius)",
-                    border="1px solid var(--border-light)",
-                    margin_top="4",
-                ),
-                rx.button(
-                    rx.hstack(
-                        rx.icon("save"),
-                        rx.text("Sačuvaj podešavanja"),
-                    ),
-                    class_name="gold-button",
-                    margin_top="4",
-                    on_click=FinanceState.save_settings,
-                ),
-                rx.divider(margin_y="6", border_color="var(--border-light)"),
-                rx.heading(
-                    rx.hstack(
-                        rx.icon("warning", color="red.500"),
-                        rx.text("Opasna zona"),
-                    ),
-                    size="md", 
-                    color="red.500",
-                    background="linear-gradient(135deg, #e53e3e, #c53030)",
-                    background_clip="text",
-                    webkit_text_fill_color="transparent",
-                    margin_bottom="3",
-                ),
-                rx.text("Sledeće akcije mogu dovesti do gubitka podataka", color="var(--muted-text)"),
-                rx.vstack(
-                    rx.button(
-                        rx.hstack(
-                            rx.icon("cancel"),
-                            rx.text("Deaktiviraj nalog"),
-                        ),
-                        color_scheme="red", 
-                        variant="outline",
-                        width="100%",
-                        margin_top="2",
-                    ),
-                    rx.button(
-                        rx.hstack(
-                            rx.icon("delete"),
-                            rx.text("Izbriši nalog"),
-                        ),
-                        color_scheme="red",
-                        width="100%",
-                        margin_top="2",
-                        on_click=FinanceState.open_delete_account_modal,
-                    ),
-                    spacing="2",
-                    width="100%",
-                    padding="1rem",
-                    background="rgba(229, 62, 62, 0.05)",
-                    border_radius="var(--border-radius)",
-                    border="1px solid rgba(229, 62, 62, 0.2)",
-                    margin_top="4",
-                ),
-                align_items="stretch",
-                width="100%",
-                spacing="4",
-            ),
-            width="100%",
-            align_items="stretch",
-            padding="1.5rem",
-            background="var(--dark-card)",
-            border_radius="var(--border-radius)",
-            border="1px solid var(--border-light)",
-            box_shadow="var(--box-shadow)",
-            margin_top="4",
-            class_name="account-settings",
-        ),
-        width="100%",
-    )
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
 
-def budget_stats():
-    return rx.box(
-        rx.vstack(
-            rx.heading(
-                rx.hstack(
-                    rx.icon("bar_chart", color="var(--gold-bright)"),
-                    rx.text("Statistika budžeta"),
-                ),
-                size="lg", 
-                margin_bottom="4",
-                background="var(--gradient-gold)",
-                background_clip="text",
-                webkit_text_fill_color="transparent",
-                display="flex",
-                align_items="center",
-                gap="0.5rem",
-                class_name="section-title",
-            ),
-            rx.grid(
-                rx.box(
-                    rx.vstack(
-                        rx.hstack(
-                            rx.icon("trending_up", color="green.400", font_size="1.5em"),
-                            rx.heading(
-                                "Prihodi", 
-                                size="md",
-                                color="var(--light-text)",
-                            ),
-                            width="100%",
-                            justify="space-between",
-                        ),
-                        rx.heading(
-                            f"€{FinanceState.income:.2f}",
-                            size="xl",
-                            color="green.400",
-                            class_name="stat-value",
-                        ),
-                        rx.text(
-                            "Ukupno za tekući mesec",
-                            color="var(--muted-text)",
-                            class_name="stat-label",
-                        ),
-                        rx.hstack(
-                            rx.icon("arrow_upward", color="green.400", font_size="0.9em"),
-                            rx.text(
-                                "5% u odnosu na prošli mesec",
-                                color="green.400",
-                                font_size="0.85rem",
-                            ),
-                            class_name="stat-change positive",
-                        ),
-                        width="100%",
-                        align_items="flex-start",
-                        padding="1.25rem",
-                        background="var(--dark-card)",
-                        border_radius="var(--border-radius)",
-                        border="1px solid var(--border-light)",
-                        box_shadow="var(--box-shadow)",
-                        transition="var(--transition)",
-                        _hover={
-                            "transform": "translateY(-5px)",
-                            "box_shadow": "var(--box-shadow-hover)",
-                            "border_color": "green.400",
-                        },
-                        class_name="stat-card income",
-                        position="relative",
-                        _before={
-                            "content": "''",
-                            "position": "absolute",
-                            "top": "0",
-                            "left": "0",
-                            "right": "0",
-                            "height": "4px",
-                            "background": "linear-gradient(90deg, #10b981, #34d399)",
-                            "border_radius": "var(--border-radius) var(--border-radius) 0 0",
-                        },
-                    ),
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.hstack(
-                            rx.icon("trending_down", color="red.400", font_size="1.5em"),
-                            rx.heading(
-                                "Rashodi", 
-                                size="md",
-                                color="var(--light-text)",
-                            ),
-                            width="100%",
-                            justify="space-between",
-                        ),
-                        rx.heading(
-                            f"€{FinanceState.expenses:.2f}",
-                            size="xl",
-                            color="red.400",
-                            class_name="stat-value",
-                        ),
-                        rx.text(
-                            "Ukupno za tekući mesec",
-                            color="var(--muted-text)",
-                            class_name="stat-label",
-                        ),
-                        rx.hstack(
-                            rx.icon("arrow_upward", color="red.400", font_size="0.9em"),
-                            rx.text(
-                                "8% u odnosu na prošli mesec",
-                                color="red.400",
-                                font_size="0.85rem",
-                            ),
-                            class_name="stat-change negative",
-                        ),
-                        width="100%",
-                        align_items="flex-start",
-                        padding="1.25rem",
-                        background="var(--dark-card)",
-                        border_radius="var(--border-radius)",
-                        border="1px solid var(--border-light)",
-                        box_shadow="var(--box-shadow)",
-                        transition="var(--transition)",
-                        _hover={
-                            "transform": "translateY(-5px)",
-                            "box_shadow": "var(--box-shadow-hover)",
-                            "border_color": "red.400",
-                        },
-                        class_name="stat-card expense",
-                        position="relative",
-                        _before={
-                            "content": "''",
-                            "position": "absolute",
-                            "top": "0",
-                            "left": "0",
-                            "right": "0",
-                            "height": "4px",
-                            "background": "linear-gradient(90deg, #ef4444, #f87171)",
-                            "border_radius": "var(--border-radius) var(--border-radius) 0 0",
-                        },
-                    ),
-                ),
-                rx.box(
-                    rx.vstack(
-                        rx.hstack(
-                            rx.icon("account_balance", color="var(--gold-medium)", font_size="1.5em"),
-                            rx.heading(
-                                "Bilans", 
-                                size="md",
-                                color="var(--light-text)",
-                            ),
-                            width="100%",
-                            justify="space-between",
-                        ),
-                        rx.heading(
-                            f"€{FinanceState.savings:.2f}",
-                            size="xl",
-                            color="var(--gold-medium)",
-                            class_name="stat-value",
-                        ),
-                        rx.text(
-                            "Neto za tekući mesec",
-                            color="var(--muted-text)",
-                            class_name="stat-label",
-                        ),
-                        rx.hstack(
-                            rx.icon("arrow_downward", color="var(--muted-text)", font_size="0.9em"),
-                            rx.text(
-                                "3% u odnosu na prošli mesec",
-                                color="var(--muted-text)",
-                                font_size="0.85rem",
-                            ),
-                            class_name="stat-change",
-                        ),
-                        width="100%",
-                        align_items="flex-start",
-                        padding="1.25rem",
-                        background="var(--dark-card)",
-                        border_radius="var(--border-radius)",
-                        border="1px solid var(--border-light)",
-                        box_shadow="var(--box-shadow)",
-                        transition="var(--transition)",
-                        _hover={
-                            "transform": "translateY(-5px)",
-                            "box_shadow": "var(--box-shadow-hover)",
-                            "border_color": "var(--gold-medium)",
-                        },
-                        class_name="stat-card",
-                        position="relative",
-                        _before={
-                            "content": "''",
-                            "position": "absolute",
-                            "top": "0",
-                            "left": "0",
-                            "right": "0",
-                            "height": "4px",
-                            "background": "var(--gradient-gold)",
-                            "border_radius": "var(--border-radius) var(--border-radius) 0 0",
-                        },
-                    ),
-                ),
-                columns=[1, 3],
-                spacing="4",
-                width="100%",
-                class_name="budget-stats",
-            ),
-            width="100%",
-            align_items="stretch",
-            padding="1.5rem",
-            background="var(--dark-card)",
-            border_radius="var(--border-radius)",
-            border="1px solid var(--border-light)",
-            box_shadow="var(--box-shadow)",
-            margin_top="4",
-        ),
-        width="100%",
-    )
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: white;
+        }
 
-def delete_account_modal():
-    """Modal za potvrdu brisanja naloga."""
-    return rx.modal(
-        rx.modal_overlay(
-            rx.modal_content(
-                rx.modal_header(
-                    rx.hstack(
-                        rx.icon("warning", color="red.500"),
-                        rx.text("Potvrda brisanja naloga"),
-                    ),
-                    background="rgba(229, 62, 62, 0.1)",
-                    border_bottom="1px solid rgba(229, 62, 62, 0.2)",
-                ),
-                rx.modal_body(
-                    rx.text(
-                        "Da li ste sigurni da želite da izbrišete svoj nalog? Ova akcija je nepovratna i svi vaši podaci biće trajno izbrisani.",
-                        margin_y="4",
-                    ),
-                ),
-                rx.modal_footer(
-                    rx.hstack(
-                        rx.button(
-                            rx.hstack(
-                                rx.icon("close"),
-                                rx.text("Otkaži"),
-                            ),
-                            on_click=FinanceState.close_delete_account_modal,
-                            margin_right="1rem",
-                            class_name="cancel-button",
-                        ),
-                        rx.button(
-                            rx.hstack(
-                                rx.icon("delete"),
-                                rx.text("Izbriši nalog"),
-                            ),
-                            color_scheme="red",
-                            on_click=FinanceState.delete_account,
-                            class_name="danger-button",
-                        ),
-                        justify="flex-end",
-                        width="100%",
-                    ),
-                ),
-                background="var(--dark-card)",
-                color="var(--light-text)",
-                border="1px solid var(--border-light)",
-                border_radius="var(--border-radius-lg)",
-                box_shadow="var(--box-shadow)",
-                max_width="500px",
-                width="90%",
-                position="relative",
-                overflow="hidden",
-                _before={
-                    "content": "''",
-                    "position": "absolute",
-                    "top": "0",
-                    "left": "0",
-                    "width": "100%",
-                    "height": "100%",
-                    "background": "linear-gradient(135deg, rgba(229, 62, 62, 0.05), transparent)",
-                    "pointer_events": "none",
-                    "z_index": "-1",
-                },
-            ),
-        ),
-        is_open=FinanceState.delete_account_modal_open,
-    )
+        .btn-primary:hover {
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
 
-def profile():
-    return rx.box(
-        navbar(),
-        rx.container(
-            rx.box(
-                rx.grid(
-                    sidebar(),
-                    rx.vstack(
-                        rx.heading(
-                            "Korisnički profil", 
-                            size="xl", 
-                            align="center", 
-                            margin="6",
-                            background="var(--gradient-gold)",
-                            background_clip="text",
-                            webkit_text_fill_color="transparent",
-                            class_name="page-title",
-                        ),
-                        rx.text(
-                            "Upravljajte vašim profilom, finansijama i podešavanjima", 
-                            align="center", 
-                            margin_bottom="6",
-                            color="var(--muted-text)",
-                            font_size="1.1rem",
-                        ),
-                        rx.tabs(
-                            rx.tab_list(
-                                rx.tab(
-                                    rx.hstack(
-                                        rx.icon("person", color="var(--gold-medium)"),
-                                        rx.text("Moj Profil"),
-                                    ),
-                                    class_name="profile-tab",
-                                ),
-                                rx.tab(
-                                    rx.hstack(
-                                        rx.icon("pie_chart", color="var(--gold-medium)"),
-                                        rx.text("Moj Budžet"),
-                                    ),
-                                    class_name="profile-tab",
-                                ),
-                                rx.tab(
-                                    rx.hstack(
-                                        rx.icon("settings", color="var(--gold-medium)"),
-                                        rx.text("Podešavanja"),
-                                    ),
-                                    class_name="profile-tab",
-                                ),
-                                align="center",
-                                overflow_x="auto",
-                                border_bottom="1px solid var(--border-light)",
-                                width="100%",
-                                class_name="profile-tabs",
-                            ),
-                            rx.tab_panels(
-                                # Profile panel
-                                rx.tab_panel(
-                                    user_profile(),
-                                    padding_top="6",
-                                ),
-                                # Budget panel
-                                rx.tab_panel(
-                                    rx.vstack(
-                                        budget_stats(),
-                                        budget_planner(),
-                                        expense_tracker(),
-                                        spacing="6",
-                                        align_items="stretch",
-                                        width="100%",
-                                        padding_top="6",
-                                    ),
-                                ),
-                                # Settings panel
-                                rx.tab_panel(
-                                    account_settings(),
-                                    padding_top="6",
-                                ),
-                                width="100%",
-                            ),
-                            variant="enclosed",
-                            color_scheme="gold",
-                            size="lg",
-                            width="100%",
-                            isLazy=True,
-                        ),
-                        delete_account_modal(),
-                        spacing="6",
-                        align_items="stretch",
-                        width="100%",
-                    ),
-                    template_columns="280px 1fr",
-                    gap="2rem",
-                    width="100%",
-                    align_items="flex-start",
-                    class_name="profile-container",
-                ),
-                padding="2.5rem",
-                width="90%",
-                max_width="1200px",
-                background="rgba(16, 16, 18, 0.3)",
-                border_radius="var(--border-radius-lg)",
-                box_shadow="var(--box-shadow)",
-                position="relative",
-                overflow="hidden",
-                border="1px solid var(--border-light)",
-                backdrop_filter="blur(10px)",
-                margin="2rem auto",
-                class_name="container",
-            ),
-            padding_top="4",
-            padding_bottom="8",
-            width="100%",
-            max_width="1400px",
-        ),
-        rx.script(src="/js/profile_tabs.js"),
-        rx.script("""
-        // Script za aktivaciju "Moj Budžet" kartice
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("Profile page loaded, checking for active tab");
-            // Funkcija za aktivaciju kartice
-            function activateTab(tabIndex) {
-                // Pronađi sve tab elemente
-                const tabElements = document.querySelectorAll('.profile-tab');
-                console.log("Found tabs:", tabElements.length);
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+            color: var(--gold-bright);
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: opacity 0.3s ease;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .success-message i {
+            margin-right: 0.75rem;
+            font-size: 1.25em;
+            color: var(--gold-bright);
+        }
+        
+        /* Budget Planner Styles */
+        .budget-planner {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .income-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .income-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--gray-700);
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .budget-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-card {
+            background-color: var(--gray-100);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .category-header h4 {
+            font-size: 1.1rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-percent {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .category-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-desc {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 1rem;
+            min-height: 2.5rem;
+        }
+        
+        .category-progress {
+            height: 0.5rem;
+            background-color: var(--gray-200);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 1rem;
+        }
+        
+        .category-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .category-control label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        
+        .percent-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 0.5rem;
+            background: var(--gray-200);
+            border-radius: 1rem;
+            outline: none;
+        }
+        
+        .percent-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .percent-slider::-moz-range-thumb {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .budget-note {
+            background-color: #f0f9ff;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.9rem;
+        }
+        
+        .transaction-amount.savings {
+            color: var(--success);
+        }
+        
+        /* Expense Tracker Styles */
+        .expenses-tracker {
+            margin-top: 2rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .expense-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .expense-tab {
+            padding: 0.75rem 1.25rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--gray-500);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .expense-tab:hover {
+            color: var(--primary);
+        }
+        
+        .expense-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+        
+        .expense-tab-content {
+            display: none;
+        }
+        
+        .expense-tab-content.active {
+            display: block;
+        }
+        
+        .expense-form {
+            background-color: var(--gray-100);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .expense-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: var(--gray-700);
+        }
+        
+        .expense-form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .expense-form-col {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .expense-form-col label {
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+        
+        .expense-form-col input {
+            padding: 0.625rem 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #000000;
+        }
+        
+        .expense-form-button {
+            align-self: flex-end;
+        }
+        
+        .expense-table-container {
+            overflow-x: auto;
+        }
+        
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .expense-table th {
+            background-color: var(--gray-100);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 2px solid var(--gray-200);
+        }
+        
+        .expense-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .expense-table tbody tr:hover {
+            background-color: var(--gray-100);
+        }
+        
+        .expense-table tfoot td {
+            font-weight: 600;
+            border-top: 2px solid var(--gray-200);
+        }
+        
+        .expense-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .expense-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+        
+        .expense-delete {
+            color: var(--danger);
+        }
+        
+        .expense-delete:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .expense-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Profile Layout */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .profile-info {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--primary);
+        }
+
+        .profile-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .profile-email {
+            color: var(--muted-text);
+            font-size: 0.875rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--light-text);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: rgba(22, 22, 26, 0.5);
+            border: 1px solid transparent;
+        }
+        
+        .expense-form {
+            background-color: rgba(22, 22, 26, 0.5);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--box-shadow);
+        }
+
+        .expense-form h4 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #D4AF37;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .expense-form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .expense-form-col {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--gradient-gold);
+            color: white;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title i {
+            font-size: 1.25em;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--light-text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            color: #000000;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold-medium);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+        
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Budget Stats */
+        .budget-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(22, 22, 26, 0.6);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            flex: 1;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+            pointer-events: none;
+        }
+
+        .stat-card.income {
+            border-color: var(--success);
+        }
+
+        .stat-card.expense {
+            border-color: var(--danger);
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            background: var(--gradient-gold);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card.income .stat-value {
+            color: var(--success);
+        }
+
+        .stat-card.expense .stat-value {
+            color: var(--danger);
+        }
+
+        .stat-label {
+            color: var(--muted-text);
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Transactions */
+        .transactions-list {
+            margin-top: 2rem;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(22, 22, 26, 0.4);
+            border: 1px solid var(--border-light);
+            border-radius: var(--border-radius);
+            margin-bottom: 0.75rem;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .transaction-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .transaction-category {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .income {
+            color: var(--success);
+        }
+
+        .expense {
+            color: var(--danger);
+        }
+
+        /* Danger Zone */
+        .danger-zone {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #fee2e2;
+        }
+
+        .danger-zone h3 {
+            color: var(--danger);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .danger-zone p {
+            color: var(--gray-500);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(22, 22, 26, 0.85);
+            border-radius: var(--border-radius-lg);
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--box-shadow);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+        
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-500);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-col {
+                margin-bottom: 1.25rem;
+            }
+
+            .form-col:last-child {
+                margin-bottom: 0;
+            }
+        }
+
+        /* ========================================= */
+        /* KOMPLETNA MOBILNA RESPONSIVNOST - PROFILE */
+        /* ========================================= */
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body {
+                font-size: 16px; /* Prevent iOS zoom */
+                overflow-x: hidden;
+            }
+
+            /* Header - Mobile */
+            .header {
+                padding: 0.75rem 1rem !important;
+            }
+
+            .header-content {
+                flex-direction: column !important;
+                gap: 1rem;
+                align-items: stretch !important;
+            }
+
+            .logo {
+                justify-content: center !important;
+            }
+
+            .nav-links {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+                width: 100%;
+            }
+
+            .nav-links a {
+                padding: 0.75rem 1rem !important;
+                text-align: center;
+                border-radius: 0.5rem;
+                background: rgba(212, 175, 55, 0.1);
+            }
+
+            /* Main Container - Mobile */
+            .main-container {
+                margin-top: 120px !important; /* Account for taller mobile header */
+                padding: 1rem !important;
+                max-width: 100% !important;
+            }
+
+            /* Sidebar - Mobile */
+            .sidebar {
+                position: fixed !important;
+                top: 0;
+                left: -100%;
+                width: 280px !important;
+                height: 100vh;
+                z-index: 1001;
+                transition: left 0.3s ease !important;
+                overflow-y: auto;
+                padding-top: 120px !important;
+            }
+
+            .sidebar.active {
+                left: 0 !important;
+            }
+
+            /* Mobile sidebar toggle */
+            .mobile-menu-toggle {
+                display: block !important;
+                position: fixed;
+                top: 80px;
+                left: 1rem;
+                z-index: 1002;
+                background: var(--gold-bright);
+                color: var(--dark-bg);
+                border: none;
+                padding: 0.75rem;
+                border-radius: 0.5rem;
+                font-size: 1.25rem;
+                cursor: pointer;
+                box-shadow: var(--box-shadow);
+            }
+
+            /* Content Area - Mobile */
+            .content-area {
+                margin-left: 0 !important;
+                padding: 1rem !important;
+                width: 100% !important;
+            }
+
+            /* Dashboard Grid - Mobile */
+            .dashboard-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            /* Stats Cards - Mobile */
+            .stat-card {
+                padding: 1.5rem 1rem !important;
+                text-align: center;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem !important;
+            }
+
+            .stat-card p {
+                font-size: 0.9rem !important;
+            }
+
+            /* Charts - Mobile */
+            .chart-container {
+                padding: 1rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            /* Forms - Mobile */
+            .form-container {
+                padding: 1.5rem 1rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .form-row {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            .form-group {
+                width: 100% !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Buttons - Mobile */
+            .btn, .primary-btn, .secondary-btn {
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                min-height: 48px; /* Touch target */
+                margin-bottom: 0.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+            }
+
+            /* Tables - Mobile */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 600px;
+                font-size: 0.875rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem !important;
+                white-space: nowrap;
+            }
+
+            /* Navigation Tabs - Mobile */
+            .nav-tabs {
+                flex-direction: column !important;
+                gap: 0.25rem !important;
+            }
+
+            .nav-tab {
+                width: 100% !important;
+                text-align: center !important;
+                padding: 1rem !important;
+            }
+
+            /* Modals - Mobile */
+            .modal-content {
+                width: 95vw !important;
+                max-width: none !important;
+                margin: 1rem auto !important;
+                padding: 1.5rem 1rem !important;
+                max-height: calc(100vh - 2rem) !important;
+                overflow-y: auto;
+            }
+
+            /* Typography - Mobile */
+            h1 { font-size: 1.75rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.25rem !important; }
+            h4 { font-size: 1.125rem !important; }
+            h5 { font-size: 1rem !important; }
+
+            /* Cards - Mobile */
+            .card {
+                margin: 1rem 0 !important;
+                padding: 1.5rem 1rem !important;
+            }
+
+            .card-header {
+                padding: 1rem !important;
+                text-align: center;
+            }
+
+            .card-body {
+                padding: 1rem !important;
+            }
+
+            /* Budget specific - Mobile */
+            .budget-category {
+                padding: 1rem !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            .expense-item {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 0.5rem !important;
+                padding: 1rem !important;
+            }
+
+            /* Budget Stats - Mobile Enhanced */
+            .budget-stats {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            .stat-card {
+                padding: 1.25rem 1rem !important;
+                text-align: center !important;
+            }
+
+            .stat-card h3 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            .stat-card .stat-value {
+                font-size: 1.75rem !important;
+                font-weight: bold !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            .stat-card .stat-label {
+                font-size: 0.9rem !important;
+                opacity: 0.8;
+            }
+
+            /* Budget Planner - Mobile */
+            .budget-planner {
+                padding: 1rem !important;
+                margin: 1rem 0 !important;
+            }
+
+            .budget-planner h3 {
+                font-size: 1.25rem !important;
+                margin-bottom: 1rem !important;
+                text-align: center;
+            }
+
+            .budget-categories {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+
+            .budget-category {
+                padding: 1.25rem 1rem !important;
+                border-radius: 0.75rem !important;
+            }
+
+            .budget-category h4 {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem !important;
+                text-align: center;
+            }
+
+            .budget-inputs {
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }
+
+            .budget-inputs input {
+                width: 100% !important;
+                padding: 0.875rem !important;
+                font-size: 16px !important; /* Prevent iOS zoom */
+            }
+
+            .budget-progress {
+                margin: 1rem 0 !important;
+            }
+
+            .progress-bar {
+                height: 10px !important;
+                border-radius: 5px !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            .progress-text {
+                display: flex !important;
+                justify-content: space-between !important;
+                font-size: 0.85rem !important;
+                margin-top: 0.5rem !important;
+            }
+
+            /* Settings Section - Mobile Enhanced */
+            #settingsSection {
+                padding: 1rem !important;
+            }
+
+            #settingsSection .section-title {
+                font-size: 1.5rem !important;
+                text-align: center !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            #settingsSection .form-group {
+                margin-bottom: 1.5rem !important;
+                padding: 1.25rem 1rem !important;
+                background: rgba(22, 22, 26, 0.5) !important;
+                border-radius: 0.75rem !important;
+                border: 1px solid var(--border-light) !important;
+            }
+
+            #settingsSection h3 {
+                font-size: 1.25rem !important;
+                margin-bottom: 1rem !important;
+                text-align: center !important;
+                color: var(--gold-bright) !important;
+            }
+
+            #settingsSection .form-label {
+                font-size: 0.95rem !important;
+                margin-bottom: 0.5rem !important;
+                font-weight: 600 !important;
+            }
+
+            #settingsSection .form-control {
+                width: 100% !important;
+                padding: 0.875rem !important;
+                font-size: 16px !important; /* Prevent iOS zoom */
+                border-radius: 0.5rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            /* Danger Zone - Mobile */
+            .danger-zone {
+                background: rgba(239, 68, 68, 0.1) !important;
+                border: 1px solid rgba(239, 68, 68, 0.3) !important;
+                border-radius: 0.75rem !important;
+                padding: 1.25rem 1rem !important;
+                margin-top: 2rem !important;
+                text-align: center !important;
+            }
+
+            .danger-zone h3 {
+                color: #ef4444 !important;
+                font-size: 1.1rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            .danger-zone p {
+                font-size: 0.9rem !important;
+                margin-bottom: 1rem !important;
+                line-height: 1.5 !important;
+            }
+
+            .btn-danger {
+                background: #ef4444 !important;
+                color: white !important;
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                border-radius: 0.5rem !important;
+                border: none !important;
+                font-weight: 600 !important;
+            }
+
+            /* Budget Action Buttons - Mobile */
+            .budget-actions {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+                margin-top: 1.5rem !important;
+            }
+
+            .budget-actions .btn {
+                width: 100% !important;
+                padding: 1rem !important;
+                font-size: 1rem !important;
+                border-radius: 0.5rem !important;
+            }
+
+            /* Income/Expense Forms - Mobile */
+            .income-expense-forms {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+                margin: 2rem 0 !important;
+            }
+
+            .income-form, .expense-form {
+                background: rgba(22, 22, 26, 0.7) !important;
+                padding: 1.5rem 1rem !important;
+                border-radius: 0.75rem !important;
+                border: 1px solid var(--border-light) !important;
+            }
+
+            .income-form h4, .expense-form h4 {
+                font-size: 1.2rem !important;
+                margin-bottom: 1rem !important;
+                text-align: center !important;
+            }
+
+            /* Budget Summary Cards - Mobile */
+            .budget-summary {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 1rem !important;
+                margin: 1.5rem 0 !important;
+            }
+
+            .summary-card {
+                background: rgba(22, 22, 26, 0.8) !important;
+                padding: 1.25rem 1rem !important;
+                border-radius: 0.75rem !important;
+                border-left: 4px solid var(--gold-bright) !important;
+                text-align: center !important;
+            }
+
+            .summary-card.income {
+                border-left-color: #10b981 !important;
+            }
+
+            .summary-card.expense {
+                border-left-color: #ef4444 !important;
+            }
+
+            .summary-card.balance {
+                border-left-color: var(--gold-bright) !important;
+            }
+
+            .summary-value {
+                font-size: 1.5rem !important;
+                font-weight: bold !important;
+                margin: 0.5rem 0 !important;
+            }
+
+            .summary-label {
+                font-size: 0.9rem !important;
+                opacity: 0.8 !important;
+            }
+
+            /* Progress bars - Mobile */
+            .progress-container {
+                margin: 1rem 0 !important;
+            }
+
+            .progress-bar {
+                height: 8px !important;
+                border-radius: 4px;
+            }
+
+            /* Spacing adjustments - Mobile */
+            .mb-4 { margin-bottom: 1.5rem !important; }
+            .mt-4 { margin-top: 1.5rem !important; }
+            .py-4 { padding: 1.5rem 0 !important; }
+            .px-4 { padding: 0 1rem !important; }
+        }
+
+        /* Extra Small Devices */
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0.5rem !important;
+            }
+
+            .content-area {
+                padding: 0.5rem !important;
+            }
+
+            .card {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .form-container {
+                padding: 1rem 0.75rem !important;
+            }
+
+            .mobile-menu-toggle {
+                left: 0.5rem !important;
+                padding: 0.5rem !important;
+            }
+
+            /* Form improvements for very small screens */
+            input, select, textarea {
+                font-size: 16px !important; /* Prevent zoom on iOS */
+                padding: 0.875rem !important;
+            }
+
+            .btn {
+                padding: 0.875rem !important;
+                font-size: 0.95rem !important;
+            }
+        }
+
+        /* Tablet Portrait */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-container {
+                padding: 1.5rem !important;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            .sidebar {
+                width: 220px !important;
+            }
+
+            .content-area {
+                margin-left: 220px !important;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            /* Touch devices */
+            button, .btn, a, input[type="submit"] {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            /* Larger tap targets */
+            .nav-tab {
+                padding: 1rem !important;
+            }
+
+            /* Remove hover effects on touch devices */
+            .card:hover,
+            .stat-card:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar,
+            .mobile-menu-toggle,
+            .header {
+                display: none !important;
+            }
+
+            .content-area {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            body {
+                color: #000 !important;
+                background: #fff !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" style="background: rgba(10, 10, 12, 0.95); padding: 1rem 2rem; backdrop-filter: blur(10px); box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; border-bottom: 1px solid rgba(212, 175, 55, 0.15);">
+        <div class="header-content" style="max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <a href="preview-fixed.html" class="logo" style="text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+                <img id="siteLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9InVybCgjZ3JhZGllbnQwKSIvPgo8dGV4dCB4PSIyNSIgeT0iMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiMwRTBFMTAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkdCPC90ZXh0Pgo8ZGVmcz4KPGxpbmVhckdyYWRpZW50IGlkPSJncmFkaWVudDAiIHgxPSIwIiB5MT0iMCIgeDI9IjUwIiB5Mj0iNTAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KPHN0b3Agc3RvcC1jb2xvcj0iI0ZGRDcwMCIvPgo8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNENEFGMzciLz4KPC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8L3N2Zz4K" alt="Golden Balance Logo" style="height: 50px; width: auto; display: block;">
+                <span style="font-size: 1.6rem; font-weight: 700; background: linear-gradient(135deg, #FFD700, #D4AF37, #B8860B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Golden Balance</span>
+            </a>
+            <div class="header-actions" style="display: flex; gap: 1rem; align-items: center;">
+                <button onclick="loadLogo()" class="btn" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <i class="fas fa-sync"></i> Test Logo
+                </button>
+                <a href="preview-fixed.html" class="btn" style="background: linear-gradient(135deg, #D4AF37, #A8861D); color: #0E0E10; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <i class="fas fa-home"></i> Početna
+                </a>
+                <a href="admin.html" id="adminSettingsBtn" class="btn" style="background: linear-gradient(135deg, #C5A028, #A8861D); color: #0E0E10; border: none; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); display: none;">
+                    <i class="fas fa-cogs"></i> Admin
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dodatni prostor ispod fiksnog headera -->
+    <div style="height: 80px;"></div>
+    
+    <!-- Mobile Menu Toggle Button -->
+    <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()" style="display: none;">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Mobile Sidebar Overlay -->
+    <div class="mobile-sidebar-overlay" onclick="closeMobileSidebar()" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+    
+    <div class="container">
+        <div class="profile-container" style="display: flex; gap: 2rem; position: relative;">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="mobileSidebar" style="flex: 1; max-width: 250px; background: rgba(22, 22, 26, 0.7); border-radius: var(--border-radius); padding: var(--spacing-md); box-shadow: var(--box-shadow); border: 1px solid var(--border-light); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+                <div class="profile-info">
+                    <img src="https://ui-avatars.com/api/?name=Korisnik&background=3b82f6&color=fff&size=128" 
+                         alt="Profilna slika" 
+                         class="profile-pic" 
+                         id="userProfilePic">
+                    <h2 class="profile-name" id="userName">Korisničko Ime</h2>
+                    <p class="profile-email" id="userEmail">korisnik@example.com</p>
+                </div>
                 
-                // Ako postoje tabovi i imamo validni indeks, simuliraj klik na željenu karticu
-                if (tabElements && tabElements.length > tabIndex && tabIndex >= 0) {
-                    console.log("Activating tab:", tabIndex);
-                    setTimeout(function() {
-                        tabElements[tabIndex].click();
-                    }, 300);
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#profile" class="nav-link active" id="profileLink">
+                            <i class="fas fa-user-edit"></i>
+                            Moj Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#budget" class="nav-link" id="budgetLink">
+                            <i class="fas fa-wallet"></i>
+                            Moj Budžet
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#settings" class="nav-link" id="settingsLink">
+                            <i class="fas fa-cog"></i>
+                            Podešavanja
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Odjava
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+
+            <!-- Main Content -->
+            <main class="main-content" style="flex: 3; background: rgba(22, 22, 26, 0.7); border-radius: var(--border-radius); padding: var(--spacing-lg); box-shadow: var(--box-shadow); border: 1px solid var(--border-light); backdrop-filter: blur(10px); position: relative; overflow: hidden;">
+                <!-- Profile Section -->
+                <section id="profileSection">
+                    <h2 class="section-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-edit"></i> Moj Profil
+                    </h2>
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="firstName" class="form-label">Ime</label>
+                                <input type="text" id="firstName" class="form-control" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="lastName" class="form-label">Prezime</label>
+                                <input type="text" id="lastName" class="form-control" required>
+                            </div>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="email" class="form-label">Email adresa</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="form-col">
+                                <label for="phone" class="form-label">Broj telefona</label>
+                                <input type="tel" id="phone" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="address" class="form-label">Adresa</label>
+                            <input type="text" id="address" class="form-control">
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="form-col">
+                                <label for="city" class="form-label">Grad</label>
+                                <input type="text" id="city" class="form-control">
+                            </div>
+                            <div class="form-col">
+                                <label for="postalCode" class="form-label">Poštanski broj</label>
+                                <input type="text" id="postalCode" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="profileImage" class="form-label">Profilna slika</label>
+                            <input type="file" id="profileImage" class="form-control" accept="image/*">
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Sačuvaj promene
+                        </button>
+                    </form>
+                </section>
+
+
+                <!-- Budget Section (initially hidden) -->
+                <section id="budgetSection" style="display: none;">
+                    <div id="budgetHeader" style="background: rgba(22, 22, 26, 0.9); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        <h2 class="section-title" style="font-size: 2rem; font-weight: 800; margin: 0; color: #D4AF37; display: flex; align-items: center; gap: 1rem;">
+                            <i class="fas fa-chart-pie" style="color: #D4AF37; font-size: 1.8rem;"></i> 
+                            <span>Praćenje Proračuna</span>
+                        </h2>
+                        <p style="margin: 0.5rem 0 0; color: #D4AF37; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Pratite sve svoje prihode i troškove na jednom mjestu</p>
+                    </div>
+                    
+                    <style>
+                        .budget-stats {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                            gap: 1.5rem;
+                            margin: 2rem 0;
+                        }
+                        
+                        .stat-card {
+                            background: rgba(22, 22, 26, 0.7);
+                            backdrop-filter: blur(10px);
+                            border-radius: 12px;
+                            padding: 1.5rem;
+                            border: 1px solid var(--border-light);
+                            transition: transform 0.3s ease, box-shadow 0.3s ease;
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        
+                        .stat-card::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            height: 4px;
+                            background: var(--gradient-gold);
+                        }
+                        
+                        .stat-card.income::before { background: var(--gradient-gold); }
+                        .stat-card.expense::before { background: linear-gradient(90deg, #ef4444, #f87171); }
+                        
+                        .stat-card:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+                        }
+                        
+                        .stat-label {
+                            color: #ffffff; /* Bijela boja za bolji kontrast */
+                            font-size: 1rem; /* Povećana veličina fonta */
+                            margin-bottom: 0.5rem;
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            font-weight: 600; /* Podebljani font */
+                            text-shadow: 0 1px 2px rgba(0,0,0,0.2); /* Lagana sjena za bolju čitljivost */
+                        }
+                        
+                        .stat-value {
+                            font-size: 1.75rem;
+                            font-weight: 700;
+                            margin: 0.5rem 0;
+                            background: var(--gradient-gold);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                        }
+                        
+                        .stat-card.expense .stat-value {
+                            background: linear-gradient(90deg, #ef4444, #f87171);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                        }
+                        
+                        .stat-change {
+                            font-size: 0.85rem;
+                            color: var(--muted-text);
+                            display: flex;
+                            align-items: center;
+                            gap: 0.25rem;
+                        }
+                        
+                        .stat-change.positive {
+                            color: #10b981;
+                        }
+                        
+                        .stat-change.negative {
+                            color: #ef4444;
+                        }
+                    </style>
+                    
+                    <div class="budget-stats">
+                        <div class="stat-card income">
+                            <div class="stat-label">
+                                <i class="fas fa-arrow-down" style="color: #D4AF37;"></i> <span style="color: #D4AF37; font-weight: 600;">Ukupni prihodi</span>
+                            </div>
+                            <div class="stat-value" id="totalIncome">0 RSD</div>
+                            <div class="stat-change" id="incomeChange">
+                                <i class="fas fa-arrow-up"></i> 0% u odnosu na prošli mesec
+                            </div>
+                        </div>
+                        <div class="stat-card expense">
+                            <div class="stat-label">
+                                <i class="fas fa-arrow-up" style="color: #D4AF37;"></i> <span style="color: #D4AF37; font-weight: 600;">Ukupni troškovi</span>
+                            </div>
+                            <div class="stat-value" id="totalExpenses">0 RSD</div>
+                            <div class="stat-change" id="expenseChange">
+                                <i class="fas fa-arrow-up"></i> 0% u odnosu na prošli mesec
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">
+                                <i class="fas fa-wallet" style="color: #D4AF37;"></i> <span style="color: #D4AF37; font-weight: 600;">Trenutno stanje</span>
+                            </div>
+                            <div class="stat-value" id="currentBalance">0 RSD</div>
+                            <div class="stat-change" id="balanceChange">
+                                <i class="fas fa-arrow-up"></i> 0% u odnosu na prošli mesec
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Praćenje proračuna -->                 
+                    <style>
+                        .budget-planner {
+                            margin-top: 2.5rem;
+                        }
+                        
+                        .section-title {
+                            font-size: 1.5rem;
+                            font-weight: 600;
+                            margin: 0 0 1.5rem 0;
+                            color: var(--light-text);
+                            display: flex;
+                            align-items: center;
+                            gap: 0.75rem;
+                        }
+                        
+                        .section-title i {
+                            color: var(--gold-bright);
+                        }
+                        
+                        .income-section {
+                            background: rgba(22, 22, 26, 0.7);
+                            backdrop-filter: blur(10px);
+                            border-radius: 12px;
+                            padding: 1.75rem;
+                            border: 1px solid var(--border-light);
+                            margin-bottom: 2rem;
+                        }
+                        
+                        .section-subtitle {
+                            font-size: 1.1rem;
+                            color: var(--muted-text);
+                            margin: 0.5rem 0 2rem 0;
+                            line-height: 1.6;
+                        }
+                        
+                        .form-group {
+                            margin-bottom: 1.5rem;
+                        }
+                        
+                        .form-label {
+                            display: block;
+                            margin-bottom: 0.5rem;
+                            font-weight: 500;
+                            color: var(--light-text);
+                        }
+                        
+                        .input-group {
+                            display: flex;
+                            gap: 1rem;
+                        }
+                        
+                        .form-control {
+                            flex: 1;
+                            padding: 0.9rem 1.25rem;
+                            background: rgba(16, 16, 18, 0.7);
+                            border: 1px solid var(--border-light);
+                            border-radius: 8px;
+                            color: var(--light-text);
+                            font-size: 1rem;
+                            transition: all 0.2s ease;
+                        }
+                        
+                        .form-control:focus {
+                            outline: none;
+                            border-color: var(--gold-bright);
+                            box-shadow: 0 0 0 3px rgba(245, 193, 39, 0.2);
+                        }
+                        
+                        .btn {
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.5rem;
+                            padding: 0.9rem 1.75rem;
+                            font-weight: 600;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            transition: all 0.2s ease;
+                            border: none;
+                            font-size: 1rem;
+                        }
+                        
+                        .btn-primary {
+                            background: var(--gradient-gold);
+                            color: #000;
+                        }
+                        
+                        .btn-primary:hover {
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(245, 193, 39, 0.2);
+                        }
+                        
+                        .input-hint {
+                            font-size: 0.85rem;
+                            color: var(--muted-text);
+                            margin-top: 0.5rem;
+                            line-height: 1.5;
+                        }
+                    </style>
+                    
+                    <div class="budget-planner">
+                        <h3 class="section-title" style="color: #D4AF37; font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem;">
+                            <i class="fas fa-chart-pie" style="color: #D4AF37;"></i> Praćenje proračuna
+                        </h3>
+                        <p class="section-subtitle" style="color: #000000; font-size: 1.1rem; margin-bottom: 2rem;">
+                            Unesite svoje mesečne prihode i prilagodite kategorije troškova prema vašim potrebama.
+                        </p>
+                        
+                        <div class="income-section">
+                            <h4 style="font-size: 1.25rem; margin: 0 0 1.5rem 0; color: #D4AF37;">
+                                <i class="fas fa-money-bill-wave" style="margin-right: 0.5rem; color: #D4AF37;"></i> Mesečni prihodi
+                            </h4>
+                            
+                            <div class="form-group">
+                                <label for="monthlyIncome" class="form-label">Ukupni mesečni prihod (RSD)</label>
+                                <div class="input-group">
+                                    <input 
+                                        type="number" 
+                                        id="monthlyIncome" 
+                                        class="form-control" 
+                                        placeholder="npr. 150000"
+                                        min="0"
+                                        step="1000"
+                                    >
+                                    <button type="button" id="calculateBudget" class="btn btn-primary">
+                                        <i class="fas fa-calculator"></i> Izračunaj raspodelu
+                                    </button>
+                                </div>
+                                <p class="input-hint">
+                                    Unesite vaš ukupan mesečni prihod kako bismo vam pomogli sa planiranjem budžeta.
+                                    Preporučeno je da uključite sve izvore prihoda za tačniju analizu.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <style>
+                            .budget-categories {
+                                display: grid;
+                                gap: 1.5rem;
+                                margin-bottom: 2.5rem;
+                            }
+                            
+                            .category-card {
+                                background: rgba(22, 22, 26, 0.7);
+                                backdrop-filter: blur(10px);
+                                border-radius: 12px;
+                                padding: 1.75rem;
+                                border: 1px solid var(--border-light);
+                                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                                position: relative;
+                                overflow: hidden;
+                            }
+                            
+                            .category-card::before {
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                width: 4px;
+                                height: 100%;
+                            }
+                            
+                            #necessitiesCard::before { background: #3b82f6; }
+                            #hobbyCard::before { background: #8b5cf6; }
+                            #savingsCard::before { background: #10b981; }
+                            
+                            .category-card:hover {
+                                transform: translateY(-3px);
+                                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+                            }
+                            
+                            .category-header {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin-bottom: 1rem;
+                            }
+                            
+                            .category-header h4 {
+                                margin: 0;
+                                font-size: 1.1rem;
+                                font-weight: 600;
+                                color: #D4AF37;
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            }
+                            
+                            .category-header h4 i {
+                                width: 32px;
+                                height: 32px;
+                                background: rgba(59, 130, 246, 0.1);
+                                border-radius: 8px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #3b82f6;
+                            }
+                            
+                            #hobbyCard .category-header h4 i {
+                                background: rgba(139, 92, 246, 0.1);
+                                color: #8b5cf6;
+                            }
+                            
+                            #savingsCard .category-header h4 i {
+                                background: rgba(16, 185, 129, 0.1);
+                                color: #10b981;
+                            }
+                            
+                            .category-percent {
+                                font-size: 1.25rem;
+                                font-weight: 700;
+                                color: var(--gold-bright);
+                            }
+                            
+                            .category-amount {
+                                font-size: 1.5rem;
+                                font-weight: 700;
+                                margin: 0.5rem 0;
+                                color: var(--light-text);
+                            }
+                            
+                            .category-desc {
+                                font-size: 0.9rem;
+                                color: var(--muted-text);
+                                margin-bottom: 1.5rem;
+                                line-height: 1.5;
+                            }
+                            
+                            .category-progress {
+                                height: 8px;
+                                background: rgba(255, 255, 255, 0.05);
+                                border-radius: 4px;
+                                margin-bottom: 1.5rem;
+                                overflow: hidden;
+                            }
+                            
+                            .progress-bar {
+                                height: 100%;
+                                border-radius: 4px;
+                                transition: width 0.3s ease;
+                            }
+                            
+                            #necessitiesCard .progress-bar { background: #3b82f6; }
+                            #hobbyCard .progress-bar { background: #8b5cf6; }
+                            #savingsCard .progress-bar { background: #10b981; }
+                            
+                            .category-control {
+                                margin-top: 1.5rem;
+                            }
+                            
+                            .category-control label {
+                                display: block;
+                                margin-bottom: 0.5rem;
+                                font-size: 0.9rem;
+                                color: var(--muted-text);
+                            }
+                            
+                            .percent-slider {
+                                width: 100%;
+                                height: 6px;
+                                -webkit-appearance: none;
+                                appearance: none;
+                                background: rgba(255, 255, 255, 0.1);
+                                border-radius: 3px;
+                                outline: none;
+                                margin: 0;
+                                padding: 0;
+                            }
+                            
+                            .percent-slider::-webkit-slider-thumb {
+                                -webkit-appearance: none;
+                                appearance: none;
+                                width: 18px;
+                                height: 18px;
+                                border-radius: 50%;
+                                background: var(--gold-bright);
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                            }
+                            
+                            .percent-slider::-moz-range-thumb {
+                                width: 18px;
+                                height: 18px;
+                                border-radius: 50%;
+                                background: var(--gold-bright);
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                                border: none;
+                            }
+                            
+                            .percent-slider:hover::-webkit-slider-thumb {
+                                transform: scale(1.1);
+                                box-shadow: 0 0 0 4px rgba(245, 193, 39, 0.2);
+                            }
+                            
+                            .percent-slider:active::-webkit-slider-thumb {
+                                transform: scale(0.95);
+                            }
+                            
+                            .slider-value {
+                                display: flex;
+                                justify-content: space-between;
+                                margin-top: 0.5rem;
+                                font-size: 0.8rem;
+                                color: var(--muted-text);
+                            }
+                        </style>
+                        
+                        <div id="budgetCategories" style="display: none;">
+                            <h3 class="section-title" style="margin-bottom: 1.5rem; color: #D4AF37;">
+                                <i class="fas fa-sliders-h" style="color: #D4AF37;"></i> Podešavanje kategorija
+                            </h3>
+                            <p class="section-subtitle" style="margin-top: -1rem;">
+                                Prilagodite procente za svaku kategoriju prema vašim potrebama. Ukupan zbir mora biti 100%.
+                            </p>
+                            
+                            <div class="budget-categories">
+                                <!-- Glavne potrebe -->
+                                <div class="category-card" id="necessitiesCard">
+                                    <div class="category-header">
+                                        <h4><i class="fas fa-shopping-basket"></i> Glavne potrebe</h4>
+                                        <span class="category-percent" id="necessitiesPercentValue">50%</span>
+                                    </div>
+                                    <div class="category-amount" id="necessitiesAmount">0 RSD</div>
+                                    <div class="category-desc">
+                                        Hrana, računi, stanarina, gorivo i ostale osnovne životne potrebe. 
+                                        Preporučeni iznos je 50-60% vaših prihoda.
+                                    </div>
+                                    <div class="category-progress">
+                                        <div class="progress-bar" style="width: 50%;"></div>
+                                    </div>
+                                    <div class="category-control">
+                                        <label for="necessitiesPercent">Podešavanje procenta</label>
+                                        <input type="range" id="necessitiesPercent" min="10" max="80" value="50" class="percent-slider">
+                                        <div class="slider-value">
+                                            <span>10%</span>
+                                            <span>80%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Hobi i zabava -->
+                                <div class="category-card" id="hobbyCard">
+                                    <div class="category-header">
+                                        <h4><i class="fas fa-gamepad"></i> Hobi i zabava</h4>
+                                        <span class="category-percent" id="hobbyPercentValue">30%</span>
+                                    </div>
+                                    <div class="category-amount" id="hobbyAmount">0 RSD</div>
+                                    <div class="category-desc">
+                                        Treninzi, restorani, dostava, izlasci, kupovina i ostale aktivnosti za zabavu. 
+                                        Preporučeno je da ne prelazite 30% vaših prihoda.
+                                    </div>
+                                    <div class="category-progress">
+                                        <div class="progress-bar" style="width: 30%;"></div>
+                                    </div>
+                                    <div class="category-control">
+                                        <label for="hobbyPercent">Podešavanje procenta</label>
+                                        <input type="range" id="hobbyPercent" min="10" max="60" value="30" class="percent-slider">
+                                        <div class="slider-value">
+                                            <span>10%</span>
+                                            <span>60%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Štednja i ulaganja -->
+                                <div class="category-card" id="savingsCard">
+                                    <div class="category-header">
+                                        <h4><i class="fas fa-piggy-bank"></i> Štednja i ulaganja</h4>
+                                        <span class="category-percent" id="savingsPercentValue">20%</span>
+                                    </div>
+                                    <div class="category-amount" id="savingsAmount">0 RSD</div>
+                                    <div class="category-desc">
+                                        Ušteđevina i ulaganja za budućnost. Preporučeno je da štedite najmanje 10-20% vaših prihoda 
+                                        kako biste obezbedili finansijsku sigurnost i ostvarili dugoročne ciljeve.
+                                    </div>
+                                    <div class="category-progress">
+                                        <div class="progress-bar" style="width: 20%;"></div>
+                                    </div>
+                                    <div class="category-control">
+                                        <label for="savingsPercent">Podešavanje procenta</label>
+                                        <input type="range" id="savingsPercent" min="10" max="40" value="20" class="percent-slider">
+                                        <div class="slider-value">
+                                            <span>10%</span>
+                                            <span>40%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="budget-actions" style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light);">
+                                <div class="budget-note" style="flex: 1; margin-right: 1rem;">
+                                    <div style="display: flex; align-items: flex-start; gap: 0.75rem; background: rgba(16, 16, 18, 0.9); padding: 1rem; border-radius: 8px; border: 1px solid var(--gold-medium); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">
+                                        <i class="fas fa-info-circle" style="color: #D4AF37; font-size: 1.1rem; margin-top: 0.2rem;"></i>
+                                        <div>
+                                            <p style="margin: 0 0 0.5rem 0; font-weight: 600; color: #D4AF37; font-size: 1rem;">Savet za dobru finansijsku praksu</p>
+                                            <p style="margin: 0; font-size: 0.9rem; color: #ffffff; line-height: 1.5;">
+                                                Pravilna raspodela budžeta ključna je za finansijsku stabilnost. Pokušajte da se držite preporučenih vrednosti:
+                                                <span style="color: #3b82f6;">50-60% osnovne potrebe</span>, 
+                                                <span style="color: #8b5cf6;">20-30% lična zadovoljstva</span> i 
+                                                <span style="color: #10b981;">10-20% štednja/ulaganja</span>.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="budget-summary" style="background: rgba(22, 22, 26, 0.7); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; min-width: 200px;">
+                                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                        <span style="color: var(--muted-text); font-size: 0.9rem;">Ukupno:</span>
+                                        <span id="totalPercentage" style="font-weight: 700; font-size: 1.1rem;">100%</span>
+                                    </div>
+                                    <div style="height: 4px; background: rgba(255, 255, 255, 0.1); border-radius: 2px; margin-bottom: 0.5rem; overflow: hidden;">
+                                        <div id="totalPercentageBar" style="height: 100%; width: 100%; background: var(--gradient-gold);"></div>
+                                    </div>
+                                    <div id="percentageStatus" style="text-align: right; font-size: 0.8rem; color: #10b981;">
+                                        <i class="fas fa-check-circle"></i> Savršena raspodela
+                                    </div>
+                                </div>
+                                
+                                <button id="saveBudgetPlan" class="btn btn-primary" style="margin-left: 1.5rem; white-space: nowrap;">
+                                    <i class="fas fa-save"></i> Sačuvaj plan budžeta
+                                </button>
+                            </div>
+                            
+                            <!-- Tabele za unos troškova po kategorijama -->
+                            <div id="expenses" class="expenses-tracker">
+                                <h3 class="section-title" style="font-size: 1.25rem; margin-top: 2rem; color: #D4AF37;">
+                                    <i class="fas fa-list-alt" style="color: #D4AF37;"></i> Unos i praćenje troškova
+                                </h3>
+                                
+                                <!-- Tabs za kategorije -->
+                                <div class="expense-tabs">
+                                    <button class="expense-tab active" data-tab="necessities">
+                                        <i class="fas fa-shopping-basket"></i> Glavne potrebe
+                                    </button>
+                                    <button class="expense-tab" data-tab="hobby">
+                                        <i class="fas fa-gamepad"></i> Hobi
+                                    </button>
+                                    <button class="expense-tab" data-tab="savings">
+                                        <i class="fas fa-piggy-bank"></i> Štednja
+                                    </button>
+                                </div>
+                                
+                                <!-- Tabela za Glavne potrebe -->
+                                <div class="expense-tab-content active" id="necessitiesTab">
+                                    <div class="expense-form">
+                                        <h4>Dodaj novi trošak - Glavne potrebe</h4>
+                                        <div class="expense-form-row">
+                                            <div class="expense-form-col">
+                                                <label for="necessities-name">Naziv</label>
+                                                <input type="text" id="necessities-name" placeholder="npr. Račun za struju">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="necessities-amount">Iznos (RSD)</label>
+                                                <input type="number" id="necessities-amount" placeholder="npr. 5000">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="necessities-date">Datum</label>
+                                                <input type="date" id="necessities-date">
+                                            </div>
+                                            <div class="expense-form-col expense-form-button">
+                                                <button type="button" id="necessities-add" class="btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Dodaj
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="expense-table-container">
+                                        <table class="expense-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Naziv</th>
+                                                    <th>Iznos</th>
+                                                    <th>Datum</th>
+                                                    <th>Akcije</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="necessities-tbody">
+                                                <!-- Ovde će JavaScript dodavati redove -->
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="1"><strong>Ukupno:</strong></td>
+                                                    <td id="necessities-total">0 RSD</td>
+                                                    <td colspan="2"></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tabela za Hobi -->
+                                <div class="expense-tab-content" id="hobbyTab">
+                                    <div class="expense-form">
+                                        <h4>Dodaj novi trošak - Hobi</h4>
+                                        <div class="expense-form-row">
+                                            <div class="expense-form-col">
+                                                <label for="hobby-name">Naziv</label>
+                                                <input type="text" id="hobby-name" placeholder="npr. Teretana">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="hobby-amount">Iznos (RSD)</label>
+                                                <input type="number" id="hobby-amount" placeholder="npr. 3000">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="hobby-date">Datum</label>
+                                                <input type="date" id="hobby-date">
+                                            </div>
+                                            <div class="expense-form-col expense-form-button">
+                                                <button type="button" id="hobby-add" class="btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Dodaj
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="expense-table-container">
+                                        <table class="expense-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Naziv</th>
+                                                    <th>Iznos</th>
+                                                    <th>Datum</th>
+                                                    <th>Akcije</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="hobby-tbody">
+                                                <!-- Ovde će JavaScript dodavati redove -->
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="1"><strong>Ukupno:</strong></td>
+                                                    <td id="hobby-total">0 RSD</td>
+                                                    <td colspan="2"></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tabela za Štednju -->
+                                <div class="expense-tab-content" id="savingsTab">
+                                    <div class="expense-form">
+                                        <h4>Dodaj novu štednju</h4>
+                                        <div class="expense-form-row">
+                                            <div class="expense-form-col">
+                                                <label for="savings-name">Naziv</label>
+                                                <input type="text" id="savings-name" placeholder="npr. Štedni račun">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="savings-amount">Iznos (RSD)</label>
+                                                <input type="number" id="savings-amount" placeholder="npr. 10000">
+                                            </div>
+                                            <div class="expense-form-col">
+                                                <label for="savings-date">Datum</label>
+                                                <input type="date" id="savings-date">
+                                            </div>
+                                            <div class="expense-form-col expense-form-button">
+                                                <button type="button" id="savings-add" class="btn btn-primary">
+                                                    <i class="fas fa-plus"></i> Dodaj
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="expense-table-container">
+                                        <table class="expense-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Naziv</th>
+                                                    <th>Iznos</th>
+                                                    <th>Datum</th>
+                                                    <th>Akcije</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="savings-tbody">
+                                                <!-- Ovde će JavaScript dodavati redove -->
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="1"><strong>Ukupno:</strong></td>
+                                                    <td id="savings-total">0 RSD</td>
+                                                    <td colspan="2"></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="transactions-list">
+                        <h3 class="section-title" style="font-size: 1.25rem; margin-top: 2rem; color: #D4AF37;">
+                            <i class="fas fa-exchange-alt" style="color: #D4AF37;"></i> Poslednje transakcije
+                        </h3>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">Plaća</div>
+                                <div class="transaction-category">Prihodi</div>
+                            </div>
+                            <div class="transaction-amount income">+ 150,000 RSD</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">Računi</div>
+                                <div class="transaction-category">Glavne potrebe</div>
+                            </div>
+                            <div class="transaction-amount expense">- 25,000 RSD</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">Market</div>
+                                <div class="transaction-category">Glavne potrebe</div>
+                            </div>
+                            <div class="transaction-amount expense">- 12,500 RSD</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">Restoran</div>
+                                <div class="transaction-category">Hobi</div>
+                            </div>
+                            <div class="transaction-amount expense">- 5,000 RSD</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">Teretana</div>
+                                <div class="transaction-category">Hobi</div>
+                            </div>
+                            <div class="transaction-amount expense">- 3,500 RSD</div>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-info">
+                                <div class="transaction-title">Štednja</div>
+                                <div class="transaction-category">Štednja</div>
+                            </div>
+                            <div class="transaction-amount savings">* 15,000 RSD</div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Settings Section (initially hidden) -->
+                <section id="settingsSection" style="display: none;">
+                    <h2 class="section-title" style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-cog"></i> Podešavanja naloga
+                    </h2>
+                    
+                    <div class="form-group">
+                        <h3>Promena lozinke</h3>
+                        <form id="changePasswordForm">
+                            <div class="form-group">
+                                <label for="currentPassword" class="form-label">Trenutna lozinka</label>
+                                <input type="password" id="currentPassword" class="form-control" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword" class="form-label">Nova lozinka</label>
+                                <input type="password" id="newPassword" class="form-control" required autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmNewPassword" class="form-label">Potvrdite novu lozinku</label>
+                                <input type="password" id="confirmNewPassword" class="form-control" required autocomplete="off">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-key"></i> Promeni lozinku
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="danger-zone">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Opasna zona</h3>
+                        <p>Brisanjem naloga trajno se brišu svi vaši podaci. Ova radnja se ne može poništiti.</p>
+                        <button id="deleteAccountBtn" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Obriši nalog
+                        </button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Delete Account Confirmation Modal -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Potvrda brisanja naloga</h2>
+            <p>Da li ste sigurni da želite da obrišete svoj nalog? Svi vaši podaci će biti trajno izbrisani i neće biti moguće ih vratiti.</p>
+            <div class="modal-buttons">
+                <button id="confirmDeleteBtn" class="btn btn-danger">Obriši nalog</button>
+                <button id="cancelDeleteBtn" class="btn">Otkaži</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CENTRALIZOVANI DATA STORAGE MANAGER
+        // ========================================
+        
+        class DataManager {
+            constructor() {
+                this.storageKey = 'goldenBalance_';
+                this.version = '1.0';
+                this.init();
+            }
+            
+            init() {
+                // Inicijalizuj prazan profil ako ne postoji
+                if (!this.get('userProfile')) {
+                    this.set('userProfile', {
+                        name: '',
+                        email: '',
+                        phone: '',
+                        created: new Date().toISOString(),
+                        version: this.version
+                    });
+                }
+                
+                // Inicijalizuj prazan budžet ako ne postoji
+                if (!this.get('userBudget')) {
+                    this.set('userBudget', {
+                        categories: {
+                            necessities: { planned: 0, spent: 0, items: [] },
+                            wants: { planned: 0, spent: 0, items: [] },
+                            savings: { planned: 0, spent: 0, items: [] }
+                        },
+                        income: { amount: 0, items: [] },
+                        totalBudget: 0,
+                        created: new Date().toISOString(),
+                        updated: new Date().toISOString(),
+                        version: this.version
+                    });
+                }
+                
+                // Inicijalizuj settings ako ne postoji
+                if (!this.get('userSettings')) {
+                    this.set('userSettings', {
+                        theme: 'dark',
+                        currency: 'RSD',
+                        language: 'sr',
+                        notifications: true,
+                        autoSave: true,
+                        created: new Date().toISOString(),
+                        version: this.version
+                    });
+                }
+                
+                this.migrateOldData();
+            }
+            
+            // Glavni metodi za rad sa podacima
+            set(key, value) {
+                try {
+                    const fullKey = this.storageKey + key;
+                    const dataToStore = {
+                        data: value,
+                        timestamp: new Date().toISOString(),
+                        version: this.version
+                    };
+                    localStorage.setItem(fullKey, JSON.stringify(dataToStore));
+                    console.log(`💾 Data saved: ${key}`, value);
+                    return true;
+                } catch (error) {
+                    console.error('❌ Error saving data:', error);
+                    return false;
                 }
             }
             
-            // Proveri localStorage za vrednost aktivnog taba
+            get(key, defaultValue = null) {
+                try {
+                    const fullKey = this.storageKey + key;
+                    const stored = localStorage.getItem(fullKey);
+                    if (!stored) return defaultValue;
+                    
+                    const parsed = JSON.parse(stored);
+                    return parsed.data || defaultValue;
+                } catch (error) {
+                    console.error('❌ Error loading data:', error);
+                    return defaultValue;
+                }
+            }
+            
+            update(key, updateFunction) {
+                const currentData = this.get(key);
+                if (currentData) {
+                    const updatedData = updateFunction(currentData);
+                    return this.set(key, updatedData);
+                }
+                return false;
+            }
+            
+            delete(key) {
+                try {
+                    const fullKey = this.storageKey + key;
+                    localStorage.removeItem(fullKey);
+                    console.log(`🗑️ Data deleted: ${key}`);
+                    return true;
+                } catch (error) {
+                    console.error('❌ Error deleting data:', error);
+                    return false;
+                }
+            }
+            
+            // Profil metodi
+            updateProfile(profileData) {
+                return this.update('userProfile', (current) => ({
+                    ...current,
+                    ...profileData,
+                    updated: new Date().toISOString()
+                }));
+            }
+            
+            getProfile() {
+                return this.get('userProfile', {});
+            }
+            
+            // Budžet metodi
+            updateBudget(budgetData) {
+                return this.update('userBudget', (current) => ({
+                    ...current,
+                    ...budgetData,
+                    updated: new Date().toISOString()
+                }));
+            }
+            
+            getBudget() {
+                return this.get('userBudget', {});
+            }
+            
+            addBudgetItem(category, item) {
+                return this.update('userBudget', (budget) => {
+                    if (!budget.categories[category]) {
+                        budget.categories[category] = { planned: 0, spent: 0, items: [] };
+                    }
+                    budget.categories[category].items.push({
+                        ...item,
+                        id: Date.now(),
+                        created: new Date().toISOString()
+                    });
+                    budget.categories[category].spent += parseFloat(item.amount) || 0;
+                    budget.updated = new Date().toISOString();
+                    return budget;
+                });
+            }
+            
+            removeBudgetItem(category, itemId) {
+                return this.update('userBudget', (budget) => {
+                    if (budget.categories[category]) {
+                        const itemIndex = budget.categories[category].items.findIndex(item => item.id === itemId);
+                        if (itemIndex !== -1) {
+                            const removedItem = budget.categories[category].items.splice(itemIndex, 1)[0];
+                            budget.categories[category].spent -= parseFloat(removedItem.amount) || 0;
+                        }
+                        budget.updated = new Date().toISOString();
+                    }
+                    return budget;
+                });
+            }
+            
+            // Settings metodi
+            updateSettings(settings) {
+                return this.update('userSettings', (current) => ({
+                    ...current,
+                    ...settings,
+                    updated: new Date().toISOString()
+                }));
+            }
+            
+            getSettings() {
+                return this.get('userSettings', {});
+            }
+            
+            // Migriraj stare podatke
+            migrateOldData() {
+                try {
+                    // Migriraj userProfile iz starih ključeva
+                    const oldProfile = localStorage.getItem('userProfile');
+                    if (oldProfile && !this.get('userProfile')?.name) {
+                        const parsed = JSON.parse(oldProfile);
+                        this.updateProfile(parsed);
+                        console.log('📦 Migrated old profile data');
+                    }
+                    
+                    // Migriraj budgetData iz starih ključeva
+                    const oldBudget = localStorage.getItem('budgetData') || localStorage.getItem('userBudget');
+                    if (oldBudget && !this.get('userBudget')?.totalBudget) {
+                        const parsed = JSON.parse(oldBudget);
+                        this.set('userBudget', parsed);
+                        console.log('📦 Migrated old budget data');
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error during data migration:', error);
+                }
+            }
+            
+            // Backup i restore
+            exportData() {
+                const allData = {
+                    profile: this.getProfile(),
+                    budget: this.getBudget(),
+                    settings: this.getSettings(),
+                    exported: new Date().toISOString(),
+                    version: this.version
+                };
+                return JSON.stringify(allData, null, 2);
+            }
+            
+            importData(jsonData) {
+                try {
+                    const data = JSON.parse(jsonData);
+                    if (data.profile) this.set('userProfile', data.profile);
+                    if (data.budget) this.set('userBudget', data.budget);
+                    if (data.settings) this.set('userSettings', data.settings);
+                    console.log('📥 Data imported successfully');
+                    return true;
+                } catch (error) {
+                    console.error('❌ Error importing data:', error);
+                    return false;
+                }
+            }
+            
+            // Obriši sve podatke
+            clearAllData() {
+                const keys = ['userProfile', 'userBudget', 'userSettings'];
+                keys.forEach(key => this.delete(key));
+                console.log('🧹 All user data cleared');
+            }
+        }
+        
+        // Globalna instanca data manager-a
+        window.dataManager = new DataManager();
+        
+        // Funkcija za učitavanje settings podataka
+        function loadUserSettings() {
+            try {
+                const settings = window.dataManager.getSettings();
+                if (settings) {
+                    console.log('⚙️ Učitana podešavanja:', settings);
+                    
+                    // Prikaži status poslednje promene lozinke ako postoji
+                    if (settings.passwordChangedAt) {
+                        const dateChanged = new Date(settings.passwordChangedAt).toLocaleDateString('sr-RS');
+                        console.log(`🔐 Poslednja promena lozinke: ${dateChanged}`);
+                    }
+                    
+                    // Možeš dodati još logike za settings ako je potrebno
+                }
+            } catch (error) {
+                console.error('❌ Greška pri učitavanju podešavanja:', error);
+            }
+        }
+        
+        // Globalne funkcije pre DOMContentLoaded
+        console.log('🚀 Profile.html script učitan');
+        
+        // Funkcija za učitavanje loga - GLOBALNA
+        function loadLogo() {
+            console.log('🔍 loadLogo() pozvana');
+            const logoElement = document.getElementById('siteLogo');
+            const savedLogo = localStorage.getItem('site_logo');
+            
+            console.log('🔍 Debug logo loading:');
+            console.log('Logo element:', logoElement);
+            console.log('Saved logo:', savedLogo);
+            console.log('Saved logo length:', savedLogo ? savedLogo.length : 'null');
+            console.log('Logo type:', savedLogo ? (savedLogo.startsWith('data:') ? 'data URL' : 'regular URL') : 'none');
+            
+            if (logoElement && savedLogo) {
+                try {
+                    logoElement.src = savedLogo;
+                    console.log('✅ Logo src postavljen na profile.html');
+                    
+                    // Dodatni debug za greške u učitavanju
+                    logoElement.onload = function() {
+                        console.log('✅ Logo uspešno učitan i prikazan');
+                    };
+                    logoElement.onerror = function() {
+                        console.error('❌ Greška pri učitavanju loga');
+                        console.error('Logo src:', logoElement.src.substring(0, 100) + '...');
+                    };
+                } catch (error) {
+                    console.error('❌ JavaScript greška pri postavljanju loga:', error);
+                }
+            } else {
+                console.log('❌ Logo element ili sačuvani logo ne postoji');
+                if (!logoElement) console.log('❌ Element #siteLogo ne postoji');
+                if (!savedLogo) console.log('❌ localStorage site_logo ne postoji');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 DOMContentLoaded event triggered u profile.html');
+            
+            // Učitaj logo ODMAH
+            loadLogo();
+            
+            // Učitaj korisničke podatke i podešavanja
+            loadUserData();
+            loadUserSettings();
+            
+            // Storage event za promene iz admin panela
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'site_logo' && e.newValue) {
+                    console.log('📡 Storage event za site_logo primljen');
+                    loadLogo();
+                }
+            });
+            
+            // Pokušaj ponovo za 1 sekunda ako logo nije učitan
+            setTimeout(function() {
+                const logoElement = document.getElementById('siteLogo');
+                const savedLogo = localStorage.getItem('site_logo');
+                if (logoElement && savedLogo && logoElement.src !== savedLogo) {
+                    console.log('🔄 Retry loading logo after 1 second');
+                    loadLogo();
+                }
+            }, 1000);
+            
+            // Check if user is admin and show admin button
+            function checkAdminStatus() {
+                // Konstanta za admin email
+                const adminEmail = 'zorandostica2@gmail.com';
+                
+                // Dobaviti korisničke podatke
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+                const userProfile = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                
+                // Proveriti da li je korisnik admin na osnovu email-a
+                const userEmail = currentUser.email || userProfile.email || '';
+                const isAdminByEmail = userEmail === adminEmail;
+                const isAdminByStorage = localStorage.getItem('admin_logged_in') === 'true';
+                
+                // Admin pristup samo ako je email tačan
+                const isAdmin = isAdminByEmail || (isAdminByStorage && userEmail === adminEmail);
+                
+                const adminBtn = document.getElementById('adminSettingsBtn');
+                if (adminBtn) {
+                    adminBtn.style.display = isAdmin ? 'flex' : 'none';
+                }
+                
+                // Logiraj za debug
+                console.log('Admin provera:', {
+                    userEmail: userEmail,
+                    adminEmail: adminEmail,
+                    isAdminByEmail: isAdminByEmail,
+                    isAdminByStorage: isAdminByStorage,
+                    finalIsAdmin: isAdmin
+                });
+            }
+            
+            // Initialize admin status check
+            checkAdminStatus();
+            
+            // Tab switching functionality
+            const tabLinks = document.querySelectorAll('.nav-link');
+            const sections = {
+                profileLink: 'profileSection',
+                budgetLink: 'budgetSection',
+                settingsLink: 'settingsSection'
+            };
+
+            tabLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and hide all sections
+                    tabLinks.forEach(tab => tab.classList.remove('active'));
+                    Object.values(sections).forEach(sectionId => {
+                        document.getElementById(sectionId).style.display = 'none';
+                    });
+                    
+                    // Add active class to clicked link and show corresponding section
+                    link.classList.add('active');
+                    const sectionId = sections[link.id] || 'profileSection';
+                    document.getElementById(sectionId).style.display = 'block';
+                });
+            });
+
+            // Profile form submission
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const userData = {
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    address: document.getElementById('address').value.trim(),
+                    city: document.getElementById('city').value.trim(),
+                    postalCode: document.getElementById('postalCode').value.trim(),
+                    profileImage: document.getElementById('userProfilePic').src
+                };
+                
+                // Save to localStorage
+                saveUserData(userData);
+                
+                // Update profile display
+                updateProfileDisplay(userData);
+                
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success-message';
+                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Profil je uspešno ažuriran!';
+                
+                const form = document.getElementById('profileForm');
+                form.insertBefore(successMsg, form.firstChild);
+                
+                // Remove message after 3 seconds
+                setTimeout(() => {
+                    successMsg.style.opacity = '0';
+                    setTimeout(() => successMsg.remove(), 300);
+                }, 3000);
+            });
+
+            // Profile image upload
+            document.getElementById('profileImage').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // Check if file is an image
+                    if (!file.type.match('image.*')) {
+                        alert('Molimo izaberite isključivo slike.');
+                        return;
+                    }
+                    
+                    // Check file size (max 2MB)
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('Slika ne sme biti veća od 2MB.');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            // Create a canvas to resize the image
+                            const canvas = document.createElement('canvas');
+                            const maxSize = 400; // Max width/height
+                            let width = img.width;
+                            let height = img.height;
+                            
+                            if (width > height) {
+                                if (width > maxSize) {
+                                    height *= maxSize / width;
+                                    width = maxSize;
+                                }
+                            } else {
+                                if (height > maxSize) {
+                                    width *= maxSize / height;
+                                    height = maxSize;
+                                }
+                            }
+                            
+                            canvas.width = width;
+                            canvas.height = height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            // Convert to data URL and update the image
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+                            document.getElementById('userProfilePic').src = dataUrl;
+                            
+                            // Save to user data
+                            const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                            userData.profileImage = dataUrl;
+                            saveUserData(userData);
+                        };
+                        img.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Change password form submission
+            document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+                
+                if (newPassword !== confirmNewPassword) {
+                    alert('Nova lozinka i potvrda lozinke se ne podudaraju!');
+                    return;
+                }
+                
+                // Čuvanje preko DataManager-a
+                const updated = window.dataManager.updateSettings({
+                    passwordChanged: true,
+                    passwordChangedAt: new Date().toISOString(),
+                    securityLevel: 'high'
+                });
+                
+                console.log(updated ? '✅ Podešavanja ažurirana preko DataManager-a' : '❌ Greška pri ažuriranju podešavanja');
+                
+                // Here you would typically make an API call to change the password
+                console.log('🔐 Menjam lozinku...');
+                
+                // Reset form
+                this.reset();
+                alert('Lozinka je uspešno promenjena!');
+            });
+
+            // Delete account functionality
+            const deleteModal = document.getElementById('deleteAccountModal');
+            const deleteBtn = document.getElementById('deleteAccountBtn');
+            const closeModal = document.querySelector('.close-modal');
+            const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+            deleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'flex';
+            });
+
+            closeModal.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+
+            cancelDeleteBtn.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+            });
+
+            confirmDeleteBtn.addEventListener('click', () => {
+                // Here you would typically make an API call to delete the account
+                console.log('Deleting account...');
+                
+                // Redirect to home page after deletion
+                alert('Vaš nalog je uspešno obrisan.');
+                window.location.href = 'preview.html';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === deleteModal) {
+                    deleteModal.style.display = 'none';
+                }
+            });
+
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                // Here you would typically clear the user session
+                console.log('Logging out...');
+                localStorage.removeItem('userProfile');
+                window.location.href = 'preview.html';
+            });
+
+            // Save user data to localStorage using DataManager
+            function saveUserData(userData) {
+                console.log('💾 Saving user data with DataManager:', userData);
+                
+                // Sačuvaj profil koristeći DataManager
+                const profileSaved = window.dataManager.updateProfile(userData);
+                
+                // Get existing user data from home page storage for compatibility
+                let currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+                
+                // Update user data with profile info
+                currentUser.name = `${userData.firstName} ${userData.lastName}`;
+                currentUser.email = userData.email;
+                currentUser.phone = userData.phone;
+                currentUser.address = userData.address;
+                currentUser.city = userData.city;
+                currentUser.postalCode = userData.postalCode;
+                
+                // Update profile picture if available
+                if (userData.profileImage) {
+                    currentUser.profilePic = userData.profileImage;
+                }
+                
+                // Save currentUser for backwards compatibility (keep old system working)
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Also update session storage if it exists
+                if (sessionStorage.getItem('currentUser')) {
+                    sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+                
+                console.log(profileSaved ? '✅ Profile saved successfully with DataManager' : '❌ Error saving profile with DataManager');
+                
+                // Proveri admin status nakon čuvanja podataka
+                checkAdminStatus();
+            }
+
+            // Load user data using DataManager with fallback to old system
+            function loadUserData() {
+                let userData = {
+                    firstName: 'Korisničko',
+                    lastName: 'Ime',
+                    email: 'korisnik@example.com',
+                    phone: '+381 64 123 4567',
+                    address: 'Neka adresa 123',
+                    city: 'Beograd',
+                    postalCode: '11000',
+                    profileImage: 'https://ui-avatars.com/api/?name=Korisnik&background=3b82f6&color=fff&size=128'
+                };
+                
+                // Try to load from DataManager first
+                const profileData = window.dataManager.getProfile();
+                if (profileData && profileData.firstName) {
+                    userData = { ...userData, ...profileData };
+                    console.log('📥 Profile loaded from DataManager:', userData);
+                } else {
+                    console.log('📥 No profile data in DataManager, checking old storage...');
+                    
+                    // Fallback: Try to load from old profile storage
+                    const savedProfileData = localStorage.getItem('userProfile');
+                    if (savedProfileData) {
+                        try {
+                            const parsedData = JSON.parse(savedProfileData);
+                            userData = { ...userData, ...parsedData };
+                            console.log('📥 Profile loaded from old storage:', userData);
+                        } catch (e) {
+                            console.error('Error parsing saved profile data:', e);
+                        }
+                    }
+                    
+                    // Also check for user data from the main page
+                    const mainPageData = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+                    if (mainPageData) {
+                        try {
+                            const currentUser = JSON.parse(mainPageData);
+                            
+                            // Extract name into first and last name if available
+                            if (currentUser.name) {
+                                const nameParts = currentUser.name.split(' ');
+                                if (nameParts.length > 1) {
+                                    userData.firstName = nameParts[0];
+                                    userData.lastName = nameParts.slice(1).join(' ');
+                                } else {
+                                    userData.firstName = currentUser.name;
+                                }
+                            }
+                            
+                            // Copy other properties
+                            if (currentUser.email) userData.email = currentUser.email;
+                            if (currentUser.phone) userData.phone = currentUser.phone;
+                            if (currentUser.address) userData.address = currentUser.address;
+                            if (currentUser.city) userData.city = currentUser.city;
+                            if (currentUser.postalCode) userData.postalCode = currentUser.postalCode;
+                            if (currentUser.profilePic) userData.profileImage = currentUser.profilePic;
+                            
+                            console.log('📥 Profile enhanced with main page data:', userData);
+                        } catch (e) {
+                            console.error('Error parsing main page user data:', e);
+                        }
+                    }
+                    
+                    // Save to DataManager for future use
+                    if (userData.firstName !== 'Korisničko') {
+                        window.dataManager.updateProfile(userData);
+                        console.log('📦 Profile migrated to DataManager');
+                    }
+                }
+                // Populate form fields
+                document.getElementById('firstName').value = userData.firstName || '';
+                document.getElementById('lastName').value = userData.lastName || '';
+                document.getElementById('email').value = userData.email || '';
+                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('address').value = userData.address || '';
+                document.getElementById('city').value = userData.city || '';
+                document.getElementById('postalCode').value = userData.postalCode || '';
+                if (userData.profileImage) {
+                    document.getElementById('userProfilePic').src = userData.profileImage;
+                }
+
+                // Update profile info in the sidebar
+                updateProfileDisplay(userData);
+                
+                return userData;
+            }
+
+            // Update profile display in the sidebar
+            function updateProfileDisplay(userData) {
+                const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Korisničko Ime';
+                document.getElementById('userName').textContent = fullName;
+                
+                // Update the email display in the sidebar to show exactly as entered
+                if (userData.email) {
+                    document.getElementById('userEmail').textContent = userData.email;
+                }
+                
+                // Proveri admin status nakon ažuriranja profila
+                checkAdminStatus();
+            }
+            
+            // Inicijalizacija budžeta
+            document.addEventListener('DOMContentLoaded', function() {
+            // Inicijalizacija kalendara
+            flatpickr("#expenseDate", {
+                dateFormat: "d.m.Y.",
+                defaultDate: "today",
+                locale: "sr"
+            });
+
+            // Učitavanje podataka iz localStorage
+            const savedBudget = JSON.parse(localStorage.getItem('userBudget')) || {
+                monthlyIncome: 0,
+                necessities: 50,
+                hobby: 30,
+                savings: 20,
+                lastUpdated: new Date().toISOString()
+            };
+
+            // Postavljanje vrednosti iz localStorage
+            document.getElementById('monthlyIncome').value = savedBudget.monthlyIncome;
+            document.getElementById('necessitiesPercent').value = savedBudget.necessities;
+            document.getElementById('hobbyPercent').value = savedBudget.hobby;
+            document.getElementById('savingsPercent').value = savedBudget.savings;            // Ako postoji prihod, prikaži kategorije
+            if (savedBudget.monthlyIncome > 0) {
+                document.getElementById('budgetCategories').style.display = 'block';
+            }
+
+            // Ažuriranje prikaza
+            updateBudgetDisplay();
+            
+            // Pozivamo i globalnu funkciju za budžet iz main.js
+            if (typeof window.updateBudgetDisplay === 'function') {
+                window.updateBudgetDisplay();
+            }
+
+            // Dodavanje event listenera za dugme za izračunavanje
+            document.getElementById('calculateBudget').addEventListener('click', function() {
+                const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+                if (income > 0) {
+                    document.getElementById('budgetCategories').style.display = 'block';
+                    updateBudgetDisplay();
+                    
+                    // Animacija skrolovanja do kategorija
+                    document.getElementById('budgetCategories').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                } else {
+                    showNotification('Molimo unesite ispravan iznos prihoda.', 'error');
+                }
+            });
+
+            // Dodavanje event listenera za klizače
+            const sliders = document.querySelectorAll('.percent-slider');
+            sliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    updateBudgetDisplay();
+                    updateTotalPercentage();
+                });
+            });
+
+            // Dodavanje event listenera za čuvanje plana
+            document.getElementById('saveBudgetPlan').addEventListener('click', function(e) {
+                console.log('🖱️ Dugme "Sačuvaj budžet" kliknuto!');
+                e.preventDefault();
+                saveBudgetPlan();
+            });
+            
+            // Inicijalno ažuriranje ukupnog procenta
+            updateTotalPercentage();
+        });
+
+        // Funkcija za ažuriranje ukupnog procenta i statusa
+        function updateTotalPercentage() {
+            const necessities = parseInt(document.getElementById('necessitiesPercent').value);
+            const hobby = parseInt(document.getElementById('hobbyPercent').value);
+            const savings = parseInt(document.getElementById('savingsPercent').value);
+            
+            const total = necessities + hobby + savings;
+            const totalPercentageElement = document.getElementById('totalPercentage');
+            const totalPercentageBar = document.getElementById('totalPercentageBar');
+            const percentageStatus = document.getElementById('percentageStatus');
+            
+            // Ažuriranje prikaza ukupnog procenta
+            totalPercentageElement.textContent = `${total}%`;
+            
+            // Ažuriranje širine trake
+            const percentageWidth = Math.min(100, (total / 100) * 100);
+            totalPercentageBar.style.width = `${percentageWidth}%`;
+            
+            // Promena boje u zavisnosti od ukupne vrednosti
+            if (total < 100) {
+                totalPercentageBar.style.background = 'linear-gradient(90deg, #ef4444, #f59e0b)';
+                percentageStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Nedovoljno raspoređeno';
+                percentageStatus.style.color = '#f59e0b';
+            } else if (total > 100) {
+                totalPercentageBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                percentageStatus.innerHTML = '<i class="fas fa-times-circle"></i> Prekoračeno';
+                percentageStatus.style.color = '#ef4444';
+            } else {
+                totalPercentageBar.style.background = 'var(--gradient-gold)';
+                percentageStatus.innerHTML = '<i class="fas fa-check-circle"></i> Savršena raspodela';
+                percentageStatus.style.color = '#10b981';
+            }
+            
+            // Validacija i ažuriranje stanja dugmeta za čuvanje
+            validateSliders();
+        }
+
+        // Funkcija za validaciju klizača
+        function validateSliders() {
+            const necessities = parseInt(document.getElementById('necessitiesPercent').value);
+            const hobby = parseInt(document.getElementById('hobbyPercent').value);
+            const savings = parseInt(document.getElementById('savingsPercent').value);
+            
+            const total = necessities + hobby + savings;
+            console.log('🔍 Validacija klizača:', {
+                necessities: necessities,
+                hobby: hobby,
+                savings: savings,
+                total: total,
+                isValid: total === 100
+            });
+            
+            const saveButton = document.getElementById('saveBudgetPlan');
+            
+            if (total !== 100) {
+                console.log('❌ Validacija neuspešna - ukupan procenat nije 100%');
+                saveButton.disabled = true;
+                saveButton.style.opacity = '0.7';
+                saveButton.style.cursor = 'not-allowed';
+                saveButton.title = 'Ukupan zbir procenata mora biti tačno 100%';
+                return false;
+            } else {
+                console.log('✅ Validacija uspešna - ukupan procenat je 100%');
+                saveButton.disabled = false;
+                saveButton.style.opacity = '1';
+                saveButton.style.cursor = 'pointer';
+                saveButton.title = 'Sačuvaj plan budžeta';
+                return true;
+            }
+        }
+
+        // Funkcija za ažuriranje prikaza budžeta
+        function updateBudgetDisplay() {
+            const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+            const necessitiesPercent = parseInt(document.getElementById('necessitiesPercent').value);
+            const hobbyPercent = parseInt(document.getElementById('hobbyPercent').value);
+            const savingsPercent = parseInt(document.getElementById('savingsPercent').value);
+            
+            // Izračunavanje iznosa po kategorijama
+            const necessitiesAmount = (income * necessitiesPercent / 100).toFixed(2);
+            const hobbyAmount = (income * hobbyPercent / 100).toFixed(2);
+            const savingsAmount = (income * savingsPercent / 100).toFixed(2);
+            
+            // Formatiranje valute
+            const formatter = new Intl.NumberFormat('sr-RS', {
+                style: 'currency',
+                currency: 'RSD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // Ažuriranje prikaza
+            document.getElementById('necessitiesAmount').textContent = formatter.format(necessitiesAmount);
+            document.getElementById('hobbyAmount').textContent = formatter.format(hobbyAmount);
+            document.getElementById('savingsAmount').textContent = formatter.format(savingsAmount);
+            
+            // Ažuriranje vrednosti u klizačima
+            document.getElementById('necessitiesPercent').value = necessitiesPercent;
+            document.getElementById('hobbyPercent').value = hobbyPercent;
+            document.getElementById('savingsPercent').value = savingsPercent;
+            
+            // Ažuriranje prikaza procenata
+            document.getElementById('necessitiesPercentValue').textContent = `${necessitiesPercent}%`;
+            document.getElementById('hobbyPercentValue').textContent = `${hobbyPercent}%`;
+            document.getElementById('savingsPercentValue').textContent = `${savingsPercent}%`;
+            
+            // Ažuriranje širine progress bara
+            document.querySelector('#necessitiesCard .progress-bar').style.width = `${necessitiesPercent}%`;
+            document.querySelector('#hobbyCard .progress-bar').style.width = `${hobbyPercent}%`;
+            document.querySelector('#savingsCard .progress-bar').style.width = `${savingsPercent}%`;
+            
+            // Ažuriranje ukupnog procenta
+            updateTotalPercentage();
+        }
+
+        // Funkcija za čuvanje plana budžeta
+        function saveBudgetPlan() {
+            console.log('🔄 saveBudgetPlan() pozvan!');
+            
+            // Debug: proveravamo sve elemente
+            const monthlyIncomeEl = document.getElementById('monthlyIncome');
+            const necessitiesEl = document.getElementById('necessitiesPercent');
+            const hobbyEl = document.getElementById('hobbyPercent');
+            const savingsEl = document.getElementById('savingsPercent');
+            
+            console.log('📊 Debug elementi:', {
+                monthlyIncome: monthlyIncomeEl ? monthlyIncomeEl.value : 'NIJE PRONAĐEN',
+                necessities: necessitiesEl ? necessitiesEl.value : 'NIJE PRONAĐEN',
+                hobby: hobbyEl ? hobbyEl.value : 'NIJE PRONAĐEN',
+                savings: savingsEl ? savingsEl.value : 'NIJE PRONAĐEN'
+            });
+            
+            if (!validateSliders()) {
+                console.log('❌ Validacija nije prošla!');
+                showNotification('Greška: Ukupan zbir procenata mora biti tačno 100%!', 'error');
+                return;
+            }
+            
+            console.log('✅ Validacija prošla, kreiram budgetPlan...');
+            
+            const budgetPlan = {
+                monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value) || 0,
+                necessities: parseInt(document.getElementById('necessitiesPercent').value),
+                hobby: parseInt(document.getElementById('hobbyPercent').value),
+                savings: parseInt(document.getElementById('savingsPercent').value),
+                lastUpdated: new Date().toISOString()
+            };
+            
+            console.log('💰 Kreiran budgetPlan:', budgetPlan);
+            
+            // Čuvanje preko DataManager-a
+            const saved = window.dataManager.updateBudget({
+                totalBudget: budgetPlan.monthlyIncome,
+                categories: {
+                    necessities: { 
+                        planned: (budgetPlan.monthlyIncome * budgetPlan.necessities / 100),
+                        spent: 0,
+                        items: window.dataManager.getBudget().categories?.necessities?.items || []
+                    },
+                    wants: { 
+                        planned: (budgetPlan.monthlyIncome * budgetPlan.hobby / 100),
+                        spent: 0,
+                        items: window.dataManager.getBudget().categories?.wants?.items || []
+                    },
+                    savings: { 
+                        planned: (budgetPlan.monthlyIncome * budgetPlan.savings / 100),
+                        spent: 0,
+                        items: window.dataManager.getBudget().categories?.savings?.items || []
+                    }
+                },
+                percentages: {
+                    necessities: budgetPlan.necessities,
+                    hobby: budgetPlan.hobby,
+                    savings: budgetPlan.savings
+                },
+                monthlyIncome: budgetPlan.monthlyIncome
+            });
+            
+            // Čuvanje u localStorage za kompatibilnost
+            localStorage.setItem('userBudget', JSON.stringify(budgetPlan));
+            console.log(saved ? '✅ Budžet sačuvan preko DataManager-a' : '❌ Greška pri čuvanju budžeta');
+            
+            // Ažuriranje prikaza ukupnih prihoda i troškova
+            updateTotalBudgetDisplay(budgetPlan);
+              // Prikazivanje obaveštenja o uspešnom čuvanju
+            showNotification('Plan budžeta je uspešno sačuvan!', 'success');
+            
+            // Ažuriranje lokalnog prikaza
+            updateBudgetDisplay();
+            
+            // 🔄 NOVA SINHRONIZACIJA - pozivamo globalnu sinhronizaciju
+            if (typeof window.BudgetSync !== 'undefined') {
+                console.log('🔄 Pozivam BudgetSync.triggerSync()');
+                window.BudgetSync.triggerSync();
+            } else if (typeof window.updateBudgetDisplay === 'function') {
+                console.log('🔄 Pozivam window.updateBudgetDisplay()');
+                window.updateBudgetDisplay();
+            } else {
+                console.log('❌ Nema dostupnih funkcija za sinhronizaciju');
+            }
+        }
+        
+        // Funkcija za ažuriranje prikaza ukupnih prihoda i troškova
+        function updateTotalBudgetDisplay(budget) {
+            const totalIncome = budget.monthlyIncome;
+            const totalExpenses = totalIncome * (budget.necessities + budget.hobby) / 100;
+            const totalSavings = totalIncome * budget.savings / 100;
+            
+            // Formatiranje valute
+            const formatter = new Intl.NumberFormat('sr-RS', {
+                style: 'currency',
+                currency: 'RSD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // Ažuriranje prikaza
+            document.getElementById('totalIncome').textContent = formatter.format(totalIncome);
+            document.getElementById('totalExpenses').textContent = formatter.format(totalExpenses);
+            document.getElementById('currentBalance').textContent = formatter.format(totalSavings);
+            
+            // Ažuriranje trendova (samo primer, možete prilagoditi stvarnim potrebama)
+            updateTrends();
+        }
+        
+        // Funkcija za ažuriranje trendova (primer implementacije)
+        function updateTrends() {
+            // Ovo je samo primer - možete implementirati stvarnu logiku za praćenje trendova
+            const trends = {
+                income: getRandomTrend(),
+                expenses: getRandomTrend(),
+                balance: getRandomTrend()
+            };
+            
+            // Ažuriranje ikonica trenda
+            updateTrendIcon('incomeChange', trends.income);
+            updateTrendIcon('expenseChange', trends.expenses);
+            updateTrendIcon('balanceChange', trends.balance);
+        }
+        
+        // Pomoćna funkcija za generisanje nasumičnog trenda
+        function getRandomTrend() {
+            const trends = ['up', 'down', 'same'];
+            const values = [5, 10, 15, 20];
+            const randomTrend = trends[Math.floor(Math.random() * trends.length)];
+            const randomValue = values[Math.floor(Math.random() * values.length)];
+            
+            return {
+                direction: randomTrend,
+                value: randomValue
+            };
+        }
+        
+        // Funkcija za ažuriranje ikonice trenda
+        function updateTrendIcon(elementId, trend) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            let icon, text, color;
+            
+            switch (trend.direction) {
+                case 'up':
+                    icon = 'fa-arrow-up';
+                    text = `${trend.value}% u odnosu na prošli mesec`;
+                    color = trend.elementId === 'expenseChange' ? '#ef4444' : '#10b981';
+                    break;
+                case 'down':
+                    icon = 'fa-arrow-down';
+                    text = `${trend.value}% u odnosu na prošli mesec`;
+                    color = trend.elementId === 'expenseChange' ? '#10b981' : '#ef4444';
+                    break;
+                default:
+                    icon = 'fa-equals';
+                    text = 'Bez promene u odnosu na prošli mesec';
+                    color = '#9ca3af';
+            }
+            
+            element.innerHTML = `<i class="fas ${icon}" style="color: ${color}; margin-right: 0.25rem;"></i> ${text}`;
+        }
+        
+        // Funkcija za prikazivanje obaveštenja
+        function showNotification(message, type = 'info') {
+            // Proveri da li već postoji notifikacija i ukloni je ako postoji
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Kreiranje notifikacije
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            // Postavljanje ikonice u zavisnosti od tipa
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            // Postavljanje HTML-a notifikacije
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${icon}"></i>
+                    <span>${message}</span>
+                </div>
+                <button class="notification-close">&times;</button>
+            `;
+            
+            // Dodavanje notifikacije u body
+            document.body.appendChild(notification);
+            
+            // Dodavanje klase za animaciju pojavljivanja
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Automatsko sklanjanje notifikacije nakon 5 sekundi
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 5000);
+            
+            // Dodavanje event listenera za zatvaranje notifikacije
+            notification.querySelector('.notification-close').addEventListener('click', () => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            });
+        }
+        
+        // Stilizacija notifikacija
+        const style = document.createElement('style');
+        style.textContent = `
+            .notification {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                max-width: 400px;
+                transform: translateY(100px);
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            }
+            
+            .notification.show {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .notification-success {
+                background: #10b981;
+                border-left: 4px solid #059669;
+            }
+            
+            .notification-error {
+                background: #ef4444;
+                border-left: 4px solid #dc2626;
+            }
+            
+            .notification-warning {
+                background: #f59e0b;
+                border-left: 4px solid #d97706;
+                color: #1f2937;
+            }
+            
+            .notification-info {
+                background: #3b82f6;
+                border-left: 4px solid #2563eb;
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: inherit;
+                font-size: 1.2rem;
+                cursor: pointer;
+                margin-left: 15px;
+                opacity: 0.8;
+                transition: opacity 0.2s;
+            }
+            
+            .notification-close:hover {
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize budget data
+        const budgetData = (function() {
+            const data = {
+                monthlyIncome: 0,
+                categories: {
+                    necessities: { percent: 50, amount: 0 },
+                    hobby: { percent: 30, amount: 0 },
+                    savings: { percent: 20, amount: 0 }
+                },
+                expenses: {
+                    necessities: [],
+                    hobby: [],
+                    savings: []
+                },
+                // Save budget data to localStorage
+                save: function() {
+                    localStorage.setItem('budgetData', JSON.stringify(this));
+                    
+                    // Show success notification
+                    const notification = document.createElement('div');
+                    notification.className = 'notification notification-success';
+                    notification.innerHTML = `
+                        <div class="notification-content">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Budžet uspešno sačuvan!</span>
+                        </div>
+                        <button class="notification-close">&times;</button>
+                    `;
+                    document.body.appendChild(notification);
+                    
+                    // Auto-remove notification after 3 seconds
+                    setTimeout(() => {
+                        notification.classList.add('show');
+                        setTimeout(() => {
+                            notification.classList.remove('show');
+                            setTimeout(() => notification.remove(), 300);
+                        }, 3000);
+                    }, 10);
+                    
+                    // Close button handler
+                    notification.querySelector('.notification-close').addEventListener('click', () => {
+                        notification.classList.remove('show');
+                        setTimeout(() => notification.remove(), 300);
+                    });
+                },
+                // Update budget display
+                updateDisplay: function() {
+                    // Update category percentages
+                    const updatePercent = (id, value) => {
+                        const el = document.getElementById(id);
+                        if (el) el.textContent = `${value}%`;
+                    };
+                    
+                    updatePercent('necessitiesPercentValue', this.categories.necessities.percent);
+                    updatePercent('hobbyPercentValue', this.categories.hobby.percent);
+                    updatePercent('savingsPercentValue', this.categories.savings.percent);
+                    
+                    // Update progress bars
+                    document.querySelectorAll('.progress-bar').forEach(bar => {
+                        const category = bar.closest('.category-card')?.id.replace('Card', '');
+                        if (category && this.categories[category]) {
+                            bar.style.width = `${this.categories[category].percent}%`;
+                        }
+                    });
+                    
+                    // Update stats
+                    this.updateStats();
+                },
+                // Update budget statistics
+                updateStats: function() {
+                    const totalIncome = parseFloat(this.monthlyIncome) || 0;
+                    
+                    // Calculate category amounts
+                    Object.keys(this.categories).forEach(category => {
+                        const percent = this.categories[category].percent;
+                        this.categories[category].amount = (totalIncome * percent / 100).toFixed(2);
+                        
+                        // Update amount display
+                        const amountElement = document.getElementById(`${category}Amount`);
+                        if (amountElement) {
+                            amountElement.textContent = 
+                                new Intl.NumberFormat('sr-RS', { 
+                                    style: 'currency', 
+                                    currency: 'RSD' 
+                                }).format(this.categories[category].amount);
+                        }
+                    });
+                    
+                    // Update total stats
+                    const totalIncomeEl = document.getElementById('totalIncome');
+                    if (totalIncomeEl) {
+                        totalIncomeEl.textContent = 
+                            new Intl.NumberFormat('sr-RS', { 
+                                style: 'currency', 
+                                currency: 'RSD' 
+                            }).format(totalIncome);
+                    }
+                },
+                // Load budget data from localStorage
+                load: function() {
+                    const savedBudget = localStorage.getItem('budgetData');
+                    if (savedBudget) {
+                        try {
+                            const parsedData = JSON.parse(savedBudget);
+                            Object.assign(this, parsedData);
+                            
+                            // Set the monthly income input
+                            const monthlyIncomeEl = document.getElementById('monthlyIncome');
+                            if (monthlyIncomeEl) {
+                                monthlyIncomeEl.value = this.monthlyIncome || 0;
+                            }
+                            
+                            // Update sliders
+                            const setSlider = (id, value, def) => {
+                                const el = document.getElementById(id);
+                                if (el) el.value = value || def;
+                            };
+                            
+                            setSlider('necessitiesPercent', this.categories?.necessities?.percent, 50);
+                            setSlider('hobbyPercent', this.categories?.hobby?.percent, 30);
+                            setSlider('savingsPercent', this.categories?.savings?.percent, 20);
+                            
+                            // Show categories section if there's income
+                            const budgetCategoriesEl = document.getElementById('budgetCategories');
+                            if (budgetCategoriesEl && this.monthlyIncome > 0) {
+                                budgetCategoriesEl.style.display = 'block';
+                            }
+                            
+                            // Update the display
+                            this.updateDisplay();
+                            
+                        } catch (e) {
+                            console.error('Error loading budget data:', e);
+                        }
+                    }
+                    return this;
+                }
+            };
+            
+            // Initialize the budget data
+            data.load();
+            return data;
+        })();
+        
+        // Set default dates for expense forms
+        function setDefaultDates() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelectorAll('input[type="date"]').forEach(input => {
+                input.value = today;
+                input.max = today; // Prevent future dates
+            });
+        }
+        
+        // Save budget data
+        function saveBudgetData() {
+                // Čuvanje preko DataManager-a
+                const saved = window.dataManager.updateBudget({
+                    totalBudget: budgetData.totalBudget || 0,
+                    categories: budgetData.categories || {},
+                    lastUpdated: new Date().toISOString()
+                });
+                
+                // Rezervno čuvanje u localStorage
+                localStorage.setItem('budgetData', JSON.stringify(budgetData));
+                
+                console.log(saved ? '✅ Budžet sačuvan preko DataManager-a' : '❌ Greška pri čuvanju budžeta');
+                
+                // Show success message
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success-message';
+                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Budžet plan je uspešno sačuvan!';
+                
+                const budgetPlanner = document.querySelector('.budget-planner');
+                budgetPlanner.insertBefore(successMsg, budgetPlanner.firstChild);
+                
+                // Remove message after 3 seconds
+                setTimeout(() => {
+                    successMsg.style.opacity = '0';
+                    setTimeout(() => successMsg.remove(), 300);
+                }, 3000);
+                  // Update total stats
+                updateBudgetStats();
+                
+                // Pozivamo i globalnu funkciju za budžet iz main.js
+                if (typeof window.updateBudgetDisplay === 'function') {
+                    window.updateBudgetDisplay();
+                }
+            }
+            
+            // Update budget stats at the top
+            function updateBudgetStats() {
+                // Prihod iz budžet plana
+                const totalIncome = budgetData.monthlyIncome;
+                
+                // Izračunaj stvarne troškove iz unetih podataka
+                const necessitiesExpenses = expensesData?.necessities ? expensesData.necessities.reduce((sum, expense) => sum + expense.amount, 0) : 0;
+                const hobbyExpenses = expensesData?.hobby ? expensesData.hobby.reduce((sum, expense) => sum + expense.amount, 0) : 0;
+                
+                // Izračunaj ukupne troškove (glavne potrebe + hobi)
+                const totalExpenses = necessitiesExpenses + hobbyExpenses;
+                
+                // Izračunaj preostalo stanje
+                const currentBalance = totalIncome - totalExpenses;
+                
+                // Izračunaj procenat promene (za demonstraciju)
+                // U stvarnoj aplikaciji bi trebalo da imaš podatke iz prethodnog meseca
+                const incomeChange = '+0%';
+                const expenseChange = totalExpenses > 0 ? '+0%' : '0%';
+                const balanceChange = currentBalance > 0 ? '+0%' : '0%';
+                
+                // Ažuriraj prikaz
+                document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
+                document.getElementById('totalExpenses').textContent = formatCurrency(totalExpenses);
+                document.getElementById('currentBalance').textContent = formatCurrency(currentBalance);
+                
+                document.getElementById('incomeChange').textContent = incomeChange + ' u odnosu na prošli mesec';
+                document.getElementById('expenseChange').textContent = expenseChange + ' u odnosu na prošli mesec';
+                document.getElementById('balanceChange').textContent = balanceChange + ' u odnosu na prošli mesec';
+            }
+            
+            // Format currency
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('sr-RS', {
+                    style: 'decimal',
+                    maximumFractionDigits: 0
+                }).format(amount) + ' RSD';
+            }
+            
+            // Calculate budget
+            function calculateBudget() {
+                const income = parseFloat(monthlyIncomeInput.value) || 0;
+                
+                if (income <= 0) {
+                    alert('Molimo unesite validan mesečni prihod.');
+                    return;
+                }
+                
+                // Set income
+                budgetData.monthlyIncome = income;
+                
+                // Calculate amounts for each category
+                calculateCategoryAmounts();
+                
+                // Update the display
+                updateBudgetDisplay();
+                
+                // Show budget categories
+                budgetCategoriesSection.style.display = 'block';
+            }
+            
+            // Calculate category amounts
+            function calculateCategoryAmounts() {
+                const income = budgetData.monthlyIncome;
+                
+                budgetData.categories.necessities.amount = income * (budgetData.categories.necessities.percent / 100);
+                budgetData.categories.hobby.amount = income * (budgetData.categories.hobby.percent / 100);
+                budgetData.categories.savings.amount = income * (budgetData.categories.savings.percent / 100);
+            }
+            
+            // Update budget display
+            function updateBudgetDisplay() {
+                // Update percent displays
+                necessitiesPercentDisplay.textContent = budgetData.categories.necessities.percent + '%';
+                hobbyPercentDisplay.textContent = budgetData.categories.hobby.percent + '%';
+                savingsPercentDisplay.textContent = budgetData.categories.savings.percent + '%';
+                
+                // Update amount displays
+                necessitiesAmountDisplay.textContent = formatCurrency(budgetData.categories.necessities.amount);
+                hobbyAmountDisplay.textContent = formatCurrency(budgetData.categories.hobby.amount);
+                savingsAmountDisplay.textContent = formatCurrency(budgetData.categories.savings.amount);
+                
+                // Update progress bars
+                necessitiesProgressBar.style.width = budgetData.categories.necessities.percent + '%';
+                hobbyProgressBar.style.width = budgetData.categories.hobby.percent + '%';
+                savingsProgressBar.style.width = budgetData.categories.savings.percent + '%';
+            }
+            
+            // Adjust percentages when sliders change
+            function adjustPercentages(changedCategory) {
+                const necessitiesPercent = parseInt(necessitiesSlider.value);
+                const hobbyPercent = parseInt(hobbySlider.value);
+                const savingsPercent = parseInt(savingsSlider.value);
+                
+                let total = necessitiesPercent + hobbyPercent + savingsPercent;
+                
+                // If total is not 100%, adjust other categories proportionally
+                if (total !== 100) {
+                    const diff = 100 - total;
+                    
+                    if (changedCategory === 'necessities') {
+                        // Adjust hobby and savings
+                        const hobbyRatio = hobbyPercent / (hobbyPercent + savingsPercent);
+                        const hobbyAdjustment = Math.round(diff * hobbyRatio);
+                        const savingsAdjustment = diff - hobbyAdjustment;
+                        
+                        hobbySlider.value = hobbyPercent + hobbyAdjustment;
+                        savingsSlider.value = savingsPercent + savingsAdjustment;
+                    } else if (changedCategory === 'hobby') {
+                        // Adjust necessities and savings
+                        const necessitiesRatio = necessitiesPercent / (necessitiesPercent + savingsPercent);
+                        const necessitiesAdjustment = Math.round(diff * necessitiesRatio);
+                        const savingsAdjustment = diff - necessitiesAdjustment;
+                        
+                        necessitiesSlider.value = necessitiesPercent + necessitiesAdjustment;
+                        savingsSlider.value = savingsPercent + savingsAdjustment;
+                    } else if (changedCategory === 'savings') {
+                        // Adjust necessities and hobby
+                        const necessitiesRatio = necessitiesPercent / (necessitiesPercent + hobbyPercent);
+                        const necessitiesAdjustment = Math.round(diff * necessitiesRatio);
+                        const hobbyAdjustment = diff - necessitiesAdjustment;
+                        
+                        necessitiesSlider.value = necessitiesPercent + necessitiesAdjustment;
+                        hobbySlider.value = hobbyPercent + hobbyAdjustment;
+                    }
+                }
+                
+                // Update budget data with new percentages
+                budgetData.categories.necessities.percent = parseInt(necessitiesSlider.value);
+                budgetData.categories.hobby.percent = parseInt(hobbySlider.value);
+                budgetData.categories.savings.percent = parseInt(savingsSlider.value);
+                
+                // Recalculate amounts
+                calculateCategoryAmounts();
+                
+                // Update the display
+                updateBudgetDisplay();
+            }
+            
+            // Get DOM elements
+            const calculateBudgetBtn = document.getElementById('calculateBudgetBtn');
+            const necessitiesSlider = document.getElementById('necessitiesSlider');
+            const hobbySlider = document.getElementById('hobbySlider');
+            const savingsSlider = document.getElementById('savingsSlider');
+            
+            // Event listeners
+            if (calculateBudgetBtn) {
+                calculateBudgetBtn.addEventListener('click', calculateBudget);
+            }
+            
+            if (necessitiesSlider) {
+                necessitiesSlider.addEventListener('input', () => adjustPercentages('necessities'));
+            }
+            
+            if (hobbySlider) {
+                hobbySlider.addEventListener('input', () => adjustPercentages('hobby'));
+            }
+            
+            if (savingsSlider) {
+                savingsSlider.addEventListener('input', () => adjustPercentages('savings'));
+            }
+            
+            const saveButton = document.getElementById('saveBudgetPlan');
+            if (saveButton) {
+                saveButton.addEventListener('click', saveBudgetData);
+            }
+            
+            // Initialize budget data
+            function loadBudgetData() {
+                try {
+                    // Pokušaj da učitaš iz DataManager-a prvo
+                    const budgetDataFromManager = window.dataManager.getBudget();
+                    if (budgetDataFromManager && budgetDataFromManager.categories) {
+                        console.log('📊 Učitan budžet iz DataManager-a:', budgetDataFromManager);
+                        
+                        // Ažuriraj globalni budgetData objekat
+                        budgetData.totalBudget = budgetDataFromManager.totalBudget || 0;
+                        budgetData.categories = budgetDataFromManager.categories || {};
+                        budgetData.lastUpdated = budgetDataFromManager.lastUpdated || new Date().toISOString();
+                        
+                        // Ažuriraj prikaz
+                        updateBudgetDisplay();
+                        return;
+                    }
+                    
+                    // Rezervni način - učitaj iz localStorage
+                    const savedBudget = localStorage.getItem('budgetData');
+                    if (savedBudget) {
+                        console.log('📊 Učitavam budžet iz localStorage (rezervno)');
+                        const parsedBudget = JSON.parse(savedBudget);
+                        Object.assign(budgetData, parsedBudget);
+                        updateBudgetDisplay();
+                    }
+                } catch (e) {
+                    console.error('❌ Greška pri učitavanju budžet podataka:', e);
+                }
+            }
+            
+            // Load saved budget data on page load
+            if (typeof loadBudgetData === 'function') {
+                loadBudgetData();
+            }
+            
+            // Expense tracking functionality
+            // Data structure for expenses
+            let expensesData = {
+                necessities: [],
+                hobby: [],
+                savings: []
+            };
+            
+            // Expense tab switching
+            const expenseTabs = document.querySelectorAll('.expense-tab');
+            const expenseContents = document.querySelectorAll('.expense-tab-content');
+            
+            expenseTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    expenseTabs.forEach(t => t.classList.remove('active'));
+                    expenseContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    const tabName = tab.getAttribute('data-tab');
+                    tab.classList.add('active');
+                    document.getElementById(tabName + 'Tab').classList.add('active');
+                });
+            });
+            
+            // Set current date as default
+            function setDefaultDates() {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('necessities-date').value = today;
+                document.getElementById('hobby-date').value = today;
+                document.getElementById('savings-date').value = today;
+            }
+            
+            // Add expense
+            function addExpense(category) {
+                const nameInput = document.getElementById(`${category}-name`);
+                const amountInput = document.getElementById(`${category}-amount`);
+                const dateInput = document.getElementById(`${category}-date`);
+                
+                const name = nameInput.value.trim();
+                const amount = parseFloat(amountInput.value);
+                const date = dateInput.value;
+                
+                if (!name || isNaN(amount) || amount <= 0 || !date) {
+                    alert('Molimo unesite sve podatke pravilno');
+                    return;
+                }
+                
+                // Create new expense object
+                const expense = {
+                    id: Date.now(), // Unique ID based on timestamp
+                    name: name,
+                    amount: amount,
+                    date: date
+                };
+                
+                // Add to expenses data
+                expensesData[category].push(expense);
+                
+                // Save to localStorage
+                saveExpensesData();
+                
+                // Update UI
+                renderExpenses(category);
+                updateCategoryTotal(category);
+                
+                // Ažuriraj ukupnu statistiku
+                updateBudgetStats();
+                
+                // Clear inputs
+                nameInput.value = '';
+                amountInput.value = '';
+                dateInput.value = new Date().toISOString().split('T')[0];
+                
+                // Focus on name input for next entry
+                nameInput.focus();
+            }
+            
+            // Delete expense
+            function deleteExpense(category, id) {
+                // Find expense index
+                const index = expensesData[category].findIndex(expense => expense.id === id);
+                
+                if (index !== -1) {
+                    // Remove expense
+                    expensesData[category].splice(index, 1);
+                    
+                    // Save to localStorage
+                    saveExpensesData();
+                    
+                    // Update UI
+                    renderExpenses(category);
+                    updateCategoryTotal(category);
+                    
+                    // Ažuriraj ukupnu statistiku
+                    updateBudgetStats();
+                }
+            }
+            
+            // Render expenses for a category
+            function renderExpenses(category) {
+                const tbody = document.getElementById(`${category}-tbody`);
+                tbody.innerHTML = ''; // Clear existing rows
+                
+                // Sort expenses by date (newest first)
+                const sortedExpenses = [...expensesData[category]].sort((a, b) => {
+                    return new Date(b.date) - new Date(a.date);
+                });
+                
+                // Add rows for each expense
+                sortedExpenses.forEach(expense => {
+                    const tr = document.createElement('tr');
+                    
+                    tr.innerHTML = `
+                        <td>${expense.name}</td>
+                        <td>${formatCurrency(expense.amount)}</td>
+                        <td>${formatDate(expense.date)}</td>
+                        <td>
+                            <div class="expense-actions">
+                                <button class="expense-delete" onclick="deleteExpense('${category}', ${expense.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(tr);
+                });
+            }
+            
+            // Format date to dd.mm.yyyy
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('sr-RS');
+            }
+            
+            // Update category total
+            function updateCategoryTotal(category) {
+                const total = expensesData[category].reduce((sum, expense) => sum + expense.amount, 0);
+                document.getElementById(`${category}-total`).textContent = formatCurrency(total);
+            }
+            
+            // Save expenses data to localStorage
+            function saveExpensesData() {
+                localStorage.setItem('expensesData', JSON.stringify(expensesData));
+            }
+            
+            // Load expenses data from localStorage
+            function loadExpensesData() {
+                const savedData = localStorage.getItem('expensesData');
+                if (savedData) {
+                    try {
+                        expensesData = JSON.parse(savedData);
+                        
+                        // Render expenses for each category
+                        renderExpenses('necessities');
+                        renderExpenses('hobby');
+                        renderExpenses('savings');
+                        
+                        // Update totals
+                        updateCategoryTotal('necessities');
+                        updateCategoryTotal('hobby');
+                        updateCategoryTotal('savings');
+                    } catch (e) {
+                        console.error('Error parsing saved expenses data:', e);
+                    }
+                }
+            }
+            
+            // Add event listeners for add buttons
+            document.getElementById('necessities-add').addEventListener('click', () => addExpense('necessities'));
+            document.getElementById('hobby-add').addEventListener('click', () => addExpense('hobby'));
+            document.getElementById('savings-add').addEventListener('click', () => addExpense('savings'));
+            
+            // Make deleteExpense function available globally
+            window.deleteExpense = deleteExpense;
+            
+            // Initialize expense tracking
+            setDefaultDates();
+            loadExpensesData();
+            
+            // Function to show budget section
+            function showBudgetSection() {
+                // Hide all sections
+                document.querySelectorAll('section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show budget section and transactions list
+                const budgetSection = document.getElementById('budgetSection');
+                const transactionsList = document.querySelector('.transactions-list');
+                
+                if (budgetSection) {
+                    budgetSection.style.display = 'block';
+                    // Scroll to the budget section
+                    budgetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                if (transactionsList) {
+                    transactionsList.style.display = 'block';
+                }
+                
+                // Update active link in navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#budget') {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Load budget data if not already loaded
+                if (typeof loadBudgetData === 'function') {
+                    loadBudgetData();
+                }
+            }
+            
+            // Function to get URL parameter
+            function getUrlParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // Function to check if we should show budget section
+            function checkAndShowBudgetSection() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('directToBudget') === 'true' || urlParams.get('showBudget') === 'true' || window.location.hash === '#budget') {
+                    // Let handleNavigation handle the rest
+                    handleNavigation();
+                    return true;
+                }
+                return false;
+            }
+            
+            // Function to check if we should go directly to budget
+            function shouldGoDirectlyToBudget() {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get('directToBudget') === 'true';
+            }
+
+            // Function to handle navigation
+            function handleNavigation() {
+                // If we should go directly to budget, override everything
+                if (shouldGoDirectlyToBudget()) {
+                    // Hide all sections
+                    document.querySelectorAll('section').forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // Show only budget section
+                    const budgetSection = document.getElementById('budgetSection');
+                    if (budgetSection) {
+                        budgetSection.style.display = 'block';
+                        if (typeof showBudgetSection === 'function') {
+                            showBudgetSection();
+                        }
+                    }
+                    
+                    // Clean up URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    
+                    // Disable all navigation links
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.style.pointerEvents = 'none';
+                        link.style.opacity = '0.5';
+                        link.style.cursor = 'not-allowed';
+                        link.title = 'Navigacija je onemogućena';
+                    });
+                    
+                    return;
+                }
+                
+                // Normal navigation
+                const hash = window.location.hash || '#profile';
+                
+                // Hide all sections first
+                document.querySelectorAll('section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show the appropriate section based on hash
+                const sectionToShow = document.querySelector(hash + 'Section') || document.getElementById('profileSection');
+                if (sectionToShow) {
+                    sectionToShow.style.display = 'block';
+                }
+                
+                // Update active link in navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === hash) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Special case for budget section
+                if (hash === '#budget' && typeof showBudgetSection === 'function') {
+                    showBudgetSection();
+                }
+            }
+            
+            // Set up navigation event listeners
+            document.addEventListener('DOMContentLoaded', function() {
+                // Load user profile data first
+                loadUserData();
+                
+                // Handle initial navigation
+                handleNavigation();
+                
+                // Set up hash change listener
+                window.addEventListener('hashchange', handleNavigation);
+                
+                // Add click handlers for navigation links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const href = this.getAttribute('href');
+                        if (href.startsWith('#')) {
+                            window.location.hash = href;
+                        } else {
+                            window.location.href = href;
+                        }
+                    });
+                });
+                
+                // Handle navigation between sections
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const sectionId = this.getAttribute('href').substring(1);
+                        
+                        // Hide all sections
+                        document.getElementById('profileSection').style.display = 'none';
+                        document.getElementById('budgetSection').style.display = 'none';
+                        document.getElementById('settingsSection').style.display = 'none';
+                        
+                        // Show selected section
+                        document.getElementById(sectionId + 'Section').style.display = 'block';
+                        
+                        // Update active link
+                        document.querySelectorAll('.nav-link').forEach(lnk => lnk.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Update URL without page reload
+                        window.history.pushState(null, '', `#${sectionId}`);
+                    });
+                });
+            });
+            
+            // Handle browser back/forward buttons
+            window.addEventListener('popstate', function() {
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    document.getElementById('profileSection').style.display = 'none';
+                    document.getElementById('budgetSection').style.display = 'none';
+                    document.getElementById('settingsSection').style.display = 'none';
+                    document.getElementById(hash + 'Section').style.display = 'block';
+                    
+                    // Update active link
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${hash}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+            
+            // Check localStorage for active tab
             const activeTab = localStorage.getItem('activeProfileTab');
-            console.log("Active tab from localStorage:", activeTab);
             if (activeTab !== null) {
-                // Konvertuj u broj i aktiviraj tab
+                // Konvertuj u broj
                 const tabIndex = parseInt(activeTab);
-                activateTab(tabIndex);
+                
+                // Pronađi sve linkove za navigaciju
+                const navLinks = document.querySelectorAll('.nav-link');
+                
+                // Ako postoje linkovi i imamo validni indeks, simuliraj klik na željeni link
+                if (navLinks && navLinks.length > tabIndex && tabIndex >= 0) {
+                    setTimeout(function() {
+                        navLinks[tabIndex].click();
+                    }, 100);
+                }
                 
                 // Očisti localStorage da ne bi uticalo na buduće posete
                 localStorage.removeItem('activeProfileTab');
@@ -1470,21 +4410,206 @@ def profile():
                         element.scrollIntoView({ behavior: 'smooth' });
                     }
                     localStorage.removeItem('scrollToSection');
-                }, 500);
+                }, 300);
             }
             
             // Proveri da li treba otvoriti tab za unos troškova
             const openExpenseTab = localStorage.getItem('openExpenseTab');
             if (openExpenseTab === 'true') {
                 setTimeout(function() {
-                    // Ovde možemo dodati kod za otvaranje dodatnih tabova unutar budžet sekcije
                     const expenseButton = document.querySelector('[data-expense-tab="true"]');
                     if (expenseButton) {
                         expenseButton.click();
                     }
                     localStorage.removeItem('openExpenseTab');
-                }, 700);
+                }, 500);
             }
+
+            // Funkcija za ažuriranje prikaza budžeta
+            function updateBudgetDisplay() {
+                try {
+                    // Učitaj i validiraj podatke iz localStorage-a
+                    let budget = {};
+                    let userBudget = {};
+                    
+                    try {
+                        const budgetStr = localStorage.getItem('budget');
+                        if (budgetStr) budget = JSON.parse(budgetStr);
+                    } catch (e) {
+                        console.warn('Greška pri učitavanju budget podataka:', e);
+                    }
+                    
+                    try {
+                        const userBudgetStr = localStorage.getItem('userBudget');
+                        if (userBudgetStr) userBudget = JSON.parse(userBudgetStr);
+                    } catch (e) {
+                        console.warn('Greška pri učitavanju userBudget podataka:', e);
+                    }
+
+                    // Izračunaj vrednosti sa validacijom
+                    const monthlyBudget = parseFloat(budget.monthlyBudget) || 
+                        parseFloat(userBudget.monthlyIncome) || 0;
+                    
+                    const spentAmount = parseFloat(budget.totalSpent) || 
+                        (parseFloat(userBudget.necessities || 0) + parseFloat(userBudget.hobby || 0)) || 0;
+                    
+                    const remainingAmount = Math.max(0, monthlyBudget - spentAmount);
+
+                    // Ažuriraj DOM elemente
+                    const elements = {
+                        monthlyBudget: document.getElementById('monthlyBudget'),
+                        spentAmount: document.getElementById('spentAmount'),
+                        remainingAmount: document.getElementById('remainingAmount'),
+                        progressBar: document.getElementById('budgetProgressBar')
+                    };
+
+                    // Proveri da li elementi postoje pre ažuriranja
+                    if (!elements.monthlyBudget && !elements.spentAmount && 
+                        !elements.remainingAmount && !elements.progressBar) {
+                        return; // Tiho prekini ako nijedan element ne postoji
+                    }
+
+                    // Funkcija za animirano ažuriranje vrednosti
+                    const updateWithAnimation = (element, newValue) => {
+                        if (!element) return;
+                        
+                        const oldValue = parseFloat(element.textContent.replace('€', '')) || 0;
+                        const duration = 1000; // 1 sekunda za animaciju
+                        const startTime = performance.now();
+                        
+                        const animate = (currentTime) => {
+                            const elapsed = currentTime - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            
+                            const currentValue = oldValue + (newValue - oldValue) * progress;
+                            element.textContent = `€${currentValue.toFixed(2)}`;
+                            
+                            if (progress < 1) {
+                                requestAnimationFrame(animate);
+                            }
+                        };
+                        
+                        requestAnimationFrame(animate);
+                    };
+
+                    // Ažuriraj vrednosti sa animacijom
+                    updateWithAnimation(elements.monthlyBudget, monthlyBudget);
+                    updateWithAnimation(elements.spentAmount, spentAmount);
+                    updateWithAnimation(elements.remainingAmount, remainingAmount);
+
+                    // Ažuriraj progres bar sa animacijom
+                    if (elements.progressBar) {
+                        const percentage = monthlyBudget > 0 ? (spentAmount / monthlyBudget) * 100 : 0;
+                        elements.progressBar.style.transition = 'width 0.5s ease-out, background 0.3s ease';
+                        elements.progressBar.style.width = `${Math.min(100, percentage)}%`;
+                        
+                        // Koristi CSS varijable za boje
+                        if (percentage >= 90) {
+                            elements.progressBar.style.background = 'var(--gradient-gold-dark)';
+                        } else if (percentage >= 75) {
+                            elements.progressBar.style.background = 'var(--gradient-gold)';
+                        } else {
+                            elements.progressBar.style.background = 'var(--gradient-gold-light)';
+                        }
+                    }
+
+                    // Emituj custom event za sinhronizaciju
+                    window.dispatchEvent(new CustomEvent('budget-updated', { 
+                        detail: { monthlyBudget, spentAmount, remainingAmount } 
+                    }));
+
+                } catch (error) {
+                    console.error('Greška pri ažuriranju prikaza budžeta:', error);
+                }
+            }
+
+            // Osluškuj promene u localStorage-u
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'budget' || e.key === 'userBudget' || e.key === 'currentUser') {
+                    updateBudgetDisplay();
+                }
+                
+                // Osluškuj promene loga
+                if (e.key === 'site_logo') {
+                    const logoElement = document.getElementById('siteLogo');
+                    if (logoElement && e.newValue) {
+                        logoElement.src = e.newValue;
+                    }
+                }
+            });
+
+            // Osluškuj custom event za sinhronizaciju
+            window.addEventListener('budget-updated', (e) => {
+                console.log('Budžet je ažuriran:', e.detail);
+            });
+
+            // Ažuriraj svakih 30 sekundi
+            setInterval(updateBudgetDisplay, 30000);
+
+            // Izvozi funkcije za upotrebu u drugim fajlovima
+            window.updateBudgetDisplay = updateBudgetDisplay;
+
+            // Pozovi početno ažuriranje budžeta
+            updateBudgetDisplay();
         });
-        """),
-    )
+    </script>
+    
+    <!-- Mobile Sidebar JavaScript -->
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.querySelector('.mobile-sidebar-overlay');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (sidebar.classList.contains('active')) {
+                closeMobileSidebar();
+            } else {
+                sidebar.classList.add('active');
+                overlay.style.display = 'block';
+                toggle.innerHTML = '<i class="fas fa-times"></i>';
+            }
+        }
+        
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('mobileSidebar');
+            const overlay = document.querySelector('.mobile-sidebar-overlay');
+            const toggle = document.querySelector('.mobile-menu-toggle');
+            
+            sidebar.classList.remove('active');
+            overlay.style.display = 'none';
+            toggle.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+        
+        // Close sidebar when clicking on navigation items (mobile)
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 768) {
+                const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
+                sidebarLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        setTimeout(closeMobileSidebar, 300); // Small delay for smooth transition
+                    });
+                });
+            }
+            
+            // Show mobile menu toggle on small screens
+            function checkScreenSize() {
+                const toggle = document.querySelector('.mobile-menu-toggle');
+                if (window.innerWidth <= 768) {
+                    toggle.style.display = 'block';
+                } else {
+                    toggle.style.display = 'none';
+                    closeMobileSidebar(); // Close sidebar if screen becomes larger
+                }
+            }
+            
+            checkScreenSize();
+            window.addEventListener('resize', checkScreenSize);
+        });
+    </script>
+    
+    <!-- Uključujemo main.js za globalne funkcije budžeta -->
+    <script src="js/main.js"></script>
+    <!-- Uključujemo profile_tabs.js za funkcionalnost aktivacije tabova -->
+    <script src="js/profile_tabs.js"></script>
+</body>
+</html>
