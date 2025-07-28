@@ -3310,38 +3310,286 @@
             // Inicijalno ažuriranje ukupnog procenta
             updateTotalPercentage();
             
-        }); // Zatvaramo glavni DOMContentLoaded listener
-        
-        // Globalne funkcije (van DOMContentLoaded)
-        
-        // Throttle funkcija za optimizaciju performansi
-        function throttle(func, delay) {
-            let timeoutId;
-            let lastExecTime = 0;
-            return function (...args) {
-                const currentTime = Date.now();
-                
-                if (currentTime - lastExecTime > delay) {
-                    func.apply(this, args);
-                    lastExecTime = currentTime;
-                } else {
-                    clearTimeout(timeoutId);
-                    timeoutId = setTimeout(() => {
+            // Funkcije potrebne za rad aplikacije
+            
+            // Throttle funkcija za optimizaciju performansi
+            function throttle(func, delay) {
+                let timeoutId;
+                let lastExecTime = 0;
+                return function (...args) {
+                    const currentTime = Date.now();
+                    
+                    if (currentTime - lastExecTime > delay) {
                         func.apply(this, args);
-                        lastExecTime = Date.now();
-                    }, delay - (currentTime - lastExecTime));
+                        lastExecTime = currentTime;
+                    } else {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(() => {
+                            func.apply(this, args);
+                            lastExecTime = Date.now();
+                        }, delay - (currentTime - lastExecTime));
+                    }
+                };
+            }
+            
+            // Debounce funkcija za optimizaciju performansi
+            function debounce(func, delay) {
+                let timeoutId;
+                return function (...args) {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => func.apply(this, args), delay);
+                };
+            }
+            
+            // Optimizovana funkcija za ažuriranje budžeta sa debounce
+            window.debouncedUpdateBudgetDisplay = debounce(function() {
+                if (typeof updateBudgetDisplay === 'function') {
+                    updateBudgetDisplay();
                 }
-            };
-        }
-        
-        // Debounce funkcija za optimizaciju performansi
-        function debounce(func, delay) {
-            let timeoutId;
-            return function (...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
+            }, 300);
+            
+            window.debouncedUpdateTotalPercentage = debounce(function() {
+                if (typeof updateTotalPercentage === 'function') {
+                    updateTotalPercentage();
+                }
+            }, 200);
+            
+            // Funkcija za ažuriranje ukupnog procenta i statusa
+            function updateTotalPercentage() {
+                const necessitiesEl = document.getElementById('necessitiesPercent');
+                const hobbyEl = document.getElementById('hobbyPercent');
+                const savingsEl = document.getElementById('savingsPercent');
+                
+                if (!necessitiesEl || !hobbyEl || !savingsEl) return;
+                
+                const necessities = parseInt(necessitiesEl.value);
+                const hobby = parseInt(hobbyEl.value);
+                const savings = parseInt(savingsEl.value);
+                
+                const total = necessities + hobby + savings;
+                const totalPercentageElement = document.getElementById('totalPercentage');
+                const totalPercentageBar = document.getElementById('totalPercentageBar');
+                const percentageStatus = document.getElementById('percentageStatus');
+                
+                if (totalPercentageElement) totalPercentageElement.textContent = `${total}%`;
+                
+                if (totalPercentageBar) {
+                    const percentageWidth = Math.min(100, (total / 100) * 100);
+                    totalPercentageBar.style.width = `${percentageWidth}%`;
+                    
+                    // Promena boje u zavisnosti od ukupne vrednosti
+                    if (total < 100) {
+                        totalPercentageBar.style.background = 'linear-gradient(90deg, #ef4444, #f59e0b)';
+                        if (percentageStatus) {
+                            percentageStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Nedovoljno raspoređeno';
+                            percentageStatus.style.color = '#f59e0b';
+                        }
+                    } else if (total > 100) {
+                        totalPercentageBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                        if (percentageStatus) {
+                            percentageStatus.innerHTML = '<i class="fas fa-times-circle"></i> Prekoračeno';
+                            percentageStatus.style.color = '#ef4444';
+                        }
+                    } else {
+                        totalPercentageBar.style.background = 'var(--gradient-gold)';
+                        if (percentageStatus) {
+                            percentageStatus.innerHTML = '<i class="fas fa-check-circle"></i> Savršena raspodela';
+                            percentageStatus.style.color = '#10b981';
+                        }
+                    }
+                }
+                
+                // Validacija i ažuriranje stanja dugmeta za čuvanje
+                validateSliders();
+            }
+
+            // Funkcija za validaciju klizača
+            function validateSliders() {
+                const necessitiesEl = document.getElementById('necessitiesPercent');
+                const hobbyEl = document.getElementById('hobbyPercent');
+                const savingsEl = document.getElementById('savingsPercent');
+                
+                if (!necessitiesEl || !hobbyEl || !savingsEl) return false;
+                
+                const necessities = parseInt(necessitiesEl.value);
+                const hobby = parseInt(hobbyEl.value);
+                const savings = parseInt(savingsEl.value);
+                
+                const total = necessities + hobby + savings;
+                console.log('🔍 Validacija klizača:', {
+                    necessities: necessities,
+                    hobby: hobby,
+                    savings: savings,
+                    total: total,
+                    isValid: total === 100
+                });
+                
+                const saveButton = document.getElementById('saveBudgetPlan');
+                
+                if (saveButton) {
+                    if (total !== 100) {
+                        console.log('❌ Validacija neuspešna - ukupan procenat nije 100%');
+                        saveButton.disabled = true;
+                        saveButton.style.opacity = '0.7';
+                        saveButton.style.cursor = 'not-allowed';
+                        saveButton.title = 'Ukupan zbir procenata mora biti tačno 100%';
+                        return false;
+                    } else {
+                        console.log('✅ Validacija uspešna - ukupan procenat je 100%');
+                        saveButton.disabled = false;
+                        saveButton.style.opacity = '1';
+                        saveButton.style.cursor = 'pointer';
+                        saveButton.title = 'Sačuvaj plan budžeta';
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // Funkcija za ažuriranje prikaza budžeta
+            function updateBudgetDisplay() {
+                const incomeEl = document.getElementById('monthlyIncome');
+                const necessitiesPercentEl = document.getElementById('necessitiesPercent');
+                const hobbyPercentEl = document.getElementById('hobbyPercent');
+                const savingsPercentEl = document.getElementById('savingsPercent');
+                
+                if (!incomeEl || !necessitiesPercentEl || !hobbyPercentEl || !savingsPercentEl) return;
+                
+                const income = parseFloat(incomeEl.value) || 0;
+                const necessitiesPercent = parseInt(necessitiesPercentEl.value);
+                const hobbyPercent = parseInt(hobbyPercentEl.value);
+                const savingsPercent = parseInt(savingsPercentEl.value);
+                
+                // Izračunavanje iznosa po kategorijama
+                const necessitiesAmount = (income * necessitiesPercent / 100).toFixed(2);
+                const hobbyAmount = (income * hobbyPercent / 100).toFixed(2);
+                const savingsAmount = (income * savingsPercent / 100).toFixed(2);
+                
+                // Formatiranje valute
+                const formatter = new Intl.NumberFormat('sr-RS', {
+                    style: 'currency',
+                    currency: 'RSD',
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                
+                // Ažuriranje prikaza
+                const necessitiesAmountEl = document.getElementById('necessitiesAmount');
+                const hobbyAmountEl = document.getElementById('hobbyAmount');
+                const savingsAmountEl = document.getElementById('savingsAmount');
+                
+                if (necessitiesAmountEl) necessitiesAmountEl.textContent = formatter.format(necessitiesAmount);
+                if (hobbyAmountEl) hobbyAmountEl.textContent = formatter.format(hobbyAmount);
+                if (savingsAmountEl) savingsAmountEl.textContent = formatter.format(savingsAmount);
+                
+                // Ažuriranje vrednosti u klizačima
+                necessitiesPercentEl.value = necessitiesPercent;
+                hobbyPercentEl.value = hobbyPercent;
+                savingsPercentEl.value = savingsPercent;
+                
+                // Ažuriranje prikaza procenata
+                const necessitiesPercentValueEl = document.getElementById('necessitiesPercentValue');
+                const hobbyPercentValueEl = document.getElementById('hobbyPercentValue');
+                const savingsPercentValueEl = document.getElementById('savingsPercentValue');
+                
+                if (necessitiesPercentValueEl) necessitiesPercentValueEl.textContent = `${necessitiesPercent}%`;
+                if (hobbyPercentValueEl) hobbyPercentValueEl.textContent = `${hobbyPercent}%`;
+                if (savingsPercentValueEl) savingsPercentValueEl.textContent = `${savingsPercent}%`;
+                
+                // Ažuriranje širine progress bara
+                const necessitiesProgressBar = document.querySelector('#necessitiesCard .progress-bar');
+                const hobbyProgressBar = document.querySelector('#hobbyCard .progress-bar');
+                const savingsProgressBar = document.querySelector('#savingsCard .progress-bar');
+                
+                if (necessitiesProgressBar) necessitiesProgressBar.style.width = `${necessitiesPercent}%`;
+                if (hobbyProgressBar) hobbyProgressBar.style.width = `${hobbyPercent}%`;
+                if (savingsProgressBar) savingsProgressBar.style.width = `${savingsPercent}%`;
+                
+                // Ažuriranje ukupnog procenta
+                updateTotalPercentage();
+            }
+
+            // Funkcija za čuvanje plana budžeta
+            function saveBudgetPlan() {
+                console.log('🔄 saveBudgetPlan() pozvan!');
+                
+                if (!validateSliders()) {
+                    console.log('❌ Validacija nije prošla!');
+                    alert('Greška: Ukupan zbir procenata mora biti tačno 100%!');
+                    return;
+                }
+                
+                const monthlyIncomeEl = document.getElementById('monthlyIncome');
+                const necessitiesEl = document.getElementById('necessitiesPercent');
+                const hobbyEl = document.getElementById('hobbyPercent');
+                const savingsEl = document.getElementById('savingsPercent');
+                
+                if (!monthlyIncomeEl || !necessitiesEl || !hobbyEl || !savingsEl) {
+                    console.log('❌ Potrebni elementi nisu pronađeni!');
+                    return;
+                }
+                
+                console.log('✅ Validacija prošla, kreiram budgetPlan...');
+                
+                const budgetPlan = {
+                    monthlyIncome: parseFloat(monthlyIncomeEl.value) || 0,
+                    necessities: parseInt(necessitiesEl.value),
+                    hobby: parseInt(hobbyEl.value),
+                    savings: parseInt(savingsEl.value),
+                    lastUpdated: new Date().toISOString()
+                };
+                
+                console.log('💰 Kreiran budgetPlan:', budgetPlan);
+                
+                // Čuvanje preko DataManager-a
+                if (window.dataManager) {
+                    const saved = window.dataManager.updateBudget({
+                        totalBudget: budgetPlan.monthlyIncome,
+                        categories: {
+                            necessities: { 
+                                planned: (budgetPlan.monthlyIncome * budgetPlan.necessities / 100),
+                                spent: 0,
+                                items: window.dataManager.getBudget().categories?.necessities?.items || []
+                            },
+                            wants: { 
+                                planned: (budgetPlan.monthlyIncome * budgetPlan.hobby / 100),
+                                spent: 0,
+                                items: window.dataManager.getBudget().categories?.wants?.items || []
+                            },
+                            savings: { 
+                                planned: (budgetPlan.monthlyIncome * budgetPlan.savings / 100),
+                                spent: 0,
+                                items: window.dataManager.getBudget().categories?.savings?.items || []
+                            }
+                        },
+                        percentages: {
+                            necessities: budgetPlan.necessities,
+                            hobby: budgetPlan.hobby,
+                            savings: budgetPlan.savings
+                        },
+                        monthlyIncome: budgetPlan.monthlyIncome
+                    });
+                    
+                    console.log(saved ? '✅ Budžet sačuvan preko DataManager-a' : '❌ Greška pri čuvanju budžeta');
+                }
+                
+                // Čuvanje u localStorage za kompatibilnost
+                localStorage.setItem('userBudget', JSON.stringify(budgetPlan));
+                
+                // Prikazivanje obaveštenja o uspešnom čuvanju
+                alert('Plan budžeta je uspešno sačuvan!');
+                
+                // Ažuriranje lokalnog prikaza
+                updateBudgetDisplay();
+            }
+            
+            // Postavi globalne funkcije
+            window.updateTotalPercentage = updateTotalPercentage;
+            window.validateSliders = validateSliders;
+            window.updateBudgetDisplay = updateBudgetDisplay;
+            window.saveBudgetPlan = saveBudgetPlan;
+            
+        }); // Zatvaramo glavni DOMContentLoaded listener
     </script>
         
     <!-- Budget & Navigation JavaScript -->

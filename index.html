@@ -404,14 +404,59 @@
         document.getElementById('downloadApp').addEventListener('click', (e) => {
             e.preventDefault();
             
-            // Kreiraj dummy fajl za download
+            // Detektuj tip uređaja
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            const isTablet = /iPad|Android/i.test(navigator.userAgent) && window.innerWidth > 768;
+            
+            if (isMobile && !isTablet) {
+                // Za mobilne uređaje - prikaži informacije o PWA
+                showMobileAppInfo();
+            } else {
+                // Za desktop - kreiraj info fajl
+                downloadDesktopInfo();
+            }
+        });
+        
+        function showMobileAppInfo() {
+            const message = `
+📱 MOBILNA VERZIJA DOSTUPNA!
+
+Golden Balance je optimizovana za mobilne uređaje kao Progressive Web App (PWA).
+
+🔗 Za najbolje iskustvo:
+1. Idite na: preview-fixed.html
+2. U browser meniju izaberite "Dodaj na početni ekran" 
+3. Aplikacija će se instalirati kao native app
+
+✨ Funkcionalnosti na telefonu:
+• Offline rad
+• Push notifikacije  
+• Brz pristup sa početnog ekrana
+• Optimizovano za touch
+
+📞 Kontakt: info@goldenbalance.rs
+            `;
+            
+            if (confirm(message + '\n\nDa li želite da idete direktno na aplikaciju?')) {
+                window.location.href = 'preview-fixed.html';
+            }
+        }
+        
+        function downloadDesktopInfo() {
+            // Kreiraj fajl za desktop download
             const dummyContent = `
 Golden Balance - Finansijska Aplikacija
 
 Hvala što ste zainteresovani za download naše aplikacije!
 
+DESKTOP VERZIJA:
 Trenutno radimo na desktop verziji aplikacije.
 Za sada možete koristiti web verziju na: preview-fixed.html
+
+MOBILNA VERZIJA:
+✓ Dostupna kao PWA (Progressive Web App)
+✓ Instalira se direktno iz browser-a
+✓ Radi offline nakon instalacije
 
 Kontakt za više informacija:
 Email: info@goldenbalance.rs
@@ -431,8 +476,8 @@ Telefon: +381 60 123 4567
             window.URL.revokeObjectURL(url);
             
             // Prikaži poruku korisniku
-            alert('Hvala na interesovanju! Preuzet je informacioni fajl. Desktop verzija aplikacije je u pripremi.');
-        });
+            alert('Hvala na interesovanju! Preuzet je informacioni fajl.\n\nDesktop verzija aplikacije je u pripremi.\nMobilna verzija je dostupna kao PWA.');
+        }
         
         // Preveniranje refresh-a tokom countdown-a
         window.addEventListener('beforeunload', (e) => {

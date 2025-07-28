@@ -1,0 +1,36 @@
+{
+    "name": "Golden Balance - Finansijska Aplikacija",
+    "short_name": "Golden Balance",
+    "description": "Moderna finansijska aplikacija za upravljanje budžetom i konsultacije",
+    "start_url": "/preview-fixed.html",
+    "display": "standalone",
+    "background_color": "#0E0E10",
+    "theme_color": "#D4AF37",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiNENEFGMzciLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjMEUwRTEwIj4KPHN0eWxlPi5zdDB7ZmlsbDojMEUwRTEwO308L3N0eWxlPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTIsM2MtNSwwLTksNC05LDlzNCw5LDksOXM5LTQsOS05UzE3LDMsMTIsM3ogTTEzLDE2aC0ydi00SDEzVjE2eiBNMTMsOWgtMlY3aDJWOXoiLz4KPHN2Zz4KPHN2Zz4=",
+            "sizes": "192x192",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiNEQUFGMzciLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzBFMEUxMCI+CjxzdHlsZT4uc3Qwe2ZpbGw6IzBFMEUxMDt9PC9zdHlsZT4KPHN0eWxlPi5zdDB7Zm9udC1mYW1pbHk6QXJpYWwtQm9sZE1UO2ZvbnQtc2l6ZTo0OHB4O2ZvbnQtd2VpZ2h0OmJvbGQ7fTwvc3R5bGU+Cjx0ZXh0IGNsYXNzPSJzdDAiIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgNiAxNikiPkdCPC90ZXh0Pgo8L3N2Zz4KPHN2Zz4=",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["finance", "productivity", "business"],
+    "lang": "sr",
+    "scope": "/",
+    "prefer_related_applications": false,
+    "screenshots": [
+        {
+            "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjU2OCIgdmlld0JveD0iMCAwIDMyMCA1NjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNTY4IiBmaWxsPSIjMEUwRTEwIi8+Cjx0ZXh0IHg9IjE2MCIgeT0iMjg0IiBmaWxsPSIjRDRBRjM3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiPkdvbGRlbiBCYWxhbmNlPC90ZXh0Pgo8L3N2Zz4=",
+            "sizes": "320x568",
+            "type": "image/svg+xml",
+            "form_factor": "narrow"
+        }
+    ]
+}
