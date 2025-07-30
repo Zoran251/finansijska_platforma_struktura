@@ -570,23 +570,26 @@
         }
 
         .profile-pic {
-            width: 120px;
-            height: 120px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             object-fit: cover;
             margin: 0 auto 1rem;
-            border: 4px solid var(--primary);
+            border: 3px solid var(--gold-bright);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
         }
 
         .profile-name {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
+            color: var(--light-text);
         }
         
         .profile-email {
             color: var(--muted-text);
             font-size: 0.875rem;
+            margin-bottom: 1.5rem;
         }
 
         .nav-menu {
@@ -609,6 +612,28 @@
             transition: all 0.3s ease;
             background: rgba(22, 22, 26, 0.5);
             border: 1px solid transparent;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: rgba(212, 175, 55, 0.3);
+            color: var(--gold-bright);
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: var(--gradient-gold);
+            color: #0E0E10;
+            border-color: var(--gold-bright);
+            font-weight: 600;
+        }
+
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 18px;
+            text-align: center;
         }
         
         .expense-form {
@@ -1549,6 +1574,207 @@
                 border: 1px solid #ccc !important;
             }
         }
+
+        /* Stilovi za klizače */
+        .percent-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            outline: none;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .percent-slider:hover {
+            opacity: 1;
+        }
+
+        .percent-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .percent-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--gold-bright);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Form stilovi */
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light-text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold-bright);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-gold);
+            color: #0E0E10;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success message stilovi */
+        .success-message {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            opacity: 0;
+            animation: slideInFade 0.3s ease forwards;
+        }
+
+        @keyframes slideInFade {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Danger zone stilovi */
+        .danger-zone {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .danger-zone h3 {
+            color: #ef4444;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .danger-zone p {
+            color: var(--muted-text);
+            margin-bottom: 1rem;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Modal stilovi */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(22, 22, 26, 0.95);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 1.5rem;
+            color: var(--muted-text);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--light-text);
+        }
+
+        .modal h2 {
+            color: var(--light-text);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .modal p {
+            color: var(--muted-text);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
     </style>
 </head>
 <body>
@@ -1691,12 +1917,114 @@
 
                 <!-- Budget Section (initially hidden) -->
                 <section id="budgetSection" style="display: none;">
-                    <div id="budgetHeader" style="background: rgba(22, 22, 26, 0.9); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid var(--gold); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <div id="budgetHeader" style="background: rgba(22, 22, 26, 0.9); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid var(--gold-bright); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                         <h2 class="section-title" style="font-size: 2rem; font-weight: 800; margin: 0; color: #D4AF37; display: flex; align-items: center; gap: 1rem;">
                             <i class="fas fa-chart-pie" style="color: #D4AF37; font-size: 1.8rem;"></i> 
-                            <span>Praćenje Proračuna</span>
+                            <span>Planiranje Budžeta</span>
                         </h2>
-                        <p style="margin: 0.5rem 0 0; color: #D4AF37; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Pratite sve svoje prihode i troškove na jednom mjestu</p>
+                        <p style="margin: 0.5rem 0 0; color: #D4AF37; font-size: 1.1rem; font-weight: 500; opacity: 0.9;">Planirajte svoj mesečni budžet prema 50/30/20 pravilu</p>
+                    </div>
+
+                    <!-- Planiranje budžeta -->
+                    <div class="income-section" style="background: rgba(22, 22, 26, 0.7); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.75rem; border: 1px solid var(--border-light); margin-bottom: 2rem;">
+                        <h3 style="font-size: 1.25rem; color: var(--light-text); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-money-bill-wave" style="color: var(--gold-bright);"></i>
+                            Mesečni prihod
+                        </h3>
+                        <p class="section-subtitle" style="font-size: 1rem; color: var(--muted-text); margin: 0.5rem 0 1.5rem 0;">Unesite vaš ukupan mesečni prihod za planiranje budžeta</p>
+                        
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label for="monthlyIncome" class="form-label" style="display: block; margin-bottom: 0.5rem; color: var(--light-text); font-weight: 500;">Mesečni prihod (RSD)</label>
+                            <input type="number" id="monthlyIncome" class="form-control" placeholder="npr. 80000" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; background: rgba(255, 255, 255, 0.1); color: var(--light-text); font-size: 1rem;">
+                        </div>
+                        
+                        <button type="button" id="calculateBudget" class="btn btn-primary" style="background: var(--gradient-gold); color: #0E0E10; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            <i class="fas fa-calculator"></i> Izračunaj raspodelu
+                        </button>
+                    </div>
+
+                    <div id="budgetCategories" style="display: none; margin-top: 2rem;">
+                        <h3 style="font-size: 1.25rem; color: var(--light-text); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-sliders-h" style="color: var(--gold-bright);"></i>
+                            Raspodela po kategorijama
+                        </h3>
+                        
+                        <div class="budget-categories-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                            <!-- Potrebe (50%) -->
+                            <div class="category-card" id="necessitiesCard" style="background: rgba(22, 22, 26, 0.7); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-light);">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                    <h4 style="color: var(--light-text); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-home" style="color: var(--gold-bright);"></i>
+                                        Potrebe
+                                    </h4>
+                                    <span id="necessitiesPercentValue" style="color: var(--gold-bright); font-weight: 600;">50%</span>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <input type="range" id="necessitiesPercent" min="0" max="100" value="50" class="percent-slider" style="width: 100%; margin-bottom: 0.5rem;">
+                                    <div class="progress-bar" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; width: 50%; background: var(--gradient-gold); transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                <div id="necessitiesAmount" style="font-size: 1.25rem; font-weight: 600; color: var(--gold-bright);">0 RSD</div>
+                                <p style="font-size: 0.875rem; color: var(--muted-text); margin: 0.5rem 0 0;">Stanarina, hrana, komunalije, transport</p>
+                            </div>
+
+                            <!-- Želje (30%) -->
+                            <div class="category-card" id="hobbyCard" style="background: rgba(22, 22, 26, 0.7); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-light);">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                    <h4 style="color: var(--light-text); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-gamepad" style="color: var(--gold-bright);"></i>
+                                        Želje
+                                    </h4>
+                                    <span id="hobbyPercentValue" style="color: var(--gold-bright); font-weight: 600;">30%</span>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <input type="range" id="hobbyPercent" min="0" max="100" value="30" class="percent-slider" style="width: 100%; margin-bottom: 0.5rem;">
+                                    <div class="progress-bar" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; width: 30%; background: var(--gradient-gold); transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                <div id="hobbyAmount" style="font-size: 1.25rem; font-weight: 600; color: var(--gold-bright);">0 RSD</div>
+                                <p style="font-size: 0.875rem; color: var(--muted-text); margin: 0.5rem 0 0;">Zabava, hobi, putovanja, kupovina</p>
+                            </div>
+
+                            <!-- Štednja (20%) -->
+                            <div class="category-card" id="savingsCard" style="background: rgba(22, 22, 26, 0.7); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-light);">
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                                    <h4 style="color: var(--light-text); margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                                        <i class="fas fa-piggy-bank" style="color: var(--gold-bright);"></i>
+                                        Štednja
+                                    </h4>
+                                    <span id="savingsPercentValue" style="color: var(--gold-bright); font-weight: 600;">20%</span>
+                                </div>
+                                <div style="margin-bottom: 1rem;">
+                                    <input type="range" id="savingsPercent" min="0" max="100" value="20" class="percent-slider" style="width: 100%; margin-bottom: 0.5rem;">
+                                    <div class="progress-bar" style="height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                                        <div style="height: 100%; width: 20%; background: var(--gradient-gold); transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                <div id="savingsAmount" style="font-size: 1.25rem; font-weight: 600; color: var(--gold-bright);">0 RSD</div>
+                                <p style="font-size: 0.875rem; color: var(--muted-text); margin: 0.5rem 0 0;">Štedni račun, investicije, fondovi</p>
+                            </div>
+                        </div>
+
+                        <!-- Ukupna raspodela -->
+                        <div class="total-percentage" style="background: rgba(22, 22, 26, 0.9); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--border-light); margin-bottom: 2rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                                <h4 style="color: var(--light-text); margin: 0;">Ukupna raspodela</h4>
+                                <span id="totalPercentage" style="font-size: 1.5rem; font-weight: 700; color: var(--gold-bright);">100%</span>
+                            </div>
+                            <div style="height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin-bottom: 0.5rem;">
+                                <div id="totalPercentageBar" style="height: 100%; width: 100%; background: var(--gradient-gold); transition: all 0.3s ease;"></div>
+                            </div>
+                            <div id="percentageStatus" style="color: #10b981; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-check-circle"></i> Savršena raspodela
+                            </div>
+                        </div>
+
+                        <button type="button" id="saveBudgetPlan" class="btn btn-primary" style="background: var(--gradient-gold); color: #0E0E10; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-save"></i> Sačuvaj plan budžeta
+                        </button>
                     </div>
                     
                     <style>
@@ -2511,7 +2839,8 @@
         </div>
     </div>
 
-    <script>
+    <script type="text/javascript">
+        // @ts-nocheck
         // ========================================
         // CENTRALIZOVANI DATA STORAGE MANAGER
         // ========================================
@@ -2988,12 +3317,18 @@
                             
                             // Convert to data URL and update the image
                             const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-                            document.getElementById('userProfilePic').src = dataUrl;
                             
-                            // Save to user data
-                            const userData = JSON.parse(localStorage.getItem('userProfile') || '{}');
+                            // Ažuriraj sidebar profilnu sliku
+                            const sidebarProfilePic = document.getElementById('userProfilePic');
+                            if (sidebarProfilePic) {
+                                sidebarProfilePic.src = dataUrl;
+                            }
+                            
+                            // Save to user data and update sidebar display
+                            const userData = window.dataManager.getProfile();
                             userData.profileImage = dataUrl;
                             saveUserData(userData);
+                            updateProfileDisplay(userData);
                         };
                         img.src = event.target.result;
                     };
@@ -3069,10 +3404,28 @@
             // Logout functionality
             document.getElementById('logoutBtn').addEventListener('click', (e) => {
                 e.preventDefault();
-                // Here you would typically clear the user session
-                console.log('Logging out...');
-                localStorage.removeItem('userProfile');
-                window.location.href = 'preview.html';
+                
+                // Potvrda odjave
+                if (confirm('Da li ste sigurni da se želite odjaviti?')) {
+                    console.log('🚪 Odjavljujem korisnika...');
+                    
+                    // Očisti session podatke ali zadrži budžet i profile podatke
+                    localStorage.removeItem('admin_logged_in');
+                    sessionStorage.clear();
+                    
+                    // Prikaži obaveštenje
+                    if (typeof showNotification === 'function') {
+                        showNotification('Uspešno ste se odjavili!', 'success');
+                        
+                        // Preusmer nakon kratke pauze
+                        setTimeout(() => {
+                            window.location.href = 'preview-fixed.html';
+                        }, 1500);
+                    } else {
+                        // Fallback ako nema showNotification
+                        window.location.href = 'preview-fixed.html';
+                    }
+                }
             });
 
             // Save user data to localStorage using DataManager
@@ -3190,8 +3543,11 @@
                 document.getElementById('address').value = userData.address || '';
                 document.getElementById('city').value = userData.city || '';
                 document.getElementById('postalCode').value = userData.postalCode || '';
-                if (userData.profileImage) {
-                    document.getElementById('userProfilePic').src = userData.profileImage;
+                
+                // Ažuriraj profilnu sliku i u sidebar-u i u form preview
+                const sidebarProfilePic = document.getElementById('userProfilePic');
+                if (userData.profileImage && sidebarProfilePic) {
+                    sidebarProfilePic.src = userData.profileImage;
                 }
 
                 // Update profile info in the sidebar
@@ -3203,12 +3559,34 @@
             // Update profile display in the sidebar
             function updateProfileDisplay(userData) {
                 const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || 'Korisničko Ime';
-                document.getElementById('userName').textContent = fullName;
+                const userNameElement = document.getElementById('userName');
+                const userEmailElement = document.getElementById('userEmail');
+                const profilePicElement = document.getElementById('userProfilePic');
                 
-                // Update the email display in the sidebar to show exactly as entered
-                if (userData.email) {
-                    document.getElementById('userEmail').textContent = userData.email;
+                // Ažuriraj ime
+                if (userNameElement) {
+                    userNameElement.textContent = fullName;
                 }
+                
+                // Ažuriraj email
+                if (userEmailElement && userData.email) {
+                    userEmailElement.textContent = userData.email;
+                }
+                
+                // Ažuriraj profilnu sliku
+                if (profilePicElement && userData.profileImage) {
+                    profilePicElement.src = userData.profileImage;
+                } else if (profilePicElement && !userData.profileImage) {
+                    // Generiši placeholder sliku sa inicijalom korisnika
+                    const initials = fullName.split(' ').map(name => name.charAt(0)).join('').substring(0, 2).toUpperCase();
+                    profilePicElement.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(initials)}&background=D4AF37&color=0E0E10&size=128&font-size=0.5`;
+                }
+                
+                console.log('👤 Profile display ažuriran:', {
+                    name: fullName,
+                    email: userData.email,
+                    hasProfileImage: !!userData.profileImage
+                });
                 
                 // Proveri admin status nakon ažuriranja profila
                 checkAdminStatus();
@@ -3583,1437 +3961,168 @@
                 updateBudgetDisplay();
             }
             
+            // Funkcija za setup event listener-a
+            function setupBudgetEventListeners() {
+                // Event listeners za klizače
+                const necessitiesSlider = document.getElementById('necessitiesPercent');
+                const hobbySlider = document.getElementById('hobbyPercent');
+                const savingsSlider = document.getElementById('savingsPercent');
+                const saveButton = document.getElementById('saveBudgetPlan');
+                const monthlyIncomeInput = document.getElementById('monthlyIncome');
+                const calculateButton = document.getElementById('calculateBudget');
+                
+                // Dodaj event listener za dugme "Izračunaj raspodelu"
+                if (calculateButton) {
+                    calculateButton.addEventListener('click', function() {
+                        const income = parseFloat(monthlyIncomeInput.value);
+                        if (income > 0) {
+                            // 50/30/20 pravilo
+                            document.getElementById('necessitiesPercent').value = 50;
+                            document.getElementById('hobbyPercent').value = 30;
+                            document.getElementById('savingsPercent').value = 20;
+                            
+                            // Prikaži kategorije sekciju
+                            const budgetCategories = document.getElementById('budgetCategories');
+                            if (budgetCategories) {
+                                budgetCategories.style.display = 'block';
+                            }
+                            
+                            // Ažuriraj prikaz
+                            updateBudgetDisplay();
+                        } else {
+                            alert('Molimo unesite validan mesečni prihod.');
+                        }
+                    });
+                }
+                
+                if (necessitiesSlider) {
+                    necessitiesSlider.addEventListener('input', function() {
+                        updateBudgetDisplay();
+                        updateTotalPercentage();
+                    });
+                }
+                if (hobbySlider) {
+                    hobbySlider.addEventListener('input', function() {
+                        updateBudgetDisplay();
+                        updateTotalPercentage();
+                    });
+                }
+                if (savingsSlider) {
+                    savingsSlider.addEventListener('input', function() {
+                        updateBudgetDisplay();
+                        updateTotalPercentage();
+                    });
+                }
+                if (saveButton) {
+                    saveButton.addEventListener('click', saveBudgetPlan);
+                }
+                if (monthlyIncomeInput) {
+                    monthlyIncomeInput.addEventListener('input', updateBudgetDisplay);
+                }
+            }
+            
+            // Setup event listeners za budžet sekciju
+            setupBudgetEventListeners();
+            
             // Postavi globalne funkcije
             window.updateTotalPercentage = updateTotalPercentage;
             window.validateSliders = validateSliders;
             window.updateBudgetDisplay = updateBudgetDisplay;
             window.saveBudgetPlan = saveBudgetPlan;
             
+            console.log('✅ Profile DOMContentLoaded završen uspješno');
+            
         }); // Zatvaramo glavni DOMContentLoaded listener
-    </script>
         
-    <!-- Budget & Navigation JavaScript -->
-    <script>
-        let ticking = false;
-        function optimizedScrollHandler() {
-            if (!ticking) {
-                requestAnimationFrame(function() {
-                    // Dodaj scroll logiku ovde ako je potrebna
-                    ticking = false;
-                });
-                ticking = true;
-            }
-        }
-        
-        // Dodaj throttled scroll listener samo ako je potreban
-        if (window.innerWidth <= 768) {
-            window.addEventListener('scroll', throttle(optimizedScrollHandler, 16), { passive: true });
-        }
-        
-        // Debounce funkcija za optimizaciju performansi na mobilnim
-        function debounce(func, delay) {
-            let timeoutId;
-            return function (...args) {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => func.apply(this, args), delay);
-            };
-        }
-        
-        // Optimizovana funkcija za ažuriranje budžeta sa debounce
-        const debouncedUpdateBudgetDisplay = debounce(updateBudgetDisplay, 300);
-        const debouncedUpdateTotalPercentage = debounce(updateTotalPercentage, 200);
-        
-        // Funkcija za ažuriranje ukupnog procenta i statusa
-        function updateTotalPercentage() {
-            const necessities = parseInt(document.getElementById('necessitiesPercent').value);
-            const hobby = parseInt(document.getElementById('hobbyPercent').value);
-            const savings = parseInt(document.getElementById('savingsPercent').value);
-            
-            const total = necessities + hobby + savings;
-            const totalPercentageElement = document.getElementById('totalPercentage');
-            const totalPercentageBar = document.getElementById('totalPercentageBar');
-            const percentageStatus = document.getElementById('percentageStatus');
-            
-            // Ažuriranje prikaza ukupnog procenta
-            totalPercentageElement.textContent = `${total}%`;
-            
-            // Ažuriranje širine trake
-            const percentageWidth = Math.min(100, (total / 100) * 100);
-            totalPercentageBar.style.width = `${percentageWidth}%`;
-            
-            // Promena boje u zavisnosti od ukupne vrednosti
-            if (total < 100) {
-                totalPercentageBar.style.background = 'linear-gradient(90deg, #ef4444, #f59e0b)';
-                percentageStatus.innerHTML = '<i class="fas fa-exclamation-circle"></i> Nedovoljno raspoređeno';
-                percentageStatus.style.color = '#f59e0b';
-            } else if (total > 100) {
-                totalPercentageBar.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
-                percentageStatus.innerHTML = '<i class="fas fa-times-circle"></i> Prekoračeno';
-                percentageStatus.style.color = '#ef4444';
-            } else {
-                totalPercentageBar.style.background = 'var(--gradient-gold)';
-                percentageStatus.innerHTML = '<i class="fas fa-check-circle"></i> Savršena raspodela';
-                percentageStatus.style.color = '#10b981';
-            }
-            
-            // Validacija i ažuriranje stanja dugmeta za čuvanje
-            validateSliders();
-        }
-
-        // Funkcija za validaciju klizača
-        function validateSliders() {
-            const necessities = parseInt(document.getElementById('necessitiesPercent').value);
-            const hobby = parseInt(document.getElementById('hobbyPercent').value);
-            const savings = parseInt(document.getElementById('savingsPercent').value);
-            
-            const total = necessities + hobby + savings;
-            console.log('🔍 Validacija klizača:', {
-                necessities: necessities,
-                hobby: hobby,
-                savings: savings,
-                total: total,
-                isValid: total === 100
-            });
-            
-            const saveButton = document.getElementById('saveBudgetPlan');
-            
-            if (total !== 100) {
-                console.log('❌ Validacija neuspešna - ukupan procenat nije 100%');
-                saveButton.disabled = true;
-                saveButton.style.opacity = '0.7';
-                saveButton.style.cursor = 'not-allowed';
-                saveButton.title = 'Ukupan zbir procenata mora biti tačno 100%';
-                return false;
-            } else {
-                console.log('✅ Validacija uspešna - ukupan procenat je 100%');
-                saveButton.disabled = false;
-                saveButton.style.opacity = '1';
-                saveButton.style.cursor = 'pointer';
-                saveButton.title = 'Sačuvaj plan budžeta';
-                return true;
-            }
-        }
-
-        // Funkcija za ažuriranje prikaza budžeta
-        function updateBudgetDisplay() {
-            const income = parseFloat(document.getElementById('monthlyIncome').value) || 0;
-            const necessitiesPercent = parseInt(document.getElementById('necessitiesPercent').value);
-            const hobbyPercent = parseInt(document.getElementById('hobbyPercent').value);
-            const savingsPercent = parseInt(document.getElementById('savingsPercent').value);
-            
-            // Izračunavanje iznosa po kategorijama
-            const necessitiesAmount = (income * necessitiesPercent / 100).toFixed(2);
-            const hobbyAmount = (income * hobbyPercent / 100).toFixed(2);
-            const savingsAmount = (income * savingsPercent / 100).toFixed(2);
-            
-            // Formatiranje valute
-            const formatter = new Intl.NumberFormat('sr-RS', {
-                style: 'currency',
-                currency: 'RSD',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            
-            // Ažuriranje prikaza
-            document.getElementById('necessitiesAmount').textContent = formatter.format(necessitiesAmount);
-            document.getElementById('hobbyAmount').textContent = formatter.format(hobbyAmount);
-            document.getElementById('savingsAmount').textContent = formatter.format(savingsAmount);
-            
-            // Ažuriranje vrednosti u klizačima
-            document.getElementById('necessitiesPercent').value = necessitiesPercent;
-            document.getElementById('hobbyPercent').value = hobbyPercent;
-            document.getElementById('savingsPercent').value = savingsPercent;
-            
-            // Ažuriranje prikaza procenata
-            document.getElementById('necessitiesPercentValue').textContent = `${necessitiesPercent}%`;
-            document.getElementById('hobbyPercentValue').textContent = `${hobbyPercent}%`;
-            document.getElementById('savingsPercentValue').textContent = `${savingsPercent}%`;
-            
-            // Ažuriranje širine progress bara
-            document.querySelector('#necessitiesCard .progress-bar').style.width = `${necessitiesPercent}%`;
-            document.querySelector('#hobbyCard .progress-bar').style.width = `${hobbyPercent}%`;
-            document.querySelector('#savingsCard .progress-bar').style.width = `${savingsPercent}%`;
-            
-            // Ažuriranje ukupnog procenta
-            updateTotalPercentage();
-        }
-
-        // Funkcija za čuvanje plana budžeta
-        function saveBudgetPlan() {
-            console.log('🔄 saveBudgetPlan() pozvan!');
-            
-            // Debug: proveravamo sve elemente
-            const monthlyIncomeEl = document.getElementById('monthlyIncome');
-            const necessitiesEl = document.getElementById('necessitiesPercent');
-            const hobbyEl = document.getElementById('hobbyPercent');
-            const savingsEl = document.getElementById('savingsPercent');
-            
-            console.log('📊 Debug elementi:', {
-                monthlyIncome: monthlyIncomeEl ? monthlyIncomeEl.value : 'NIJE PRONAĐEN',
-                necessities: necessitiesEl ? necessitiesEl.value : 'NIJE PRONAĐEN',
-                hobby: hobbyEl ? hobbyEl.value : 'NIJE PRONAĐEN',
-                savings: savingsEl ? savingsEl.value : 'NIJE PRONAĐEN'
-            });
-            
-            if (!validateSliders()) {
-                console.log('❌ Validacija nije prošla!');
-                showNotification('Greška: Ukupan zbir procenata mora biti tačno 100%!', 'error');
-                return;
-            }
-            
-            console.log('✅ Validacija prošla, kreiram budgetPlan...');
-            
-            const budgetPlan = {
-                monthlyIncome: parseFloat(document.getElementById('monthlyIncome').value) || 0,
-                necessities: parseInt(document.getElementById('necessitiesPercent').value),
-                hobby: parseInt(document.getElementById('hobbyPercent').value),
-                savings: parseInt(document.getElementById('savingsPercent').value),
-                lastUpdated: new Date().toISOString()
-            };
-            
-            console.log('💰 Kreiran budgetPlan:', budgetPlan);
-            
-            // Čuvanje preko DataManager-a
-            const saved = window.dataManager.updateBudget({
-                totalBudget: budgetPlan.monthlyIncome,
-                categories: {
-                    necessities: { 
-                        planned: (budgetPlan.monthlyIncome * budgetPlan.necessities / 100),
-                        spent: 0,
-                        items: window.dataManager.getBudget().categories?.necessities?.items || []
-                    },
-                    wants: { 
-                        planned: (budgetPlan.monthlyIncome * budgetPlan.hobby / 100),
-                        spent: 0,
-                        items: window.dataManager.getBudget().categories?.wants?.items || []
-                    },
-                    savings: { 
-                        planned: (budgetPlan.monthlyIncome * budgetPlan.savings / 100),
-                        spent: 0,
-                        items: window.dataManager.getBudget().categories?.savings?.items || []
-                    }
-                },
-                percentages: {
-                    necessities: budgetPlan.necessities,
-                    hobby: budgetPlan.hobby,
-                    savings: budgetPlan.savings
-                },
-                monthlyIncome: budgetPlan.monthlyIncome
-            });
-            
-            // Čuvanje u localStorage za kompatibilnost
-            localStorage.setItem('userBudget', JSON.stringify(budgetPlan));
-            console.log(saved ? '✅ Budžet sačuvan preko DataManager-a' : '❌ Greška pri čuvanju budžeta');
-            
-            // Ažuriranje prikaza ukupnih prihoda i troškova
-            updateTotalBudgetDisplay(budgetPlan);
-              // Prikazivanje obaveštenja o uspešnom čuvanju
-            showNotification('Plan budžeta je uspešno sačuvan!', 'success');
-            
-            // Ažuriranje lokalnog prikaza
-            updateBudgetDisplay();
-            
-            // 🔄 NOVA SINHRONIZACIJA - pozivamo globalnu sinhronizaciju
-            if (typeof window.BudgetSync !== 'undefined') {
-                console.log('🔄 Pozivam BudgetSync.triggerSync()');
-                window.BudgetSync.triggerSync();
-            } else if (typeof window.updateBudgetDisplay === 'function') {
-                console.log('🔄 Pozivam window.updateBudgetDisplay()');
-                window.updateBudgetDisplay();
-            } else {
-                console.log('❌ Nema dostupnih funkcija za sinhronizaciju');
-            }
-        }
-        
-        // Funkcija za ažuriranje prikaza ukupnih prihoda i troškova
-        function updateTotalBudgetDisplay(budget) {
-            const totalIncome = budget.monthlyIncome;
-            const totalExpenses = totalIncome * (budget.necessities + budget.hobby) / 100;
-            const totalSavings = totalIncome * budget.savings / 100;
-            
-            // Formatiranje valute
-            const formatter = new Intl.NumberFormat('sr-RS', {
-                style: 'currency',
-                currency: 'RSD',
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            
-            // Ažuriranje prikaza
-            document.getElementById('totalIncome').textContent = formatter.format(totalIncome);
-            document.getElementById('totalExpenses').textContent = formatter.format(totalExpenses);
-            document.getElementById('currentBalance').textContent = formatter.format(totalSavings);
-            
-            // Ažuriranje trendova (samo primer, možete prilagoditi stvarnim potrebama)
-            updateTrends();
-        }
-        
-        // Funkcija za ažuriranje trendova (primer implementacije)
-        function updateTrends() {
-            // Ovo je samo primer - možete implementirati stvarnu logiku za praćenje trendova
-            const trends = {
-                income: getRandomTrend(),
-                expenses: getRandomTrend(),
-                balance: getRandomTrend()
-            };
-            
-            // Ažuriranje ikonica trenda
-            updateTrendIcon('incomeChange', trends.income);
-            updateTrendIcon('expenseChange', trends.expenses);
-            updateTrendIcon('balanceChange', trends.balance);
-        }
-        
-        // Pomoćna funkcija za generisanje nasumičnog trenda
-        function getRandomTrend() {
-            const trends = ['up', 'down', 'same'];
-            const values = [5, 10, 15, 20];
-            const randomTrend = trends[Math.floor(Math.random() * trends.length)];
-            const randomValue = values[Math.floor(Math.random() * values.length)];
-            
-            return {
-                direction: randomTrend,
-                value: randomValue
-            };
-        }
-        
-        // Funkcija za ažuriranje ikonice trenda
-        function updateTrendIcon(elementId, trend) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            
-            let icon, text, color;
-            
-            switch (trend.direction) {
-                case 'up':
-                    icon = 'fa-arrow-up';
-                    text = `${trend.value}% u odnosu na prošli mesec`;
-                    color = trend.elementId === 'expenseChange' ? '#ef4444' : '#10b981';
-                    break;
-                case 'down':
-                    icon = 'fa-arrow-down';
-                    text = `${trend.value}% u odnosu na prošli mesec`;
-                    color = trend.elementId === 'expenseChange' ? '#10b981' : '#ef4444';
-                    break;
-                default:
-                    icon = 'fa-equals';
-                    text = 'Bez promene u odnosu na prošli mesec';
-                    color = '#9ca3af';
-            }
-            
-            element.innerHTML = `<i class="fas ${icon}" style="color: ${color}; margin-right: 0.25rem;"></i> ${text}`;
-        }
-        
-        // Funkcija za prikazivanje obaveštenja
-        function showNotification(message, type = 'info') {
-            // Proveri da li već postoji notifikacija i ukloni je ako postoji
-            const existingNotification = document.querySelector('.notification');
-            if (existingNotification) {
-                existingNotification.remove();
-            }
-            
-            // Kreiranje notifikacije
-            const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
-            
-            // Postavljanje ikonice u zavisnosti od tipa
-            let icon = 'info-circle';
-            if (type === 'success') icon = 'check-circle';
-            if (type === 'error') icon = 'exclamation-circle';
-            if (type === 'warning') icon = 'exclamation-triangle';
-            
-            // Postavljanje HTML-a notifikacije
-            notification.innerHTML = `
-                <div class="notification-content">
-                    <i class="fas fa-${icon}"></i>
-                    <span>${message}</span>
-                </div>
-                <button class="notification-close">&times;</button>
-            `;
-            
-            // Dodavanje notifikacije u body
-            document.body.appendChild(notification);
-            
-            // Dodavanje klase za animaciju pojavljivanja
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 10);
-            
-            // Automatsko sklanjanje notifikacije nakon 5 sekundi
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            }, 5000);
-            
-            // Dodavanje event listenera za zatvaranje notifikacije
-            notification.querySelector('.notification-close').addEventListener('click', () => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    notification.remove();
-                }, 300);
-            });
-        }
-        
-        // Stilizacija notifikacija
-        const style = document.createElement('style');
-        style.textContent = `
-            .notification {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 8px;
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                max-width: 400px;
-                transform: translateY(100px);
-                opacity: 0;
-                transition: all 0.3s ease;
-                z-index: 1000;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            }
-            
-            .notification.show {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            
-            .notification-success {
-                background: #10b981;
-                border-left: 4px solid #059669;
-            }
-            
-            .notification-error {
-                background: #ef4444;
-                border-left: 4px solid #dc2626;
-            }
-            
-            .notification-warning {
-                background: #f59e0b;
-                border-left: 4px solid #d97706;
-                color: #1f2937;
-            }
-            
-            .notification-info {
-                background: #3b82f6;
-                border-left: 4px solid #2563eb;
-            }
-            
-            .notification-content {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .notification-close {
-                background: none;
-                border: none;
-                color: inherit;
-                font-size: 1.2rem;
-                cursor: pointer;
-                margin-left: 15px;
-                opacity: 0.8;
-                transition: opacity 0.2s;
-            }
-            
-            .notification-close:hover {
-                opacity: 1;
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Initialize budget data
-        const budgetData = (function() {
-            const data = {
-                monthlyIncome: 0,
-                categories: {
-                    necessities: { percent: 50, amount: 0 },
-                    hobby: { percent: 30, amount: 0 },
-                    savings: { percent: 20, amount: 0 }
-                },
-                expenses: {
-                    necessities: [],
-                    hobby: [],
-                    savings: []
-                },
-                // Save budget data to localStorage
-                save: function() {
-                    localStorage.setItem('budgetData', JSON.stringify(this));
-                    
-                    // Show success notification
-                    const notification = document.createElement('div');
-                    notification.className = 'notification notification-success';
-                    notification.innerHTML = `
-                        <div class="notification-content">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Budžet uspešno sačuvan!</span>
-                        </div>
-                        <button class="notification-close">&times;</button>
-                    `;
-                    document.body.appendChild(notification);
-                    
-                    // Auto-remove notification after 3 seconds
-                    setTimeout(() => {
-                        notification.classList.add('show');
-                        setTimeout(() => {
-                            notification.classList.remove('show');
-                            setTimeout(() => notification.remove(), 300);
-                        }, 3000);
-                    }, 10);
-                    
-                    // Close button handler
-                    notification.querySelector('.notification-close').addEventListener('click', () => {
-                        notification.classList.remove('show');
-                        setTimeout(() => notification.remove(), 300);
-                    });
-                },
-                // Update budget display
-                updateDisplay: function() {
-                    // Update category percentages
-                    const updatePercent = (id, value) => {
-                        const el = document.getElementById(id);
-                        if (el) el.textContent = `${value}%`;
-                    };
-                    
-                    updatePercent('necessitiesPercentValue', this.categories.necessities.percent);
-                    updatePercent('hobbyPercentValue', this.categories.hobby.percent);
-                    updatePercent('savingsPercentValue', this.categories.savings.percent);
-                    
-                    // Update progress bars
-                    document.querySelectorAll('.progress-bar').forEach(bar => {
-                        const category = bar.closest('.category-card')?.id.replace('Card', '');
-                        if (category && this.categories[category]) {
-                            bar.style.width = `${this.categories[category].percent}%`;
-                        }
-                    });
-                    
-                    // Update stats
-                    this.updateStats();
-                },
-                // Update budget statistics
-                updateStats: function() {
-                    const totalIncome = parseFloat(this.monthlyIncome) || 0;
-                    
-                    // Calculate category amounts
-                    Object.keys(this.categories).forEach(category => {
-                        const percent = this.categories[category].percent;
-                        this.categories[category].amount = (totalIncome * percent / 100).toFixed(2);
-                        
-                        // Update amount display
-                        const amountElement = document.getElementById(`${category}Amount`);
-                        if (amountElement) {
-                            amountElement.textContent = 
-                                new Intl.NumberFormat('sr-RS', { 
-                                    style: 'currency', 
-                                    currency: 'RSD' 
-                                }).format(this.categories[category].amount);
-                        }
-                    });
-                    
-                    // Update total stats
-                    const totalIncomeEl = document.getElementById('totalIncome');
-                    if (totalIncomeEl) {
-                        totalIncomeEl.textContent = 
-                            new Intl.NumberFormat('sr-RS', { 
-                                style: 'currency', 
-                                currency: 'RSD' 
-                            }).format(totalIncome);
-                    }
-                },
-                // Load budget data from localStorage
-                load: function() {
-                    const savedBudget = localStorage.getItem('budgetData');
-                    if (savedBudget) {
-                        try {
-                            const parsedData = JSON.parse(savedBudget);
-                            Object.assign(this, parsedData);
-                            
-                            // Set the monthly income input
-                            const monthlyIncomeEl = document.getElementById('monthlyIncome');
-                            if (monthlyIncomeEl) {
-                                monthlyIncomeEl.value = this.monthlyIncome || 0;
-                            }
-                            
-                            // Update sliders
-                            const setSlider = (id, value, def) => {
-                                const el = document.getElementById(id);
-                                if (el) el.value = value || def;
-                            };
-                            
-                            setSlider('necessitiesPercent', this.categories?.necessities?.percent, 50);
-                            setSlider('hobbyPercent', this.categories?.hobby?.percent, 30);
-                            setSlider('savingsPercent', this.categories?.savings?.percent, 20);
-                            
-                            // Show categories section if there's income
-                            const budgetCategoriesEl = document.getElementById('budgetCategories');
-                            if (budgetCategoriesEl && this.monthlyIncome > 0) {
-                                budgetCategoriesEl.style.display = 'block';
-                            }
-                            
-                            // Update the display
-                            this.updateDisplay();
-                            
-                        } catch (e) {
-                            console.error('Error loading budget data:', e);
-                        }
-                    }
-                    return this;
-                }
-            };
-            
-            // Initialize the budget data
-            data.load();
-            return data;
-        })();
-        
-        // Set default dates for expense forms
-        function setDefaultDates() {
-            const today = new Date().toISOString().split('T')[0];
-            document.querySelectorAll('input[type="date"]').forEach(input => {
-                input.value = today;
-                input.max = today; // Prevent future dates
-            });
-        }
-        
-        // Save budget data
-        function saveBudgetData() {
-                // Čuvanje preko DataManager-a
-                const saved = window.dataManager.updateBudget({
-                    totalBudget: budgetData.totalBudget || 0,
-                    categories: budgetData.categories || {},
-                    lastUpdated: new Date().toISOString()
-                });
-                
-                // Rezervno čuvanje u localStorage
-                localStorage.setItem('budgetData', JSON.stringify(budgetData));
-                
-                console.log(saved ? '✅ Budžet sačuvan preko DataManager-a' : '❌ Greška pri čuvanju budžeta');
-                
-                // Show success message
-                const successMsg = document.createElement('div');
-                successMsg.className = 'success-message';
-                successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Budžet plan je uspešno sačuvan!';
-                
-                const budgetPlanner = document.querySelector('.budget-planner');
-                budgetPlanner.insertBefore(successMsg, budgetPlanner.firstChild);
-                
-                // Remove message after 3 seconds
-                setTimeout(() => {
-                    successMsg.style.opacity = '0';
-                    setTimeout(() => successMsg.remove(), 300);
-                }, 3000);
-                  // Update total stats
-                updateBudgetStats();
-                
-                // Pozivamo i globalnu funkciju za budžet iz main.js
-                if (typeof window.updateBudgetDisplay === 'function') {
-                    window.updateBudgetDisplay();
-                }
-            }
-            
-            // Update budget stats at the top
-            function updateBudgetStats() {
-                // Prihod iz budžet plana
-                const totalIncome = budgetData.monthlyIncome;
-                
-                // Izračunaj stvarne troškove iz unetih podataka
-                const necessitiesExpenses = expensesData?.necessities ? expensesData.necessities.reduce((sum, expense) => sum + expense.amount, 0) : 0;
-                const hobbyExpenses = expensesData?.hobby ? expensesData.hobby.reduce((sum, expense) => sum + expense.amount, 0) : 0;
-                
-                // Izračunaj ukupne troškove (glavne potrebe + hobi)
-                const totalExpenses = necessitiesExpenses + hobbyExpenses;
-                
-                // Izračunaj preostalo stanje
-                const currentBalance = totalIncome - totalExpenses;
-                
-                // Izračunaj procenat promene (za demonstraciju)
-                // U stvarnoj aplikaciji bi trebalo da imaš podatke iz prethodnog meseca
-                const incomeChange = '+0%';
-                const expenseChange = totalExpenses > 0 ? '+0%' : '0%';
-                const balanceChange = currentBalance > 0 ? '+0%' : '0%';
-                
-                // Ažuriraj prikaz
-                document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
-                document.getElementById('totalExpenses').textContent = formatCurrency(totalExpenses);
-                document.getElementById('currentBalance').textContent = formatCurrency(currentBalance);
-                
-                document.getElementById('incomeChange').textContent = incomeChange + ' u odnosu na prošli mesec';
-                document.getElementById('expenseChange').textContent = expenseChange + ' u odnosu na prošli mesec';
-                document.getElementById('balanceChange').textContent = balanceChange + ' u odnosu na prošli mesec';
-            }
-            
-            // Format currency
-            function formatCurrency(amount) {
-                return new Intl.NumberFormat('sr-RS', {
-                    style: 'decimal',
-                    maximumFractionDigits: 0
-                }).format(amount) + ' RSD';
-            }
-            
-            // Calculate budget
-            function calculateBudget() {
-                const income = parseFloat(monthlyIncomeInput.value) || 0;
-                
-                if (income <= 0) {
-                    alert('Molimo unesite validan mesečni prihod.');
-                    return;
-                }
-                
-                // Set income
-                budgetData.monthlyIncome = income;
-                
-                // Calculate amounts for each category
-                calculateCategoryAmounts();
-                
-                // Update the display
-                updateBudgetDisplay();
-                
-                // Show budget categories
-                budgetCategoriesSection.style.display = 'block';
-            }
-            
-            // Calculate category amounts
-            function calculateCategoryAmounts() {
-                const income = budgetData.monthlyIncome;
-                
-                budgetData.categories.necessities.amount = income * (budgetData.categories.necessities.percent / 100);
-                budgetData.categories.hobby.amount = income * (budgetData.categories.hobby.percent / 100);
-                budgetData.categories.savings.amount = income * (budgetData.categories.savings.percent / 100);
-            }
-            
-            // Update budget display
-            function updateBudgetDisplay() {
-                // Update percent displays
-                necessitiesPercentDisplay.textContent = budgetData.categories.necessities.percent + '%';
-                hobbyPercentDisplay.textContent = budgetData.categories.hobby.percent + '%';
-                savingsPercentDisplay.textContent = budgetData.categories.savings.percent + '%';
-                
-                // Update amount displays
-                necessitiesAmountDisplay.textContent = formatCurrency(budgetData.categories.necessities.amount);
-                hobbyAmountDisplay.textContent = formatCurrency(budgetData.categories.hobby.amount);
-                savingsAmountDisplay.textContent = formatCurrency(budgetData.categories.savings.amount);
-                
-                // Update progress bars
-                necessitiesProgressBar.style.width = budgetData.categories.necessities.percent + '%';
-                hobbyProgressBar.style.width = budgetData.categories.hobby.percent + '%';
-                savingsProgressBar.style.width = budgetData.categories.savings.percent + '%';
-            }
-            
-            // Adjust percentages when sliders change
-            function adjustPercentages(changedCategory) {
-                const necessitiesPercent = parseInt(necessitiesSlider.value);
-                const hobbyPercent = parseInt(hobbySlider.value);
-                const savingsPercent = parseInt(savingsSlider.value);
-                
-                let total = necessitiesPercent + hobbyPercent + savingsPercent;
-                
-                // If total is not 100%, adjust other categories proportionally
-                if (total !== 100) {
-                    const diff = 100 - total;
-                    
-                    if (changedCategory === 'necessities') {
-                        // Adjust hobby and savings
-                        const hobbyRatio = hobbyPercent / (hobbyPercent + savingsPercent);
-                        const hobbyAdjustment = Math.round(diff * hobbyRatio);
-                        const savingsAdjustment = diff - hobbyAdjustment;
-                        
-                        hobbySlider.value = hobbyPercent + hobbyAdjustment;
-                        savingsSlider.value = savingsPercent + savingsAdjustment;
-                    } else if (changedCategory === 'hobby') {
-                        // Adjust necessities and savings
-                        const necessitiesRatio = necessitiesPercent / (necessitiesPercent + savingsPercent);
-                        const necessitiesAdjustment = Math.round(diff * necessitiesRatio);
-                        const savingsAdjustment = diff - necessitiesAdjustment;
-                        
-                        necessitiesSlider.value = necessitiesPercent + necessitiesAdjustment;
-                        savingsSlider.value = savingsPercent + savingsAdjustment;
-                    } else if (changedCategory === 'savings') {
-                        // Adjust necessities and hobby
-                        const necessitiesRatio = necessitiesPercent / (necessitiesPercent + hobbyPercent);
-                        const necessitiesAdjustment = Math.round(diff * necessitiesRatio);
-                        const hobbyAdjustment = diff - necessitiesAdjustment;
-                        
-                        necessitiesSlider.value = necessitiesPercent + necessitiesAdjustment;
-                        hobbySlider.value = hobbyPercent + hobbyAdjustment;
-                    }
-                }
-                
-                // Update budget data with new percentages
-                budgetData.categories.necessities.percent = parseInt(necessitiesSlider.value);
-                budgetData.categories.hobby.percent = parseInt(hobbySlider.value);
-                budgetData.categories.savings.percent = parseInt(savingsSlider.value);
-                
-                // Recalculate amounts
-                calculateCategoryAmounts();
-                
-                // Update the display
-                updateBudgetDisplay();
-            }
-            
-            // Get DOM elements
-            const calculateBudgetBtn = document.getElementById('calculateBudgetBtn');
-            const necessitiesSlider = document.getElementById('necessitiesSlider');
-            const hobbySlider = document.getElementById('hobbySlider');
-            const savingsSlider = document.getElementById('savingsSlider');
-            
-            // Event listeners
-            if (calculateBudgetBtn) {
-                calculateBudgetBtn.addEventListener('click', calculateBudget);
-            }
-            
-            if (necessitiesSlider) {
-                necessitiesSlider.addEventListener('input', () => adjustPercentages('necessities'));
-            }
-            
-            if (hobbySlider) {
-                hobbySlider.addEventListener('input', () => adjustPercentages('hobby'));
-            }
-            
-            if (savingsSlider) {
-                savingsSlider.addEventListener('input', () => adjustPercentages('savings'));
-            }
-            
-            const saveButton = document.getElementById('saveBudgetPlan');
-            if (saveButton) {
-                saveButton.addEventListener('click', saveBudgetData);
-            }
-            
-            // Initialize budget data
-            function loadBudgetData() {
-                try {
-                    // Pokušaj da učitaš iz DataManager-a prvo
-                    const budgetDataFromManager = window.dataManager.getBudget();
-                    if (budgetDataFromManager && budgetDataFromManager.categories) {
-                        console.log('📊 Učitan budžet iz DataManager-a:', budgetDataFromManager);
-                        
-                        // Ažuriraj globalni budgetData objekat
-                        budgetData.totalBudget = budgetDataFromManager.totalBudget || 0;
-                        budgetData.categories = budgetDataFromManager.categories || {};
-                        budgetData.lastUpdated = budgetDataFromManager.lastUpdated || new Date().toISOString();
-                        
-                        // Ažuriraj prikaz
-                        updateBudgetDisplay();
-                        return;
-                    }
-                    
-                    // Rezervni način - učitaj iz localStorage
-                    const savedBudget = localStorage.getItem('budgetData');
-                    if (savedBudget) {
-                        console.log('📊 Učitavam budžet iz localStorage (rezervno)');
-                        const parsedBudget = JSON.parse(savedBudget);
-                        Object.assign(budgetData, parsedBudget);
-                        updateBudgetDisplay();
-                    }
-                } catch (e) {
-                    console.error('❌ Greška pri učitavanju budžet podataka:', e);
-                }
-            }
-            
-            // Load saved budget data on page load
-            if (typeof loadBudgetData === 'function') {
-                loadBudgetData();
-            }
-            
-            // Expense tracking functionality
-            // Data structure for expenses
-            let expensesData = {
-                necessities: [],
-                hobby: [],
-                savings: []
-            };
-            
-            // Expense tab switching
-            const expenseTabs = document.querySelectorAll('.expense-tab');
-            const expenseContents = document.querySelectorAll('.expense-tab-content');
-            
-            expenseTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // Remove active class from all tabs and contents
-                    expenseTabs.forEach(t => t.classList.remove('active'));
-                    expenseContents.forEach(c => c.classList.remove('active'));
-                    
-                    // Add active class to clicked tab and corresponding content
-                    const tabName = tab.getAttribute('data-tab');
-                    tab.classList.add('active');
-                    document.getElementById(tabName + 'Tab').classList.add('active');
-                });
-            });
-            
-            // Set current date as default
-            function setDefaultDates() {
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('necessities-date').value = today;
-                document.getElementById('hobby-date').value = today;
-                document.getElementById('savings-date').value = today;
-            }
-            
-            // Add expense
-            function addExpense(category) {
-                const nameInput = document.getElementById(`${category}-name`);
-                const amountInput = document.getElementById(`${category}-amount`);
-                const dateInput = document.getElementById(`${category}-date`);
-                
-                const name = nameInput.value.trim();
-                const amount = parseFloat(amountInput.value);
-                const date = dateInput.value;
-                
-                if (!name || isNaN(amount) || amount <= 0 || !date) {
-                    alert('Molimo unesite sve podatke pravilno');
-                    return;
-                }
-                
-                // Create new expense object
-                const expense = {
-                    id: Date.now(), // Unique ID based on timestamp
-                    name: name,
-                    amount: amount,
-                    date: date
-                };
-                
-                // Add to expenses data
-                expensesData[category].push(expense);
-                
-                // Save to localStorage
-                saveExpensesData();
-                
-                // Update UI
-                renderExpenses(category);
-                updateCategoryTotal(category);
-                
-                // Ažuriraj ukupnu statistiku
-                updateBudgetStats();
-                
-                // Clear inputs
-                nameInput.value = '';
-                amountInput.value = '';
-                dateInput.value = new Date().toISOString().split('T')[0];
-                
-                // Focus on name input for next entry
-                nameInput.focus();
-            }
-            
-            // Delete expense
-            function deleteExpense(category, id) {
-                // Find expense index
-                const index = expensesData[category].findIndex(expense => expense.id === id);
-                
-                if (index !== -1) {
-                    // Remove expense
-                    expensesData[category].splice(index, 1);
-                    
-                    // Save to localStorage
-                    saveExpensesData();
-                    
-                    // Update UI
-                    renderExpenses(category);
-                    updateCategoryTotal(category);
-                    
-                    // Ažuriraj ukupnu statistiku
-                    updateBudgetStats();
-                }
-            }
-            
-            // Render expenses for a category
-            function renderExpenses(category) {
-                const tbody = document.getElementById(`${category}-tbody`);
-                tbody.innerHTML = ''; // Clear existing rows
-                
-                // Sort expenses by date (newest first)
-                const sortedExpenses = [...expensesData[category]].sort((a, b) => {
-                    return new Date(b.date) - new Date(a.date);
-                });
-                
-                // Add rows for each expense
-                sortedExpenses.forEach(expense => {
-                    const tr = document.createElement('tr');
-                    
-                    tr.innerHTML = `
-                        <td>${expense.name}</td>
-                        <td>${formatCurrency(expense.amount)}</td>
-                        <td>${formatDate(expense.date)}</td>
-                        <td>
-                            <div class="expense-actions">
-                                <button class="expense-delete" onclick="deleteExpense('${category}', ${expense.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    
-                    tbody.appendChild(tr);
-                });
-            }
-            
-            // Format date to dd.mm.yyyy
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('sr-RS');
-            }
-            
-            // Update category total
-            function updateCategoryTotal(category) {
-                const total = expensesData[category].reduce((sum, expense) => sum + expense.amount, 0);
-                document.getElementById(`${category}-total`).textContent = formatCurrency(total);
-            }
-            
-            // Save expenses data to localStorage
-            function saveExpensesData() {
-                localStorage.setItem('expensesData', JSON.stringify(expensesData));
-            }
-            
-            // Load expenses data from localStorage
-            function loadExpensesData() {
-                const savedData = localStorage.getItem('expensesData');
-                if (savedData) {
-                    try {
-                        expensesData = JSON.parse(savedData);
-                        
-                        // Render expenses for each category
-                        renderExpenses('necessities');
-                        renderExpenses('hobby');
-                        renderExpenses('savings');
-                        
-                        // Update totals
-                        updateCategoryTotal('necessities');
-                        updateCategoryTotal('hobby');
-                        updateCategoryTotal('savings');
-                    } catch (e) {
-                        console.error('Error parsing saved expenses data:', e);
-                    }
-                }
-            }
-            
-            // Add event listeners for add buttons
-            document.getElementById('necessities-add').addEventListener('click', () => addExpense('necessities'));
-            document.getElementById('hobby-add').addEventListener('click', () => addExpense('hobby'));
-            document.getElementById('savings-add').addEventListener('click', () => addExpense('savings'));
-            
-            // Make deleteExpense function available globally
-            window.deleteExpense = deleteExpense;
-            
-            // Initialize expense tracking
-            setDefaultDates();
-            loadExpensesData();
-            
-            // Function to show budget section
-            function showBudgetSection() {
-                // Hide all sections
-                document.querySelectorAll('section').forEach(section => {
-                    section.style.display = 'none';
-                });
-                
-                // Show budget section and transactions list
-                const budgetSection = document.getElementById('budgetSection');
-                const transactionsList = document.querySelector('.transactions-list');
-                
-                if (budgetSection) {
-                    budgetSection.style.display = 'block';
-                    // Scroll to the budget section
-                    budgetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-                
-                if (transactionsList) {
-                    transactionsList.style.display = 'block';
-                }
-                
-                // Update active link in navigation
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === '#budget') {
-                        link.classList.add('active');
-                    }
-                });
-                
-                // Load budget data if not already loaded
-                if (typeof loadBudgetData === 'function') {
-                    loadBudgetData();
-                }
-            }
-            
-            // Function to get URL parameter
-            function getUrlParameter(name) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
-            }
-            
-            // Function to check if we should show budget section
-            function checkAndShowBudgetSection() {
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('directToBudget') === 'true' || urlParams.get('showBudget') === 'true' || window.location.hash === '#budget') {
-                    // Let handleNavigation handle the rest
-                    handleNavigation();
-                    return true;
-                }
-                return false;
-            }
-            
-            // Function to check if we should go directly to budget
-            function shouldGoDirectlyToBudget() {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get('directToBudget') === 'true';
-            }
-
-            // Function to handle navigation
-            function handleNavigation() {
-                // If we should go directly to budget, override everything
-                if (shouldGoDirectlyToBudget()) {
-                    // Hide all sections
-                    document.querySelectorAll('section').forEach(section => {
-                        section.style.display = 'none';
-                    });
-                    
-                    // Show only budget section
-                    const budgetSection = document.getElementById('budgetSection');
-                    if (budgetSection) {
-                        budgetSection.style.display = 'block';
-                        if (typeof showBudgetSection === 'function') {
-                            showBudgetSection();
-                        }
-                    }
-                    
-                    // Clean up URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                    // Disable all navigation links
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        link.style.pointerEvents = 'none';
-                        link.style.opacity = '0.5';
-                        link.style.cursor = 'not-allowed';
-                        link.title = 'Navigacija je onemogućena';
-                    });
-                    
-                    return;
-                }
-                
-                // Normal navigation
-                const hash = window.location.hash || '#profile';
-                
-                // Hide all sections first
-                document.querySelectorAll('section').forEach(section => {
-                    section.style.display = 'none';
-                });
-                
-                // Show the appropriate section based on hash
-                const sectionToShow = document.querySelector(hash + 'Section') || document.getElementById('profileSection');
-                if (sectionToShow) {
-                    sectionToShow.style.display = 'block';
-                }
-                
-                // Update active link in navigation
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === hash) {
-                        link.classList.add('active');
-                    }
-                });
-                
-                // Special case for budget section
-                if (hash === '#budget' && typeof showBudgetSection === 'function') {
-                    showBudgetSection();
-                }
-            }
-            
-            // Set up navigation event listeners
-            document.addEventListener('DOMContentLoaded', function() {
-                // Load user profile data first
-                loadUserData();
-                
-                // Handle initial navigation
-                handleNavigation();
-                
-                // Set up hash change listener
-                window.addEventListener('hashchange', handleNavigation);
-                
-                // Add click handlers for navigation links
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const href = this.getAttribute('href');
-                        if (href.startsWith('#')) {
-                            window.location.hash = href;
-                        } else {
-                            window.location.href = href;
-                        }
-                    });
-                });
-                
-                // Handle navigation between sections
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const sectionId = this.getAttribute('href').substring(1);
-                        
-                        // Hide all sections
-                        document.getElementById('profileSection').style.display = 'none';
-                        document.getElementById('budgetSection').style.display = 'none';
-                        document.getElementById('settingsSection').style.display = 'none';
-                        
-                        // Show selected section
-                        document.getElementById(sectionId + 'Section').style.display = 'block';
-                        
-                        // Update active link
-                        document.querySelectorAll('.nav-link').forEach(lnk => lnk.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        // Update URL without page reload
-                        window.history.pushState(null, '', `#${sectionId}`);
-                    });
-                });
-            });
-            
-            // Handle browser back/forward buttons
-            window.addEventListener('popstate', function() {
-                const hash = window.location.hash.substring(1);
-                if (hash) {
-                    document.getElementById('profileSection').style.display = 'none';
-                    document.getElementById('budgetSection').style.display = 'none';
-                    document.getElementById('settingsSection').style.display = 'none';
-                    document.getElementById(hash + 'Section').style.display = 'block';
-                    
-                    // Update active link
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === `#${hash}`) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-            
-            // Check localStorage for active tab
-            const activeTab = localStorage.getItem('activeProfileTab');
-            if (activeTab !== null) {
-                // Konvertuj u broj
-                const tabIndex = parseInt(activeTab);
-                
-                // Pronađi sve linkove za navigaciju
-                const navLinks = document.querySelectorAll('.nav-link');
-                
-                // Ako postoje linkovi i imamo validni indeks, simuliraj klik na željeni link
-                if (navLinks && navLinks.length > tabIndex && tabIndex >= 0) {
-                    setTimeout(function() {
-                        navLinks[tabIndex].click();
-                    }, 100);
-                }
-                
-                // Očisti localStorage da ne bi uticalo na buduće posete
-                localStorage.removeItem('activeProfileTab');
-            }
-            
-            // Proveri da li treba da skrolujemo do određene sekcije
-            const scrollToSection = localStorage.getItem('scrollToSection');
-            if (scrollToSection) {
-                setTimeout(function() {
-                    const element = document.getElementById(scrollToSection);
-                    if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                    localStorage.removeItem('scrollToSection');
-                }, 300);
-            }
-            
-            // Proveri da li treba otvoriti tab za unos troškova
-            const openExpenseTab = localStorage.getItem('openExpenseTab');
-            if (openExpenseTab === 'true') {
-                setTimeout(function() {
-                    const expenseButton = document.querySelector('[data-expense-tab="true"]');
-                    if (expenseButton) {
-                        expenseButton.click();
-                    }
-                    localStorage.removeItem('openExpenseTab');
-                }, 500);
-            }
-
-            // Funkcija za ažuriranje prikaza budžeta
-            function updateBudgetDisplay() {
-                try {
-                    // Učitaj i validiraj podatke iz localStorage-a
-                    let budget = {};
-                    let userBudget = {};
-                    
-                    try {
-                        const budgetStr = localStorage.getItem('budget');
-                        if (budgetStr) budget = JSON.parse(budgetStr);
-                    } catch (e) {
-                        console.warn('Greška pri učitavanju budget podataka:', e);
-                    }
-                    
-                    try {
-                        const userBudgetStr = localStorage.getItem('userBudget');
-                        if (userBudgetStr) userBudget = JSON.parse(userBudgetStr);
-                    } catch (e) {
-                        console.warn('Greška pri učitavanju userBudget podataka:', e);
-                    }
-
-                    // Izračunaj vrednosti sa validacijom
-                    const monthlyBudget = parseFloat(budget.monthlyBudget) || 
-                        parseFloat(userBudget.monthlyIncome) || 0;
-                    
-                    const spentAmount = parseFloat(budget.totalSpent) || 
-                        (parseFloat(userBudget.necessities || 0) + parseFloat(userBudget.hobby || 0)) || 0;
-                    
-                    const remainingAmount = Math.max(0, monthlyBudget - spentAmount);
-
-                    // Ažuriraj DOM elemente
-                    const elements = {
-                        monthlyBudget: document.getElementById('monthlyBudget'),
-                        spentAmount: document.getElementById('spentAmount'),
-                        remainingAmount: document.getElementById('remainingAmount'),
-                        progressBar: document.getElementById('budgetProgressBar')
-                    };
-
-                    // Proveri da li elementi postoje pre ažuriranja
-                    if (!elements.monthlyBudget && !elements.spentAmount && 
-                        !elements.remainingAmount && !elements.progressBar) {
-                        return; // Tiho prekini ako nijedan element ne postoji
-                    }
-
-                    // Funkcija za animirano ažuriranje vrednosti
-                    const updateWithAnimation = (element, newValue) => {
-                        if (!element) return;
-                        
-                        const oldValue = parseFloat(element.textContent.replace('€', '')) || 0;
-                        const duration = 1000; // 1 sekunda za animaciju
-                        const startTime = performance.now();
-                        
-                        const animate = (currentTime) => {
-                            const elapsed = currentTime - startTime;
-                            const progress = Math.min(elapsed / duration, 1);
-                            
-                            const currentValue = oldValue + (newValue - oldValue) * progress;
-                            element.textContent = `€${currentValue.toFixed(2)}`;
-                            
-                            if (progress < 1) {
-                                requestAnimationFrame(animate);
-                            }
-                        };
-                        
-                        requestAnimationFrame(animate);
-                    };
-
-                    // Ažuriraj vrednosti sa animacijom
-                    updateWithAnimation(elements.monthlyBudget, monthlyBudget);
-                    updateWithAnimation(elements.spentAmount, spentAmount);
-                    updateWithAnimation(elements.remainingAmount, remainingAmount);
-
-                    // Ažuriraj progres bar sa animacijom
-                    if (elements.progressBar) {
-                        const percentage = monthlyBudget > 0 ? (spentAmount / monthlyBudget) * 100 : 0;
-                        elements.progressBar.style.transition = 'width 0.5s ease-out, background 0.3s ease';
-                        elements.progressBar.style.width = `${Math.min(100, percentage)}%`;
-                        
-                        // Koristi CSS varijable za boje
-                        if (percentage >= 90) {
-                            elements.progressBar.style.background = 'var(--gradient-gold-dark)';
-                        } else if (percentage >= 75) {
-                            elements.progressBar.style.background = 'var(--gradient-gold)';
-                        } else {
-                            elements.progressBar.style.background = 'var(--gradient-gold-light)';
-                        }
-                    }
-
-                    // Emituj custom event za sinhronizaciju
-                    window.dispatchEvent(new CustomEvent('budget-updated', { 
-                        detail: { monthlyBudget, spentAmount, remainingAmount } 
-                    }));
-
-                } catch (error) {
-                    console.error('Greška pri ažuriranju prikaza budžeta:', error);
-                }
-            }
-
-            // Osluškuj promene u localStorage-u
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'budget' || e.key === 'userBudget' || e.key === 'currentUser') {
-                    updateBudgetDisplay();
-                }
-                
-                // Osluškuj promene loga
-                if (e.key === 'site_logo') {
-                    const logoElement = document.getElementById('siteLogo');
-                    if (logoElement && e.newValue) {
-                        logoElement.src = e.newValue;
-                    }
-                }
-            });
-
-            // Osluškuj custom event za sinhronizaciju
-            window.addEventListener('budget-updated', (e) => {
-                console.log('Budžet je ažuriran:', e.detail);
-            });
-
-            // Ažuriraj svakih 30 sekundi samo na desktop uređajima
-            if (window.innerWidth > 768) {
-                setInterval(updateBudgetDisplay, 30000);
-            }
-
-            // Izvozi funkcije za upotrebu u drugim fajlovima
-            window.updateBudgetDisplay = updateBudgetDisplay;
-
-            // Pozovi početno ažuriranje budžeta
-            updateBudgetDisplay();
-        }); // Zatvaramo DOMContentLoaded listener
-    </script>
-    
-    <!-- Mobile Sidebar JavaScript -->
-    <script>
+        // Globalne funkcije za mobilni sidebar
         function toggleMobileSidebar() {
             const sidebar = document.getElementById('mobileSidebar');
             const overlay = document.querySelector('.mobile-sidebar-overlay');
-            const toggle = document.querySelector('.mobile-menu-toggle');
             
-            if (sidebar.classList.contains('active')) {
-                closeMobileSidebar();
-            } else {
-                sidebar.classList.add('active');
-                overlay.style.display = 'block';
-                toggle.innerHTML = '<i class="fas fa-times"></i>';
+            if (sidebar && overlay) {
+                const isVisible = sidebar.style.display === 'block';
+                sidebar.style.display = isVisible ? 'none' : 'block';
+                overlay.style.display = isVisible ? 'none' : 'block';
             }
         }
         
         function closeMobileSidebar() {
             const sidebar = document.getElementById('mobileSidebar');
             const overlay = document.querySelector('.mobile-sidebar-overlay');
-            const toggle = document.querySelector('.mobile-menu-toggle');
             
-            sidebar.classList.remove('active');
-            overlay.style.display = 'none';
-            toggle.innerHTML = '<i class="fas fa-bars"></i>';
+            if (sidebar && overlay) {
+                sidebar.style.display = 'none';
+                overlay.style.display = 'none';
+            }
         }
         
-        // Close sidebar when clicking on navigation items (mobile)
-        document.addEventListener('DOMContentLoaded', function() {
-            if (window.innerWidth <= 768) {
-                const sidebarLinks = document.querySelectorAll('.sidebar .nav-link');
-                sidebarLinks.forEach(link => {
-                    link.addEventListener('click', () => {
-                        setTimeout(closeMobileSidebar, 300); // Small delay for smooth transition
-                    });
-                });
+        // Dodeli globalno
+        window.toggleMobileSidebar = toggleMobileSidebar;
+        window.closeMobileSidebar = closeMobileSidebar;
+        
+        // Funkcija za prikazivanje obaveštenja
+        function showNotification(message, type = 'info') {
+            // Kreiraj notifikaciju element
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            `;
+            
+            // Postavi boju na osnovu tipa
+            switch(type) {
+                case 'success':
+                    notification.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    break;
+                case 'error':
+                    notification.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    break;
+                case 'warning':
+                    notification.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+                    break;
+                default:
+                    notification.style.background = 'linear-gradient(135deg, #3b82f6, #2563eb)';
             }
             
-            // Show mobile menu toggle on small screens
-            function checkScreenSize() {
-                const toggle = document.querySelector('.mobile-menu-toggle');
-                if (window.innerWidth <= 768) {
-                    toggle.style.display = 'block';
-                } else {
-                    toggle.style.display = 'none';
-                    closeMobileSidebar(); // Close sidebar if screen becomes larger
-                }
-            }
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
             
-            checkScreenSize();
-            window.addEventListener('resize', checkScreenSize);
-        });
+            // Dodaj u DOM
+            document.body.appendChild(notification);
+            
+            // Animiraj prikazivanje
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Ukloni nakon 4 sekunde
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+        
+        // Dodeli globalno
+        window.showNotification = showNotification;
     </script>
-    
-    <!-- Uključujemo main.js za globalne funkcije budžeta -->
-    <script src="js/main.js"></script>
-    <!-- Uključujemo profile_tabs.js za funkcionalnost aktivacije tabova -->
-    <script src="js/profile_tabs.js"></script>
 </body>
 </html>

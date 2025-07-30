@@ -32,6 +32,160 @@
             box-shadow: 0 8px 24px rgba(224,180,60,0.25);
             background: linear-gradient(135deg, #ffe066 0%, #b99309 100%);
         }
+        
+        /* 50/30/20 Budget Calculator Styles */
+        .budget-calculator {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .section-description {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .income-input {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .income-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .income-input input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .income-input input:focus {
+            border-color: #ffe066;
+            outline: none;
+        }
+        
+        .budget-results {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .budget-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .budget-category {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .budget-category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .budget-category.needs {
+            border-left: 5px solid #4caf50;
+        }
+        
+        .budget-category.wants {
+            border-left: 5px solid #ff9800;
+        }
+        
+        .budget-category.savings {
+            border-left: 5px solid #2196f3;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .category-header h4 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .category-header i {
+            font-size: 1.5rem;
+        }
+        
+        .needs .category-header i { color: #4caf50; }
+        .wants .category-header i { color: #ff9800; }
+        .savings .category-header i { color: #2196f3; }
+        
+        .category-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .budget-tips {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .budget-tips h4 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+        
+        .budget-tips ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        
+        .budget-tips li {
+            margin-bottom: 0.5rem;
+            color: #856404;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .income-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .budget-categories {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -148,7 +302,7 @@
                                 <option value="RSD">Srpski Dinar (RSD)</option>
                             </select>
                         </div>
-                        <div class="
+                        <div class="form-group"></div>
                             <label for="monthlyIncome">Mjesečni prihod</label>
                             <input type="number" id="monthlyIncome" value="1500" step="0.01">
                         </div>
@@ -169,6 +323,78 @@
                     <button class="btn btn-primary" onclick="saveFinancialSettings()">
                         <i class="fas fa-save"></i> Sačuvaj Postavke
                     </button>
+                </section>
+
+                <!-- 50/30/20 Budget Calculator -->
+                <section class="profile-section" id="budgetCalculatorSection">
+                    <h2><i class="fas fa-calculator"></i> 50/30/20 Budžet Kalkulator</h2>
+                    <p class="section-description">
+                        Unesite svoj mjesečni prihod i sistem će automatski izračunati raspodelu prema 50/30/20 pravilu:
+                        <strong>50%</strong> za osnovne potrebe, <strong>30%</strong> za želje i zabavu, <strong>20%</strong> za štednju.
+                    </p>
+                    
+                    <div class="budget-calculator">
+                        <div class="income-input">
+                            <label for="budgetIncome">Mjesečni prihod (RSD)</label>
+                            <input type="number" id="budgetIncome" placeholder="200000" step="1000" min="0">
+                            <button class="btn btn-primary" onclick="calculateBudget()" id="calculateBtn">
+                                <i class="fas fa-calculator"></i> Izračunaj raspodelu
+                            </button>
+                        </div>
+                        
+                        <div class="budget-results" id="budgetResults" style="display: none;">
+                            <h3>Vaša budžet raspodela:</h3>
+                            
+                            <div class="budget-categories">
+                                <div class="budget-category needs">
+                                    <div class="category-header">
+                                        <i class="fas fa-home"></i>
+                                        <h4>Osnovne potrebe (50%)</h4>
+                                    </div>
+                                    <div class="category-amount" id="needsAmount">100,000 RSD</div>
+                                    <div class="category-description">
+                                        Stanovanje, hrana, transport, režije, minimalne potrebe
+                                    </div>
+                                </div>
+                                
+                                <div class="budget-category wants">
+                                    <div class="category-header">
+                                        <i class="fas fa-gamepad"></i>
+                                        <h4>Želje i zabava (30%)</h4>
+                                    </div>
+                                    <div class="category-amount" id="wantsAmount">60,000 RSD</div>
+                                    <div class="category-description">
+                                        Izlasci, kupovina, hobi, putovanja, restorани
+                                    </div>
+                                </div>
+                                
+                                <div class="budget-category savings">
+                                    <div class="category-header">
+                                        <i class="fas fa-piggy-bank"></i>
+                                        <h4>Štednja i investicije (20%)</h4>
+                                    </div>
+                                    <div class="category-amount" id="savingsAmount">40,000 RSD</div>
+                                    <div class="category-description">
+                                        Štedni račun, investicije, fondovi za hitne slučajeve
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="budget-tips">
+                                <h4><i class="fas fa-lightbulb"></i> Savjeti za uspješno budžetiranje:</h4>
+                                <ul>
+                                    <li>Držite se 50% limita za osnovne potrebe - tražite načine za uštede</li>
+                                    <li>30% za želje ne smije preći ovu granicu - budite disciplinovani</li>
+                                    <li>20% štednje je minimum - pokušajte uštedjeti još više ako možete</li>
+                                    <li>Redovno pratite troškove i prilagođavajte budžet</li>
+                                </ul>
+                            </div>
+                            
+                            <button class="btn btn-success" onclick="saveBudgetPlan()">
+                                <i class="fas fa-save"></i> Sačuvaj budžet plan
+                            </button>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Security Settings -->
@@ -370,9 +596,111 @@
         function saveFinancialSettings() {
             // Simulate saving financial settings
             const income = document.getElementById('monthlyIncome').value;
+            const budgetMethod = document.getElementById('budgetMethod').value;
+            const currency = document.getElementById('currency').value;
+            const savingsGoal = document.getElementById('savingsGoal').value;
+            
+            // Update monthly budget display
             document.getElementById('monthlyBudget').textContent = '€' + income;
             
+            // If 50/30/20 method is selected, auto-populate the calculator
+            if (budgetMethod === '50-30-20') {
+                document.getElementById('budgetIncome').value = income;
+                calculateBudget();
+                
+                // Scroll to budget calculator
+                document.getElementById('budgetCalculatorSection').scrollIntoView({ 
+                    behavior: 'smooth' 
+                });
+            }
+            
+            // Save to localStorage
+            const financialSettings = {
+                monthlyIncome: income,
+                budgetMethod: budgetMethod,
+                currency: currency,
+                savingsGoal: savingsGoal,
+                lastUpdated: new Date().toISOString()
+            };
+            localStorage.setItem('financialSettings', JSON.stringify(financialSettings));
+            
             showNotification('Finansijske postavke su uspješno sačuvane!', 'success');
+        }
+
+        // 50/30/20 Budget Calculator Functions
+        function calculateBudget() {
+            const income = parseFloat(document.getElementById('budgetIncome').value);
+            
+            if (!income || income <= 0) {
+                alert('Molimo unesite validan mjesečni prihod.');
+                return;
+            }
+            
+            // Calculate 50/30/20 breakdown
+            const needs = Math.round(income * 0.5);
+            const wants = Math.round(income * 0.3);
+            const savings = Math.round(income * 0.2);
+            
+            // Format numbers with thousands separator
+            const formatNumber = (num) => {
+                return num.toLocaleString('sr-RS') + ' RSD';
+            };
+            
+            // Update display
+            document.getElementById('needsAmount').textContent = formatNumber(needs);
+            document.getElementById('wantsAmount').textContent = formatNumber(wants);
+            document.getElementById('savingsAmount').textContent = formatNumber(savings);
+            
+            // Show results
+            document.getElementById('budgetResults').style.display = 'block';
+            
+            // Add animation class
+            const results = document.getElementById('budgetResults');
+            results.classList.add('animate');
+            
+            // Store calculated values for saving
+            window.currentBudgetPlan = {
+                totalIncome: income,
+                needs: needs,
+                wants: wants,
+                savings: savings,
+                needsPercent: 50,
+                wantsPercent: 30,
+                savingsPercent: 20
+            };
+            
+            showNotification('Budžet je uspješno izračunat!', 'success');
+        }
+
+        function saveBudgetPlan() {
+            if (!window.currentBudgetPlan) {
+                alert('Prvo izračunajte budžet prije čuvanja.');
+                return;
+            }
+            
+            const budgetPlan = {
+                ...window.currentBudgetPlan,
+                createdAt: new Date().toISOString(),
+                method: '50-30-20'
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('activeBudgetPlan', JSON.stringify(budgetPlan));
+            
+            // Update profile stats
+            document.getElementById('monthlyBudget').textContent = 
+                budgetPlan.totalIncome.toLocaleString('sr-RS') + ' RSD';
+            document.getElementById('totalSavings').textContent = 
+                budgetPlan.savings.toLocaleString('sr-RS') + ' RSD';
+            
+            showNotification('Budžet plan je uspješno sačuvan!', 'success');
+            
+            // Optional: Navigate to budget tracking page
+            setTimeout(() => {
+                if (confirm('Želite li otići na stranicu za praćenje budžeta?')) {
+                    window.location.href = 'profile.html#budget';
+                }
+            }, 1500);
         }
 
         function openPasswordModal() {
@@ -483,6 +811,167 @@
                 });
             }
         });
+
+        // Notification and Helper Functions
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.querySelector('button').style.cssText = `
+                background: none;
+                border: none;
+                color: white;
+                font-size: 18px;
+                cursor: pointer;
+                padding: 0;
+                margin-left: 10px;
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        function loadSavedData() {
+            // Load financial settings
+            const savedSettings = localStorage.getItem('financialSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                
+                if (settings.monthlyIncome) {
+                    document.getElementById('monthlyIncome').value = settings.monthlyIncome;
+                    document.getElementById('monthlyBudget').textContent = 
+                        settings.monthlyIncome.toLocaleString('sr-RS') + ' RSD';
+                }
+                
+                if (settings.budgetMethod) {
+                    document.getElementById('budgetMethod').value = settings.budgetMethod;
+                }
+                
+                if (settings.currency) {
+                    document.getElementById('currency').value = settings.currency;
+                }
+                
+                if (settings.savingsGoal) {
+                    document.getElementById('savingsGoal').value = settings.savingsGoal;
+                }
+            }
+
+            // Load saved budget plan
+            const savedBudget = localStorage.getItem('activeBudgetPlan');
+            if (savedBudget) {
+                const budget = JSON.parse(savedBudget);
+                document.getElementById('totalSavings').textContent = 
+                    budget.savings.toLocaleString('sr-RS') + ' RSD';
+                
+                // Pre-populate calculator if data exists
+                if (budget.totalIncome) {
+                    document.getElementById('budgetIncome').value = budget.totalIncome;
+                    
+                    // Show saved budget breakdown
+                    if (budget.needs && budget.wants && budget.savings) {
+                        const formatNumber = (num) => num.toLocaleString('sr-RS') + ' RSD';
+                        
+                        document.getElementById('needsAmount').textContent = formatNumber(budget.needs);
+                        document.getElementById('wantsAmount').textContent = formatNumber(budget.wants);
+                        document.getElementById('savingsAmount').textContent = formatNumber(budget.savings);
+                        document.getElementById('budgetResults').style.display = 'block';
+                        
+                        window.currentBudgetPlan = budget;
+                    }
+                }
+            }
+        }
+
+        function resetBudgetCalculator() {
+            document.getElementById('budgetIncome').value = '';
+            document.getElementById('budgetResults').style.display = 'none';
+            window.currentBudgetPlan = null;
+            
+            showNotification('Kalkulator je resetovan.', 'info');
+        }
+
+        // Initialize enhanced features on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            
+            // Add input validation for budget calculator
+            const budgetIncomeInput = document.getElementById('budgetIncome');
+            if (budgetIncomeInput) {
+                budgetIncomeInput.addEventListener('input', function(e) {
+                    // Remove non-numeric characters except decimal point
+                    let value = e.target.value.replace(/[^0-9.]/g, '');
+                    
+                    // Ensure only one decimal point
+                    const parts = value.split('.');
+                    if (parts.length > 2) {
+                        value = parts[0] + '.' + parts.slice(1).join('');
+                    }
+                    
+                    e.target.value = value;
+                });
+                
+                // Calculate on Enter key
+                budgetIncomeInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        calculateBudget();
+                    }
+                });
+            }
+        });
+
+        // Add animation styles
+        const animationStyles = document.createElement('style');
+        animationStyles.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            
+            .budget-results.animate {
+                animation: fadeInUp 0.5s ease;
+            }
+            
+            @keyframes fadeInUp {
+                from { transform: translateY(20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(animationStyles);
     </script>
 </body>
 </html>

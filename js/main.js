@@ -299,16 +299,19 @@ class MainApplication {
         this.setupGlobalEventListeners();
         this.handleInitialPage();
     }    waitForModules() {
-        // Čekamo da se svi moduli učitaju
+        // Čekamo da se svi moduli učitaju ili timeout nakon 5 sekundi
+        let attempts = 0;
+        const maxAttempts = 50; // 5 sekundi (50 * 100ms)
+        
         const checkModules = () => {
+            attempts++;
+            
             const modulesLoaded = {
                 booking: typeof booking !== 'undefined',
                 calculator: typeof calculator !== 'undefined', 
                 support: typeof support !== 'undefined',
                 admin: typeof admin !== 'undefined'
             };
-            
-            console.log('🔍 Checking modules:', modulesLoaded);
             
             // Nastavi bez admin modula ako nije dostupan
             if (modulesLoaded.booking && modulesLoaded.calculator && modulesLoaded.support) {
@@ -318,12 +321,30 @@ class MainApplication {
                 if (modulesLoaded.support) this.modules.support = support;
                 if (modulesLoaded.admin) this.modules.admin = admin;
                 
-                console.log('✅ Moduli učitani:', Object.keys(this.modules));
-                this.initializeApplication();
-            } else {
-                setTimeout(checkModules, 100);
+                console.log('✅ Svi potrebni moduli učitani');
+                this.isReady = true;
+                this.handleDeferredActions();
+                return;
             }
+            
+            // Ako je prošlo previše vremena, nastavi bez nekih modula
+            if (attempts >= maxAttempts) {
+                console.warn('⚠️ Timeout: neki moduli nisu učitani, nastavljam bez njih');
+                this.modules = {};
+                if (modulesLoaded.booking) this.modules.booking = booking;
+                if (modulesLoaded.calculator) this.modules.calculator = calculator; 
+                if (modulesLoaded.support) this.modules.support = support;
+                if (modulesLoaded.admin) this.modules.admin = admin;
+                
+                this.isReady = true;
+                this.handleDeferredActions();
+                return;
+            }
+            
+            // Ponovni pokušaj nakon 100ms
+            setTimeout(checkModules, 100);
         };
+        
         checkModules();
     }
 
@@ -1055,15 +1076,22 @@ function loadProfileData() {
         username: 'zoran.dostica'
     };
     
-    document.getElementById('profileName').value = userData.name;
-    document.getElementById('profileEmail').value = userData.email;
-    document.getElementById('profilePhone').value = userData.phone;
-    document.getElementById('profileUsername').value = userData.username;
+    // Safely set profile fields if they exist
+    const profileName = document.getElementById('profileName');
+    const profileEmail = document.getElementById('profileEmail');
+    const profilePhone = document.getElementById('profilePhone');
+    const profileUsername = document.getElementById('profileUsername');
+    const profileAvatarDisplay = document.getElementById('profileAvatarDisplay');
+    
+    if (profileName) profileName.value = userData.name;
+    if (profileEmail) profileEmail.value = userData.email;
+    if (profilePhone) profilePhone.value = userData.phone;
+    if (profileUsername) profileUsername.value = userData.username;
     
     // Load avatar
     var avatar = localStorage.getItem('userAvatar');
-    if (avatar) {
-        document.getElementById('profileAvatarDisplay').src = avatar;
+    if (avatar && profileAvatarDisplay) {
+        profileAvatarDisplay.src = avatar;
     }
 }
 
