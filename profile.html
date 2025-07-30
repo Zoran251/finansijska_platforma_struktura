@@ -32,6 +32,276 @@
             box-shadow: 0 8px 24px rgba(224,180,60,0.25);
             background: linear-gradient(135deg, #ffe066 0%, #b99309 100%);
         }
+
+        /* Budget Section Styles */
+        .budget-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .budget-overview {
+            margin-bottom: 2rem;
+        }
+
+        .budget-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .budget-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #e0b43c;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(224,180,60,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .budget-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(224,180,60,0.15);
+        }
+
+        .budget-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffe066 0%, #e0b43c 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(224,180,60,0.2);
+        }
+
+        .budget-info {
+            flex: 1;
+        }
+
+        .budget-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .budget-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .budget-planning {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #e0b43c;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(224,180,60,0.1);
+        }
+
+        .budget-breakdown {
+            margin: 1.5rem 0;
+        }
+
+        .budget-category {
+            background: #fff;
+            border: 1px solid #e0b43c;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(224,180,60,0.05);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-title {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .category-amount {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e0b43c;
+        }
+
+        .category-description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Goals Section Styles */
+        .goals-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .goals-overview {
+            margin-bottom: 2rem;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .goal-card {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #e0b43c;
+            border-radius: 15px;
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(224,180,60,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .goal-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(224,180,60,0.15);
+        }
+
+        .goal-icon {
+            font-size: 2.5rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffe066 0%, #e0b43c 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(224,180,60,0.2);
+            flex-shrink: 0;
+        }
+
+        .goal-info {
+            flex: 1;
+        }
+
+        .goal-info h4 {
+            margin: 0 0 1rem 0;
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffe066 0%, #e0b43c 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #666;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-deadline {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .add-goal {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            border: 2px solid #e0b43c;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(224,180,60,0.1);
+        }
+
+        .goal-form .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Section visibility */
+        .profile-section {
+            display: none;
+        }
+
+        .profile-section.active {
+            display: block;
+        }
+
+        /* Navigation active state */
+        .nav-link.active {
+            background: linear-gradient(90deg, #e0b43c 0%, #b99309 100%);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #e0b43c 0%, #b99309 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #b99309 0%, #8b7507 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(224,180,60,0.3);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .budget-cards,
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .goal-form .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .budget-card,
+            .goal-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .goal-icon,
+            .budget-icon {
+                margin-bottom: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -51,7 +321,7 @@
                     <a href="#goals" class="nav-link">🎯 Ciljevi</a>
                 </li>
                 <li class="nav-item">
-                    <a href="profil.html" class="nav-link active">👤 Profil</a>
+                    <a href="#profile" class="nav-link active">👤 Profil</a>
                 </li>
                 <li class="nav-item">
                     <a href="#logout" class="nav-link">🚪 Odjava</a>
@@ -102,7 +372,7 @@
             <!-- Profile Sections -->
             <div class="profile-sections">
                 <!-- Personal Information -->
-                <section class="profile-section">
+                <section id="profile" class="profile-section active">
                     <h2><i class="fas fa-user"></i> Lični Podaci</h2>
                     <div class="form-grid">
                         <div class="form-group">
@@ -281,9 +551,158 @@
                         </div>
                     </div>
                 </section>
-            </div>
-        </div>
-    </main>    <!-- Support Chat će se kreirati dinamički putem JavaScript-a -->
+
+                <!-- Budget Section -->
+                <section id="budget" class="profile-section" style="display: none;">
+                    <h2><i class="fas fa-calculator"></i> Moj Budžet</h2>
+                    <div class="budget-container">
+                        <div class="budget-overview">
+                            <h3>Budžet Pregled</h3>
+                            <div class="budget-cards">
+                                <div class="budget-card income">
+                                    <div class="budget-icon">💰</div>
+                                    <div class="budget-info">
+                                        <span class="budget-label">Mjesečni Prihod</span>
+                                        <span class="budget-amount" id="monthlyIncome">€2,500</span>
+                                    </div>
+                                </div>
+                                <div class="budget-card expenses">
+                                    <div class="budget-icon">💸</div>
+                                    <div class="budget-info">
+                                        <span class="budget-label">Mjesečni Troškovi</span>
+                                        <span class="budget-amount" id="monthlyExpenses">€1,800</span>
+                                    </div>
+                                </div>
+                                <div class="budget-card savings">
+                                    <div class="budget-icon">🏦</div>
+                                    <div class="budget-info">
+                                        <span class="budget-label">Štednja</span>
+                                        <span class="budget-amount" id="monthlySavings">€700</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="budget-planning">
+                            <h3>50/30/20 Budžet Planer</h3>
+                            <div class="budget-form">
+                                <div class="form-group">
+                                    <label for="monthlyIncomeInput">Mjesečni Prihod (€)</label>
+                                    <input type="number" id="monthlyIncomeInput" placeholder="Unesite mjesečni prihod" value="2500">
+                                </div>
+                                
+                                <div class="budget-breakdown">
+                                    <div class="budget-category">
+                                        <div class="category-header">
+                                            <span class="category-title">Potrebe (50%)</span>
+                                            <span class="category-amount" id="needsAmount">€1,250</span>
+                                        </div>
+                                        <div class="category-description">Stanovanje, hrana, transport, osnovni troškovi</div>
+                                    </div>
+                                    
+                                    <div class="budget-category">
+                                        <div class="category-header">
+                                            <span class="category-title">Želje (30%)</span>
+                                            <span class="category-amount" id="wantsAmount">€750</span>
+                                        </div>
+                                        <div class="category-description">Zabava, restorani, hobi, putovanja</div>
+                                    </div>
+                                    
+                                    <div class="budget-category">
+                                        <div class="category-header">
+                                            <span class="category-title">Štednja (20%)</span>
+                                            <span class="category-amount" id="savingsAmount">€500</span>
+                                        </div>
+                                        <div class="category-description">Povećanje štednje, ulaganja, hitni fond</div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary" onclick="calculateBudget()">Izračunaj Budžet</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Goals Section -->
+                <section id="goals" class="profile-section" style="display: none;">
+                    <h2><i class="fas fa-target"></i> Finansijski Ciljevi</h2>
+                    <div class="goals-container">
+                        <div class="goals-overview">
+                            <h3>Moji Ciljevi</h3>
+                            <div class="goals-grid">
+                                <div class="goal-card">
+                                    <div class="goal-icon">🏠</div>
+                                    <div class="goal-info">
+                                        <h4>Kupovina Stana</h4>
+                                        <div class="goal-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 35%"></div>
+                                            </div>
+                                            <span class="progress-text">€17,500 / €50,000 (35%)</span>
+                                        </div>
+                                        <div class="goal-deadline">Cilj: Decembar 2025</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="goal-card">
+                                    <div class="goal-icon">✈️</div>
+                                    <div class="goal-info">
+                                        <h4>Odmor u Italiji</h4>
+                                        <div class="goal-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 80%"></div>
+                                            </div>
+                                            <span class="progress-text">€2,400 / €3,000 (80%)</span>
+                                        </div>
+                                        <div class="goal-deadline">Cilj: Ljeto 2024</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="goal-card">
+                                    <div class="goal-icon">🚗</div>
+                                    <div class="goal-info">
+                                        <h4>Novi Automobil</h4>
+                                        <div class="goal-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 15%"></div>
+                                            </div>
+                                            <span class="progress-text">€3,000 / €20,000 (15%)</span>
+                                        </div>
+                                        <div class="goal-deadline">Cilj: Septembar 2025</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="add-goal">
+                            <h3>Dodaj Novi Cilj</h3>
+                            <div class="goal-form">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="goalName">Naziv Cilja</label>
+                                        <input type="text" id="goalName" placeholder="Naziv vašeg cilja">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goalAmount">Ciljani Iznos (€)</label>
+                                        <input type="number" id="goalAmount" placeholder="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="goalDeadline">Rok za Postizanje</label>
+                                        <input type="date" id="goalDeadline">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="currentSavings">Trenutno Ušteđeno (€)</label>
+                                        <input type="number" id="currentSavings" placeholder="0">
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary" onclick="addNewGoal()">Dodaj Cilj</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Support Section -->
+                <section class="profile-section">
 
     <!-- Floating Support Button (debug prikaz) -->
     <button class="floating-support-btn support-btn" title="Tehnička Podrška" style="border: 3px solid red; background: yellow; color: red; font-size: 18px;">
@@ -338,6 +757,160 @@
     <script src="js/support-kb.js?v=2025061301"></script>
     <script src="js/support-chat.js?v=2025061301"></script>
     <script>
+        // Navigation and Tab Switching
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize navigation
+            initializeNavigation();
+            initializeBudgetCalculator();
+        });
+
+        function initializeNavigation() {
+            // Get all navigation links
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.profile-section');
+
+            // Add click event listeners to navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Check if it's an internal navigation link (starts with #)
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        
+                        // Remove active class from all links
+                        navLinks.forEach(navLink => navLink.classList.remove('active'));
+                        
+                        // Add active class to clicked link
+                        this.classList.add('active');
+                        
+                        // Hide all sections
+                        sections.forEach(section => {
+                            section.style.display = 'none';
+                            section.classList.remove('active');
+                        });
+                        
+                        // Show target section
+                        const targetId = href.substring(1); // Remove # from href
+                        let targetSection = document.getElementById(targetId);
+                        
+                        // Handle special cases
+                        if (targetId === 'budget') {
+                            targetSection = document.getElementById('budget');
+                        } else if (targetId === 'goals') {
+                            targetSection = document.getElementById('goals');
+                        } else if (targetId === 'logout') {
+                            // Handle logout
+                            handleLogout();
+                            return;
+                        }
+                        
+                        // If no target section found, show profile by default
+                        if (!targetSection) {
+                            targetSection = document.getElementById('profile');
+                        }
+                        
+                        if (targetSection) {
+                            targetSection.style.display = 'block';
+                            targetSection.classList.add('active');
+                        }
+                    }
+                });
+            });
+
+            // Set profile as active by default
+            const profileLink = document.querySelector('a[href="#profile"]');
+            const profileSection = document.getElementById('profile');
+            
+            if (profileLink) {
+                profileLink.classList.add('active');
+            }
+            
+            if (profileSection) {
+                profileSection.style.display = 'block';
+                profileSection.classList.add('active');
+            }
+        }
+
+        function initializeBudgetCalculator() {
+            const monthlyIncomeInput = document.getElementById('monthlyIncomeInput');
+            if (monthlyIncomeInput) {
+                monthlyIncomeInput.addEventListener('input', calculateBudget);
+                // Calculate initial budget
+                calculateBudget();
+            }
+        }
+
+        function calculateBudget() {
+            const monthlyIncome = parseFloat(document.getElementById('monthlyIncomeInput').value) || 0;
+            
+            // Calculate 50/30/20 rule
+            const needs = monthlyIncome * 0.5;
+            const wants = monthlyIncome * 0.3;
+            const savings = monthlyIncome * 0.2;
+            
+            // Update display
+            document.getElementById('needsAmount').textContent = `€${needs.toFixed(0)}`;
+            document.getElementById('wantsAmount').textContent = `€${wants.toFixed(0)}`;
+            document.getElementById('savingsAmount').textContent = `€${savings.toFixed(0)}`;
+            
+            // Update overview cards
+            document.getElementById('monthlyIncome').textContent = `€${monthlyIncome.toFixed(0)}`;
+            document.getElementById('monthlyExpenses').textContent = `€${(needs + wants).toFixed(0)}`;
+            document.getElementById('monthlySavings').textContent = `€${savings.toFixed(0)}`;
+        }
+
+        function addNewGoal() {
+            const goalName = document.getElementById('goalName').value;
+            const goalAmount = parseFloat(document.getElementById('goalAmount').value);
+            const goalDeadline = document.getElementById('goalDeadline').value;
+            const currentSavings = parseFloat(document.getElementById('currentSavings').value) || 0;
+            
+            if (!goalName || !goalAmount || !goalDeadline) {
+                alert('Molimo popunite sva polja!');
+                return;
+            }
+            
+            // Calculate progress percentage
+            const progressPercentage = Math.min((currentSavings / goalAmount) * 100, 100);
+            
+            // Create new goal card
+            const goalsGrid = document.querySelector('.goals-grid');
+            const newGoalCard = document.createElement('div');
+            newGoalCard.className = 'goal-card';
+            newGoalCard.innerHTML = `
+                <div class="goal-icon">🎯</div>
+                <div class="goal-info">
+                    <h4>${goalName}</h4>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        <span class="progress-text">€${currentSavings.toFixed(0)} / €${goalAmount.toFixed(0)} (${Math.round(progressPercentage)}%)</span>
+                    </div>
+                    <div class="goal-deadline">Cilj: ${new Date(goalDeadline).toLocaleDateString('sr-RS', { year: 'numeric', month: 'long' })}</div>
+                </div>
+            `;
+            
+            goalsGrid.appendChild(newGoalCard);
+            
+            // Clear form
+            document.getElementById('goalName').value = '';
+            document.getElementById('goalAmount').value = '';
+            document.getElementById('goalDeadline').value = '';
+            document.getElementById('currentSavings').value = '';
+            
+            showNotification('Novi cilj je uspješno dodan!', 'success');
+        }
+
+        function handleLogout() {
+            if (confirm('Da li ste sigurni da se želite odjaviti?')) {
+                // Clear any saved data
+                localStorage.removeItem('profileData');
+                // Redirect to login page
+                window.location.href = 'index.html';
+            }
+        }
+
         // Profile functionality
         function savePersonalInfo() {
             // Simulate saving personal information
