@@ -1,981 +1,1455 @@
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - Golden Balance</title>    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/profil.css">
-    <link rel="stylesheet" href="css/support-chat.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .floating-support-btn {
-            position: fixed;
-            bottom: 32px;
-            right: 32px;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, #ffe066 0%, #e0b43c 100%);
-            color: #222;
-            border: none;
-            border-radius: 50%;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2rem;
-            cursor: pointer;
-            z-index: 10000;
-            transition: box-shadow 0.2s, background 0.2s;
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background: var(--dark-bg);
+        position: relative;
+        min-height: 100vh;
+        color: var(--light-text);
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+    }
+    
+    body::before {
+        content: '';
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        right: -50%;
+        bottom: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at center, transparent 30%, var(--dark-bg) 70%), 
+                    radial-gradient(circle at top left, var(--gold-bright), transparent 40%),
+                    radial-gradient(circle at bottom right, var(--gold-dark), transparent 40%),
+                    radial-gradient(circle at top right, var(--gold-medium), transparent 40%);
+        background-size: 100% 100%, 50% 50%, 50% 50%, 50% 50%;
+        background-position: center, top left, bottom right, top right;
+        filter: blur(60px);
+        opacity: 0.1;
+        z-index: -2;
+        transform: rotate(0deg);
+        animation: backgroundAnimation 30s infinite alternate ease-in-out;
+    }
+    
+    @keyframes backgroundAnimation {
+        0% {
+            transform: rotate(0deg) scale(1);
         }
-        .floating-support-btn:hover {
-            box-shadow: 0 8px 24px rgba(224,180,60,0.25);
-            background: linear-gradient(135deg, #ffe066 0%, #b99309 100%);
+        100% {
+            transform: rotate(5deg) scale(1.1);
         }
-        
-        /* 50/30/20 Budget Calculator Styles */
-        .budget-calculator {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-top: 1rem;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        width: 90%;
+        background: rgba(16, 16, 18, 0.3);
+        border-radius: var(--border-radius-lg);
+        box-shadow: var(--box-shadow);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border-light);
+        backdrop-filter: blur(10px);
+    }
+    
+    .container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.03), transparent);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    /* Header */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2.5rem;
+        background: rgba(16, 16, 18, 0.7);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        margin: 0 1rem 1rem 1rem;
+        border: 1px solid var(--border-light);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+
+    .logo {
+        font-size: 1.6rem;
+        font-weight: 800;
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        letter-spacing: 0.5px;
+        box-shadow: var(--box-shadow);
+    }
+
+    .btn i {
+        margin-right: 0.5rem;
+    }
+    
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.2), rgba(255,255,255,0));
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+        z-index: -1;
+    }
+    
+    .btn:hover::before {
+        transform: translateX(100%);
+    }
+    
+    .btn:hover {
+        transform: translateY(-3px);
+    }
+    
+    .btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-primary {
+        background: var(--gradient-gold);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-danger {
+        background-color: var(--danger);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background-color: #dc2626;
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .success-message {
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+        color: var(--gold-bright);
+        padding: 1rem 1.5rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        transition: opacity 0.3s ease;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.1);
+        backdrop-filter: blur(10px);
+    }
+    
+    .success-message i {
+        margin-right: 0.75rem;
+        font-size: 1.25em;
+        color: var(--gold-bright);
+    }
+    
+    /* Budget Planner Styles */
+    .budget-planner {
+        background-color: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        box-shadow: var(--shadow);
+    }
+    
+    .income-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .income-section h4 {
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        color: var(--gray-700);
+    }
+    
+    .input-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .budget-categories {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .category-card {
+        background-color: var(--gray-100);
+        border-radius: 0.5rem;
+        padding: 1.25rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .category-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+    
+    .category-header h4 {
+        font-size: 1.1rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .category-percent {
+        font-weight: 600;
+        color: var(--primary);
+    }
+    
+    .category-amount {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .category-desc {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+        margin-bottom: 1rem;
+        min-height: 2.5rem;
+    }
+    
+    .category-progress {
+        height: 0.5rem;
+        background-color: var(--gray-200);
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+    
+    .progress-bar {
+        height: 100%;
+        border-radius: 1rem;
+    }
+    
+    .category-control {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .category-control label {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+    
+    .percent-slider {
+        flex: 1;
+        -webkit-appearance: none;
+        appearance: none;
+        height: 0.5rem;
+        background: var(--gray-200);
+        border-radius: 1rem;
+        outline: none;
+    }
+    
+    .percent-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: none;
+    }
+    
+    .percent-slider::-moz-range-thumb {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 50%;
+        background: var(--primary);
+        cursor: pointer;
+        border: none;
+    }
+    
+    .budget-note {
+        background-color: #f0f9ff;
+        border-left: 4px solid var(--primary);
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.9rem;
+    }
+    
+    .transaction-amount.savings {
+        color: var(--success);
+    }
+    
+    /* Expense Tracker Styles */
+    .expenses-tracker {
+        margin-top: 2rem;
+        background-color: white;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+    }
+    
+    .expense-tabs {
+        display: flex;
+        border-bottom: 1px solid var(--gray-200);
+        margin-bottom: 1.5rem;
+        overflow-x: auto;
+    }
+    
+    .expense-tab {
+        padding: 0.75rem 1.25rem;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: var(--gray-500);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .expense-tab:hover {
+        color: var(--primary);
+    }
+    
+    .expense-tab.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+    
+    .expense-tab-content {
+        display: none;
+    }
+    
+    .expense-tab-content.active {
+        display: block;
+    }
+    
+    .expense-form {
+        background-color: var(--gray-100);
+        border-radius: 0.5rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .expense-form h4 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        color: var(--gray-700);
+    }
+    
+    .expense-form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+    
+    .expense-form-col {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .expense-form-col label {
+        font-size: 0.875rem;
+        color: var(--gray-700);
+        margin-bottom: 0.5rem;
+    }
+    
+    .expense-form-col input {
+        padding: 0.625rem 0.75rem;
+        border: 1px solid var(--gray-200);
+        border-radius: 0.375rem;
+        background: rgba(255, 255, 255, 0.9);
+        color: #000000;
+    }
+    
+    .expense-form-button {
+        align-self: flex-end;
+    }
+    
+    .expense-table-container {
+        overflow-x: auto;
+    }
+    
+    .expense-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    .expense-table th {
+        background-color: var(--gray-100);
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--gray-700);
+        border-bottom: 2px solid var(--gray-200);
+    }
+    
+    .expense-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .expense-table tbody tr:hover {
+        background-color: var(--gray-100);
+    }
+    
+    .expense-table tfoot td {
+        font-weight: 600;
+        border-top: 2px solid var(--gray-200);
+    }
+    
+    .expense-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .expense-actions button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0.25rem;
+        border-radius: 0.25rem;
+        transition: all 0.2s ease;
+    }
+    
+    .expense-delete {
+        color: var(--danger);
+    }
+    
+    .expense-delete:hover {
+        background-color: rgba(239, 68, 68, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+        .expense-form-row {
+            grid-template-columns: 1fr;
         }
-        
-        .section-description {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            border-radius: 0 8px 8px 0;
+    }
+
+    /* Profile Layout */
+    .profile-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container {
+            grid-template-columns: 1fr;
         }
-        
-        .income-input {
-            display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: var(--shadow);
+        padding: 1.5rem;
+        height: fit-content;
+    }
+
+    .profile-info {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--gray-200);
+        margin-bottom: 1.5rem;
+    }
+
+    .profile-pic {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1rem;
+        border: 4px solid var(--primary);
+    }
+
+    .profile-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    
+    .profile-email {
+        color: var(--muted-text);
+        font-size: 0.875rem;
+    }
+
+    .nav-menu {
+        list-style: none;
+        padding: 0;
+        margin-top: 1rem;
+    }
+
+    .nav-item {
+        margin-bottom: 0.25rem;
+    }
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        color: var(--light-text);
+        text-decoration: none;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        background: rgba(22, 22, 26, 0.5);
+        border: 1px solid transparent;
+    }
+    
+    .expense-form {
+        background-color: rgba(22, 22, 26, 0.5);
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--box-shadow);
+    }
+
+    .expense-form h4 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        color: #D4AF37;
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .expense-form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+
+    .expense-form-col {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        background: var(--gradient-gold);
+        color: white;
+        border: 1px solid rgba(212, 175, 55, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .nav-link i {
+        width: 20px;
+        margin-right: 0.75rem;
+        text-align: center;
+    }
+
+    /* Main Content */
+    .main-content {
+        background: white;
+        border-radius: 0.5rem;
+        box-shadow: var(--shadow);
+        padding: 2rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title i {
+        font-size: 1.25em;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .form-col {
+        flex: 1;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--light-text);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--border-light);
+        border-radius: var(--border-radius);
+        color: #000000;
+        font-size: 1rem;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--gold-medium);
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+    
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    /* Budget Stats */
+    .budget-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: rgba(22, 22, 26, 0.6);
+        border-radius: var(--border-radius);
+        padding: 1.25rem;
+        box-shadow: var(--box-shadow);
+        text-align: center;
+        flex: 1;
+        border: 1px solid var(--border-light);
+        backdrop-filter: blur(5px);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+        pointer-events: none;
+    }
+
+    .stat-card.income {
+        border-color: var(--success);
+    }
+
+    .stat-card.expense {
+        border-color: var(--danger);
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 0.5rem 0;
+        background: var(--gradient-gold);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-card.income .stat-value {
+        color: var(--success);
+    }
+
+    .stat-card.expense .stat-value {
+        color: var(--danger);
+    }
+
+    .stat-label {
+        color: var(--muted-text);
+        font-size: 0.875rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Transactions */
+    .transactions-list {
+        margin-top: 2rem;
+    }
+
+    .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(22, 22, 26, 0.4);
+        border: 1px solid var(--border-light);
+        border-radius: var(--border-radius);
+        margin-bottom: 0.75rem;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .transaction-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+
+    .transaction-info {
+        flex: 1;
+    }
+
+    .transaction-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .transaction-category {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+
+    .transaction-amount {
+        font-weight: 600;
+    }
+
+    .income {
+        color: var(--success);
+    }
+
+    .expense {
+        color: var(--danger);
+    }
+
+    /* Danger Zone */
+    .danger-zone {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid #fee2e2;
+    }
+
+    .danger-zone h3 {
+        color: var(--danger);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .danger-zone p {
+        color: var(--gray-500);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background: rgba(22, 22, 26, 0.85);
+        border-radius: var(--border-radius-lg);
+        width: 90%;
+        max-width: 500px;
+        padding: 2rem;
+        position: relative;
+        border: 1px solid var(--border-light);
+        box-shadow: var(--box-shadow);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+    }
+    
+    .modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), transparent);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--gray-500);
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        justify-content: flex-end;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .form-row {
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .form-col {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-col:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    /* ========================================= */
+    /* KOMPLETNA MOBILNA RESPONSIVNOST - PROFILE */
+    /* ========================================= */
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        body {
+            font-size: 16px; /* Prevent iOS zoom */
+            overflow-x: hidden;
+        }
+
+        /* Header - Mobile */
+        .header {
+            padding: 0.75rem 1rem !important;
+        }
+
+        .header-content {
+            flex-direction: column !important;
             gap: 1rem;
-            align-items: end;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
+            align-items: stretch !important;
         }
-        
-        .income-input label {
-            display: block;
+
+        .logo {
+            justify-content: center !important;
+        }
+
+        .nav-links {
+            flex-direction: column !important;
+            gap: 0.5rem !important;
+            width: 100%;
+        }
+
+        .nav-links a {
+            padding: 0.75rem 1rem !important;
+            text-align: center;
+            border-radius: 0.5rem;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* Main Container - Mobile */
+        .main-container {
+            margin-top: 120px !important; /* Account for taller mobile header */
+            padding: 1rem !important;
+            max-width: 100% !important;
+        }
+
+        /* Sidebar - Mobile */
+        .sidebar {
+            position: fixed !important;
+            top: 0;
+            left: -100%;
+            width: 280px !important;
+            height: 100vh;
+            z-index: 1001;
+            transition: left 0.3s ease !important;
+            overflow-y: auto;
+            padding-top: 120px !important;
+        }
+
+        .sidebar.active {
+            left: 0 !important;
+        }
+
+        /* Mobile sidebar toggle */
+        .mobile-menu-toggle {
+            display: block !important;
+            position: fixed;
+            top: 80px;
+            left: 1rem;
+            z-index: 1002;
+            background: var(--gold-bright);
+            color: var(--dark-bg);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+        }
+
+        /* Content Area - Mobile */
+        .content-area {
+            margin-left: 0 !important;
+            padding: 1rem !important;
+            width: 100% !important;
+        }
+
+        /* Dashboard Grid - Mobile */
+        .dashboard-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+
+        /* Stats Cards - Mobile */
+        .stat-card {
+            padding: 1.5rem 1rem !important;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 1.5rem !important;
+        }
+
+        .stat-card p {
+            font-size: 0.9rem !important;
+        }
+
+        /* Charts - Mobile */
+        .chart-container {
+            padding: 1rem !important;
+            margin: 1rem 0 !important;
+        }
+
+        /* Forms - Mobile */
+        .form-container {
+            padding: 1.5rem 1rem !important;
+            margin: 1rem 0 !important;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+        }
+
+        .form-row {
+            flex-direction: column !important;
+            gap: 1rem !important;
+        }
+
+        .form-group {
+            width: 100% !important;
+            margin-bottom: 1rem !important;
+        }
+
+        /* Buttons - Mobile */
+        .btn, .primary-btn, .secondary-btn {
+            width: 100% !important;
+            padding: 1rem !important;
+            font-size: 1rem !important;
+            min-height: 48px; /* Touch target */
             margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
         }
-        
-        .income-input input {
-            flex: 1;
-            min-width: 200px;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            transition: border-color 0.3s;
+
+        .btn-group {
+            flex-direction: column !important;
+            gap: 0.5rem !important;
         }
-        
-        .income-input input:focus {
-            border-color: #ffe066;
-            outline: none;
+
+        /* Tables - Mobile */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        
-        .budget-results {
-            animation: fadeIn 0.5s ease-in;
+
+        .table {
+            min-width: 600px;
+            font-size: 0.875rem;
         }
-        
-        .budget-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
+
+        .table th,
+        .table td {
+            padding: 0.5rem !important;
+            white-space: nowrap;
         }
-        
+
+        /* Navigation Tabs - Mobile */
+        .nav-tabs {
+            flex-direction: column !important;
+            gap: 0.25rem !important;
+        }
+
+        .nav-tab {
+            width: 100% !important;
+            text-align: center !important;
+            padding: 1rem !important;
+        }
+
+        /* Modals - Mobile */
+        .modal-content {
+            width: 95vw !important;
+            max-width: none !important;
+            margin: 1rem auto !important;
+            padding: 1.5rem 1rem !important;
+            max-height: calc(100vh - 2rem) !important;
+            overflow-y: auto;
+        }
+
+        /* Typography - Mobile */
+        h1 { font-size: 1.75rem !important; }
+        h2 { font-size: 1.5rem !important; }
+        h3 { font-size: 1.25rem !important; }
+        h4 { font-size: 1.125rem !important; }
+        h5 { font-size: 1rem !important; }
+
+        /* Cards - Mobile */
+        .card {
+            margin: 1rem 0 !important;
+            padding: 1.5rem 1rem !important;
+        }
+
+        .card-header {
+            padding: 1rem !important;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 1rem !important;
+        }
+
+        /* Budget specific - Mobile */
         .budget-category {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .budget-category:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        
-        .budget-category.needs {
-            border-left: 5px solid #4caf50;
-        }
-        
-        .budget-category.wants {
-            border-left: 5px solid #ff9800;
-        }
-        
-        .budget-category.savings {
-            border-left: 5px solid #2196f3;
-        }
-        
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .category-header h4 {
-            margin: 0;
-            color: #333;
-        }
-        
-        .category-header i {
-            font-size: 1.5rem;
-        }
-        
-        .needs .category-header i { color: #4caf50; }
-        .wants .category-header i { color: #ff9800; }
-        .savings .category-header i { color: #2196f3; }
-        
-        .category-amount {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        
-        .category-description {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-        
-        .budget-tips {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .budget-tips h4 {
-            color: #856404;
-            margin-bottom: 1rem;
-        }
-        
-        .budget-tips ul {
-            margin: 0;
-            padding-left: 1.5rem;
-        }
-        
-        .budget-tips li {
-            margin-bottom: 0.5rem;
-            color: #856404;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @media (max-width: 768px) {
-            .income-input {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .budget-categories {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <h2>Golden Balance</h2>
-            </div>            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="preview-fixed.html" class="nav-link">🏠 Početna</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#budget" class="nav-link">💰 Moj Budžet</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#goals" class="nav-link">🎯 Ciljevi</a>
-                </li>
-                <li class="nav-item">
-                    <a href="profile.html" class="nav-link active">👤 Profil</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#logout" class="nav-link">🚪 Odjava</a>
-                </li>                <li class="nav-item">
-                    <a href="preview-fixed.html#openSupport" class="nav-link support-btn" style="display: flex; align-items: center; gap: 0.5rem; background: linear-gradient(90deg, #e0b43c 0%, #b99309 100%); color: #222; border-radius: 10px; font-weight: 600; border: none; padding: 0.7rem 1.5rem; cursor: pointer; transition: background 0.2s; text-decoration: none;">
-                        <i class="fas fa-headset"></i> Tehnička Podrška
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="container">
-            <!-- Profile Header -->
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <img src="assets/images/profiles/default-avatar.svg" alt="Profile Picture" id="profileImage">
-                    <div class="avatar-upload">
-                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
-                        <button onclick="document.getElementById('avatarInput').click()" class="upload-btn">
-                            <i class="fas fa-camera"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="profile-info">
-                    <h1 id="userName">Korisničko Ime</h1>
-                    <p id="userEmail">korisnik@example.com</p>
-                    <span class="member-since">Član od: <span id="memberDate">Januar 2024</span></span>
-                </div>
-                <div class="profile-stats">
-                    <div class="stat-card">
-                        <h3 id="totalSavings">€0</h3>
-                        <p>Ukupna štednja</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="monthlyBudget">€0</h3>
-                        <p>Mjesečni budžet</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3 id="goalsAchieved">0</h3>
-                        <p>Ostvareni ciljevi</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Sections -->
-            <div class="profile-sections">
-                <!-- Personal Information -->
-                <section class="profile-section">
-                    <h2><i class="fas fa-user"></i> Lični Podaci</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="firstName">Ime</label>
-                            <input type="text" id="firstName" value="Marko">
-                        </div>
-                        <div class="form-group">
-                            <label for="lastName">Prezime</label>
-                            <input type="text" id="lastName" value="Petrović">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" value="marko.petrovic@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Telefon</label>
-                            <input type="tel" id="phone" value="+387 65 123 456">
-                        </div>
-                        <div class="form-group">
-                            <label for="dateOfBirth">Datum rođenja</label>
-                            <input type="date" id="dateOfBirth" value="1990-05-15">
-                        </div>
-                        <div class="form-group">
-                            <label for="city">Grad</label>
-                            <input type="text" id="city" value="Sarajevo">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="savePersonalInfo()">
-                        <i class="fas fa-save"></i> Sačuvaj Promjene
-                    </button>
-                </section>
-
-                <!-- Financial Preferences -->
-                <section class="profile-section">
-                    <h2><i class="fas fa-cog"></i> Finansijske Postavke</h2>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="currency">Valuta</label>
-                            <select id="currency">
-                                <option value="EUR">Euro (€)</option>
-                                <option value="BAM">Bosanska Marka (KM)</option>
-                                <option value="USD">US Dollar ($)</option>
-                                <option value="RSD">Srpski Dinar (RSD)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="monthlyIncome">Mjesečni prihod</label>
-                            <input type="number" id="monthlyIncome" value="1500" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="budgetMethod">Metoda budžetiranja</label>
-                            <select id="budgetMethod">
-                                <option value="50-30-20">50/30/20 Pravilo</option>
-                                <option value="zero-based">Zero-based budžet</option>
-                                <option value="envelope">Envelope metoda</option>
-                                <option value="custom">Prilagođeno</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="savingsGoal">Cilj štednje (%)</label>
-                            <input type="number" id="savingsGoal" value="20" min="0" max="100">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="saveFinancialSettings()">
-                        <i class="fas fa-save"></i> Sačuvaj Postavke
-                    </button>
-                </section>
-
-                <!-- 50/30/20 Budget Calculator -->
-                <section class="profile-section" id="budgetCalculatorSection">
-                    <h2><i class="fas fa-calculator"></i> 50/30/20 Budžet Kalkulator</h2>
-                    <p class="section-description">
-                        Unesite svoj mjesečni prihod i sistem će automatski izračunati raspodelu prema 50/30/20 pravilu:
-                        <strong>50%</strong> za osnovne potrebe, <strong>30%</strong> za želje i zabavu, <strong>20%</strong> za štednju.
-                    </p>
-                    
-                    <div class="budget-calculator">
-                        <div class="income-input">
-                            <label for="budgetIncome">Mjesečni prihod (RSD)</label>
-                            <input type="number" id="budgetIncome" placeholder="200000" step="1000" min="0">
-                            <button class="btn btn-primary" onclick="calculateBudget()" id="calculateBtn">
-                                <i class="fas fa-calculator"></i> Izračunaj raspodelu
-                            </button>
-                        </div>
-                        
-                        <div class="budget-results" id="budgetResults" style="display: none;">
-                            <h3>Vaša budžet raspodela:</h3>
-                            
-                            <div class="budget-categories">
-                                <div class="budget-category needs">
-                                    <div class="category-header">
-                                        <i class="fas fa-home"></i>
-                                        <h4>Osnovne potrebe (50%)</h4>
-                                    </div>
-                                    <div class="category-amount" id="needsAmount">100,000 RSD</div>
-                                    <div class="category-description">
-                                        Stanovanje, hrana, transport, režije, minimalne potrebe
-                                    </div>
-                                </div>
-                                
-                                <div class="budget-category wants">
-                                    <div class="category-header">
-                                        <i class="fas fa-gamepad"></i>
-                                        <h4>Želje i zabava (30%)</h4>
-                                    </div>
-                                    <div class="category-amount" id="wantsAmount">60,000 RSD</div>
-                                    <div class="category-description">
-                                        Izlasci, kupovina, hobi, putovanja, restorани
-                                    </div>
-                                </div>
-                                
-                                <div class="budget-category savings">
-                                    <div class="category-header">
-                                        <i class="fas fa-piggy-bank"></i>
-                                        <h4>Štednja i investicije (20%)</h4>
-                                    </div>
-                                    <div class="category-amount" id="savingsAmount">40,000 RSD</div>
-                                    <div class="category-description">
-                                        Štedni račun, investicije, fondovi za hitne slučajeve
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="budget-tips">
-                                <h4><i class="fas fa-lightbulb"></i> Savjeti za uspješno budžetiranje:</h4>
-                                <ul>
-                                    <li>Držite se 50% limita za osnovne potrebe - tražite načine za uštede</li>
-                                    <li>30% za želje ne smije preći ovu granicu - budite disciplinovani</li>
-                                    <li>20% štednje je minimum - pokušajte uštedjeti još više ako možete</li>
-                                    <li>Redovno pratite troškove i prilagođavajte budžet</li>
-                                </ul>
-                            </div>
-                            
-                            <button class="btn btn-success" onclick="saveBudgetPlan()">
-                                <i class="fas fa-save"></i> Sačuvaj budžet plan
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Security Settings -->
-                <section class="profile-section">
-                    <h2><i class="fas fa-shield-alt"></i> Sigurnost</h2>
-                    <div class="security-options">
-                        <div class="security-item">
-                            <div class="security-info">
-                                <h3>Promjena Lozinke</h3>
-                                <p>Promijeni svoju lozinku za veću sigurnost</p>
-                            </div>
-                            <button class="btn btn-secondary" onclick="openPasswordModal()">
-                                <i class="fas fa-key"></i> Promijeni
-                            </button>
-                        </div>
-                        <div class="security-item">
-                            <div class="security-info">
-                                <h3>Dvofaktorska Autentifikacija</h3>
-                                <p>Dodatni sloj sigurnosti za vaš nalog</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="twoFactorAuth">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="security-item">
-                            <div class="security-info">
-                                <h3>Notifikacije o Prijavama</h3>
-                                <p>Primaj obavještenja o novim prijavama</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="loginNotifications" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Notification Settings -->
-                <section class="profile-section">
-                    <h2><i class="fas fa-bell"></i> Obavještenja</h2>
-                    <div class="notification-settings">
-                        <div class="notification-item">
-                            <div class="notification-info">
-                                <h3>Email Obavještenja</h3>
-                                <p>Primaj važne obavještenja na email</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="emailNotifications" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="notification-item">
-                            <div class="notification-info">
-                                <h3>Budžet Upozorenja</h3>
-                                <p>Obavještenja kad prekoračite budžet</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="budgetAlerts" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="notification-item">
-                            <div class="notification-info">
-                                <h3>Cilj Štednje Podsjetnici</h3>
-                                <p>Mjesečni podsjetnici o ciljevima štednje</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" id="savingsReminders" checked>
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Support Section -->
-                <section class="profile-section">
-                    <h2><i class="fas fa-headset"></i> Podrška</h2>
-                    <div class="support-options">                        <div class="support-item">
-                            <div class="support-info">
-                                <h3>Tehnička Podrška</h3>
-                                <p>Postavite pitanje našem virtuelnom asistentu</p>
-                            </div>
-                            <button class="btn btn-primary support-btn">
-                                <i class="fas fa-comments"></i> Otvori Chat
-                            </button>
-                        </div>
-                        <div class="support-item">
-                            <div class="support-info">
-                                <h3>FAQ</h3>
-                                <p>Često postavljana pitanja</p>
-                            </div>
-                            <button class="btn btn-secondary" onclick="openFAQ()">
-                                <i class="fas fa-question-circle"></i> Pogledaj
-                            </button>
-                        </div>
-                        <div class="support-item">
-                            <div class="support-info">
-                                <h3>Kontakt</h3>
-                                <p>Direktan kontakt sa našim timom</p>
-                            </div>
-                            <div class="contact-buttons">
-                                <a href="mailto:zorandostica2@gmail.com" class="btn btn-outline">
-                                    <i class="fas fa-envelope"></i> Email
-                                </a>
-                                <a href="tel:+38765827710" class="btn btn-outline">
-                                    <i class="fas fa-phone"></i> Pozovi
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-        </div>
-    </main>
-
-    <!-- Support Chat će se kreirati dinamički putem JavaScript-a -->
-
-    <!-- Floating Support Button -->
-    <button class="floating-support-btn support-btn" title="Tehnička Podrška">
-        <i class="fas fa-headset"></i>
-    </button>
-
-    <!-- Password Change Modal -->
-    <div id="passwordModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closePasswordModal()">&times;</span>
-            <h2>Promjena Lozinke</h2>
-            <form id="passwordForm">
-                <div class="form-group">
-                    <label for="currentPassword">Trenutna lozinka</label>
-                    <input type="password" id="currentPassword" name="currentPassword" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">Nova lozinka</label>
-                    <input type="password" id="newPassword" name="newPassword" required autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Potvrdi novu lozinku</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" required autocomplete="off">
-                </div>
-                <div class="modal-buttons">
-                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Otkaži</button>
-                    <button type="submit" class="btn btn-primary">Promijeni Lozinku</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script>
-        // Eksplicitno blokiraj stare chat sisteme
-        console.log('🧹 Blokiram stare chat sisteme...');
-        
-        // Ukloni postojeće script tagove koji mogu učitati stare chat fajlove
-        const oldScripts = document.querySelectorAll('script[src*="chat.js"], script[src*="chat-"], script[src*="enhanced"]');
-        oldScripts.forEach(script => {
-            if (!script.src.includes('support-chat.js')) {
-                console.log('🗑️ Uklanjam stari script:', script.src);
-                script.remove();
-            }
-        });
-        
-        // Resetuj bilo kakve postojeće chat varijable
-        if (typeof window.chatInstance !== 'undefined') {
-            console.log('🗑️ Uklanjam stari chatInstance');
-            delete window.chatInstance;
-        }
-        console.log('✅ Čišćenje završeno, učitavam novi sistem...');
-    </script>
-    <!-- Osnovne biblioteke -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
-    
-    <!-- Utility skripte -->
-    <script src="js/utils.js"></script>
-    <script src="js/notification.js"></script>
-    
-    <!-- Core moduli -->
-    <script src="js/app.js"></script>
-    <script src="js/admin.js"></script>
-    <script src="js/main.js"></script>
-    
-    <!-- Funkcionalnosti -->
-    <script src="js/support-kb.js"></script>
-    <script src="js/support-chat.js"></script>
-    <script src="js/budget.js"></script>
-    <script src="js/profile.js"></script>
-    <script>
-        // Profile functionality
-        function savePersonalInfo() {
-            // Simulate saving personal information
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            
-            // Update display name
-            document.getElementById('userName').textContent = firstName + ' ' + lastName;
-            
-            // Show success message
-            showNotification('Lični podaci su uspješno sačuvani!', 'success');
+            padding: 1rem !important;
+            margin: 0.5rem 0 !important;
         }
 
-        function saveFinancialSettings() {
-            // Simulate saving financial settings
-            const income = document.getElementById('monthlyIncome').value;
-            const budgetMethod = document.getElementById('budgetMethod').value;
-            const currency = document.getElementById('currency').value;
-            const savingsGoal = document.getElementById('savingsGoal').value;
-            
-            // Update monthly budget display
-            document.getElementById('monthlyBudget').textContent = '€' + income;
-            
-            // If 50/30/20 method is selected, auto-populate the calculator
-            if (budgetMethod === '50-30-20') {
-                document.getElementById('budgetIncome').value = income;
-                calculateBudget();
-                
-                // Scroll to budget calculator
-                document.getElementById('budgetCalculatorSection').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            }
-            
-            // Save to localStorage
-            const financialSettings = {
-                monthlyIncome: income,
-                budgetMethod: budgetMethod,
-                currency: currency,
-                savingsGoal: savingsGoal,
-                lastUpdated: new Date().toISOString()
-            };
-            localStorage.setItem('financialSettings', JSON.stringify(financialSettings));
-            
-            showNotification('Finansijske postavke su uspješno sačuvane!', 'success');
+        .expense-item {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.5rem !important;
+            padding: 1rem !important;
         }
 
-        // 50/30/20 Budget Calculator Functions
-        function calculateBudget() {
-            const income = parseFloat(document.getElementById('budgetIncome').value);
-            
-            if (!income || income <= 0) {
-                alert('Molimo unesite validan mjesečni prihod.');
-                return;
-            }
-            
-            // Calculate 50/30/20 breakdown
-            const needs = Math.round(income * 0.5);
-            const wants = Math.round(income * 0.3);
-            const savings = Math.round(income * 0.2);
-            
-            // Format numbers with thousands separator
-            const formatNumber = (num) => {
-                return num.toLocaleString('sr-RS') + ' RSD';
-            };
-            
-            // Update display
-            document.getElementById('needsAmount').textContent = formatNumber(needs);
-            document.getElementById('wantsAmount').textContent = formatNumber(wants);
-            document.getElementById('savingsAmount').textContent = formatNumber(savings);
-            
-            // Show results
-            document.getElementById('budgetResults').style.display = 'block';
-            
-            // Add animation class
-            const results = document.getElementById('budgetResults');
-            results.classList.add('animate');
-            
-            // Store calculated values for saving
-            window.currentBudgetPlan = {
-                totalIncome: income,
-                needs: needs,
-                wants: wants,
-                savings: savings,
-                needsPercent: 50,
-                wantsPercent: 30,
-                savingsPercent: 20
-            };
-            
-            showNotification('Budžet je uspješno izračunat!', 'success');
+        /* Budget Stats - Mobile Enhanced */
+        .budget-stats {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
+            margin: 1rem 0 !important;
         }
 
-        function saveBudgetPlan() {
-            if (!window.currentBudgetPlan) {
-                alert('Prvo izračunajte budžet prije čuvanja.');
-                return;
-            }
-            
-            const budgetPlan = {
-                ...window.currentBudgetPlan,
-                createdAt: new Date().toISOString(),
-                method: '50-30-20'
-            };
-            
-            // Save to localStorage
-            localStorage.setItem('activeBudgetPlan', JSON.stringify(budgetPlan));
-            
-            // Update profile stats
-            document.getElementById('monthlyBudget').textContent = 
-                budgetPlan.totalIncome.toLocaleString('sr-RS') + ' RSD';
-            document.getElementById('totalSavings').textContent = 
-                budgetPlan.savings.toLocaleString('sr-RS') + ' RSD';
-            
-            showNotification('Budžet plan je uspješno sačuvan!', 'success');
-            
-            // Optional: Navigate to budget tracking page
-            setTimeout(() => {
-                if (confirm('Želite li otići na stranicu za praćenje budžeta?')) {
-                    window.location.href = 'profile.html#budget';
-                }
-            }, 1500);
+        .stat-card {
+            padding: 1.25rem 1rem !important;
+            text-align: center !important;
         }
 
-        function openPasswordModal() {
-            document.getElementById('passwordModal').style.display = 'flex';
+        .stat-card h3 {
+            font-size: 1.5rem !important;
+            margin-bottom: 0.5rem !important;
         }
 
-        function closePasswordModal() {
-            document.getElementById('passwordModal').style.display = 'none';
-            document.getElementById('passwordForm').reset();
+        .stat-card .stat-value {
+            font-size: 1.75rem !important;
+            font-weight: bold !important;
+            margin: 0.5rem 0 !important;
         }
 
-        function openFAQ() {
-            // Redirect to FAQ page or open modal
-            alert('FAQ sekcija će biti uskoro dostupna!');
+        .stat-card .stat-label {
+            font-size: 0.9rem !important;
+            opacity: 0.8;
         }
 
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#27ae60' : '#3498db'};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 5px;
-                z-index: 9999;
-                animation: slideIn 0.3s ease-out;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+        /* Budget Planner - Mobile */
+        .budget-planner {
+            padding: 1rem !important;
+            margin: 1rem 0 !important;
         }
 
-        // Avatar upload
-        document.getElementById('avatarInput').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('profileImage').src = e.target.result;
-                    showNotification('Profilna slika je uspješno promijenjena!', 'success');
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Password form
-        document.getElementById('passwordForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword !== confirmPassword) {
-                alert('Nove lozinke se ne slažu!');
-                return;
-            }
-            
-            if (newPassword.length < 8) {
-                alert('Lozinka mora imati najmanje 8 karaktera!');
-                return;
-            }
-            
-            // Simulate password change
-            showNotification('Lozinka je uspješno promijenjena!', 'success');
-            closePasswordModal();
-        });
-
-        // Initialize profile data
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load saved data from localStorage if available
-            const savedData = localStorage.getItem('profileData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                // Populate form fields with saved data
-                Object.keys(data).forEach(key => {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        element.value = data[key];
-                    }
-                });
-            }
-        });
-
-        // Floating support button - otvori chat na klik
-        document.addEventListener('DOMContentLoaded', function() {
-            const floatingBtn = document.querySelector('.floating-support-btn');
-            if (floatingBtn) {
-                floatingBtn.addEventListener('click', function() {
-                    // Pokušaj da otvoriš chat koristeći postojeći sistem
-                    if (typeof window.openSupportChat === 'function') {
-                        window.openSupportChat();
-                    } else {
-                        // Ako nema globalne funkcije, pokušaj da simuliraš klik na dugme za podršku
-                        const supportBtn = document.querySelector('.support-btn');
-                        if (supportBtn) {
-                            supportBtn.click();
-                        } else {
-                            alert('Podrška nije dostupna na ovoj stranici.');
-                        }
-                    }
-                });
-            }
-        });
-
-        // Notification and Helper Functions
-        function showNotification(message, type = 'info') {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
-            notification.innerHTML = `
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()">&times;</button>
-            `;
-            
-            // Add styles
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
-                color: white;
-                padding: 15px 20px;
-                border-radius: 5px;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                z-index: 1000;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                animation: slideIn 0.3s ease;
-            `;
-            
-            notification.querySelector('button').style.cssText = `
-                background: none;
-                border: none;
-                color: white;
-                font-size: 18px;
-                cursor: pointer;
-                padding: 0;
-                margin-left: 10px;
-            `;
-            
-            // Add to page
-            document.body.appendChild(notification);
-            
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                if (notification.parentElement) {
-                    notification.style.animation = 'slideOut 0.3s ease';
-                    setTimeout(() => notification.remove(), 300);
-                }
-            }, 5000);
+        .budget-planner h3 {
+            font-size: 1.25rem !important;
+            margin-bottom: 1rem !important;
+            text-align: center;
         }
 
-        function loadSavedData() {
-            // Load financial settings
-            const savedSettings = localStorage.getItem('financialSettings');
-            if (savedSettings) {
-                const settings = JSON.parse(savedSettings);
-                
-                if (settings.monthlyIncome) {
-                    document.getElementById('monthlyIncome').value = settings.monthlyIncome;
-                    document.getElementById('monthlyBudget').textContent = 
-                        settings.monthlyIncome.toLocaleString('sr-RS') + ' RSD';
-                }
-                
-                if (settings.budgetMethod) {
-                    document.getElementById('budgetMethod').value = settings.budgetMethod;
-                }
-                
-                if (settings.currency) {
-                    document.getElementById('currency').value = settings.currency;
-                }
-                
-                if (settings.savingsGoal) {
-                    document.getElementById('savingsGoal').value = settings.savingsGoal;
-                }
-            }
-
-            // Load saved budget plan
-            const savedBudget = localStorage.getItem('activeBudgetPlan');
-            if (savedBudget) {
-                const budget = JSON.parse(savedBudget);
-                document.getElementById('totalSavings').textContent = 
-                    budget.savings.toLocaleString('sr-RS') + ' RSD';
-                
-                // Pre-populate calculator if data exists
-                if (budget.totalIncome) {
-                    document.getElementById('budgetIncome').value = budget.totalIncome;
-                    
-                    // Show saved budget breakdown
-                    if (budget.needs && budget.wants && budget.savings) {
-                        const formatNumber = (num) => num.toLocaleString('sr-RS') + ' RSD';
-                        
-                        document.getElementById('needsAmount').textContent = formatNumber(budget.needs);
-                        document.getElementById('wantsAmount').textContent = formatNumber(budget.wants);
-                        document.getElementById('savingsAmount').textContent = formatNumber(budget.savings);
-                        document.getElementById('budgetResults').style.display = 'block';
-                        
-                        window.currentBudgetPlan = budget;
-                    }
-                }
-            }
+        .budget-categories {
+            grid-template-columns: 1fr !important;
+            gap: 1rem !important;
         }
 
-        function resetBudgetCalculator() {
-            document.getElementById('budgetIncome').value = '';
-            document.getElementById('budgetResults').style.display = 'none';
-            window.currentBudgetPlan = null;
-            
-            showNotification('Kalkulator je resetovan.', 'info');
+        .budget-category {
+            padding: 1.25rem 1rem !important;
+            border-radius: 0.75rem !important;
         }
 
-        // Initialize enhanced features on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSavedData();
-            
-            // Add input validation for budget calculator
-            const budgetIncomeInput = document.getElementById('budgetIncome');
-            if (budgetIncomeInput) {
-                budgetIncomeInput.addEventListener('input', function(e) {
-                    // Remove non-numeric characters except decimal point
-                    let value = e.target.value.replace(/[^0-9.]/g, '');
-                    
-                    // Ensure only one decimal point
-                    const parts = value.split('.');
-                    if (parts.length > 2) {
-                        value = parts[0] + '.' + parts.slice(1).join('');
-                    }
-                    
-                    e.target.value = value;
-                });
-                
-                // Calculate on Enter key
-                budgetIncomeInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        calculateBudget();
-                    }
-                });
-            }
-        });
+        .budget-category h4 {
+            font-size: 1.1rem !important;
+            margin-bottom: 0.75rem !important;
+            text-align: center;
+        }
 
-        // Add animation styles
-        const animationStyles = document.createElement('style');
-        animationStyles.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-            
-            .budget-results.animate {
-                animation: fadeInUp 0.5s ease;
-            }
-            
-            @keyframes fadeInUp {
-                from { transform: translateY(20px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(animationStyles);
-    </script>
-</body>
-</html>
+        .budget-inputs {
+            flex-direction: column !important;
+            gap: 0.75rem !important;
+        }
+
+        .budget-inputs input {
+            width: 100% !important;
+            padding: 0.875rem !important;
+            font-size: 16px !important; /* Prevent iOS zoom */
+        }
+
+        .budget-progress {
+            margin: 1rem 0 !important;
+        }
+
+        .progress-bar {
+            height: 10px !important;
+            border-radius: 5px !important;
+            margin: 0.5rem 0 !important;
+        }
+
+        .progress-text {
+            display: flex !important;
+            justify-content: space-between !important;
+            font-size: 0.85rem !important;
+            margin-top: 0.5rem !important;
+        }
+
+        /* Settings Section - Mobile Enhanced */
+        #settingsSection {
+            padding: 1rem !important;
+        }
+
+        #settingsSection .section-title {
+            font-size: 1.5rem !important;
+            text-align: center !important;
+            margin-bottom: 1.5rem !important;
+        }
+
+        #settingsSection .form-group {
+            margin-bottom: 1.5rem !important;
+            padding: 1.25rem 1rem !important;
+            background: rgba(22, 22, 26, 0.5) !important;
+            border-radius: 0.75rem !important;
+            border: 1px solid var(--border-light) !important;
+        }
+
+        #settingsSection h3 {
+            font-size: 1.25rem !important;
+            margin-bottom: 1rem !important;
+            text-align: center !important;
+            color: var(--gold-bright) !important;
+        }
+
+        #settingsSection .form-label {
+            font-size: 0.95rem !important;
+            margin-bottom: 0.5rem !important;
+            font-weight: 600 !important;
+        }
+
+        #settingsSection .form-control {
+            width: 100% !important;
+            padding: 0.875rem !important;
+            font-size: 16px !important; /* Prevent iOS zoom */
+            border-radius: 0.5rem !important;
+            margin-bottom: 1rem !important;
+        }
+
+        /* Danger Zone - Mobile */
+        .danger-zone {
+            background: rgba(239, 68, 68, 0.1) !important;
+            border: 1px solid rgba(239, 68, 68, 0.3) !important;
+            border-radius: 0.75rem !important;
+            padding: 1.25rem 1rem !important;
+            margin-top: 2rem !important;
+            text-align: center !important;
+        }
+
+        .danger-zone h3 {
+            color: #ef4444 !important;
+            font-size: 1.1rem !important;
+            margin-bottom: 0.75rem !important;
+        }
+
+        .danger-zone p {
+            font-size: 0.9rem !important;
+            margin-bottom: 1rem !important;
+            line-height: 1.5 !important;
+        }
+
+        .btn-danger {
+            background: #ef4444 !important;
+            color: white !important;
+            width: 100% !important;
+            padding: 1rem !important;
+            font-size: 1rem !important;
+            border-radius: 0.5rem !important;
+            border: none !important;
+            font-weight: 600 !important;
+        }
+
+        /* Budget Action Buttons - Mobile */
+        .budget-actions {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0.75rem !important;
+            margin-top: 1.5rem !important;
+        }
+
+        .budget-actions .btn {
+            width: 100% !important;
+            padding: 1rem !important;
+            font-size: 1rem !important;
+            border-radius: 0.5rem !important;
+        }
+
+        /* Income/Expense Forms - Mobile */
+        .income-expense-forms {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1.5rem !important;
+            margin: 2rem 0 !important;
+        }
+
+        .income-form, .expense-form {
+            background: rgba(22, 22, 26, 0.7) !important;
+            padding: 1.5rem 1rem !important;
+            border-radius: 0.75rem !important;
+            border: 1px solid var(--border-light) !important;
+        }
+
+        .income-form h4, .expense-form h4 {
+            font-size: 1.2rem !important;
+            margin-bottom: 1rem !important;
+            text-align: center !important;
+        }
+
+        /* Budget Summary Cards - Mobile */
+        .budget-summary {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+            margin: 1.5rem 0 !important;
+        }
+
+        .summary-card {
+            background: rgba(22, 22, 26, 0.8) !important;
+            padding: 1.25rem 1rem !important;
+            border-radius: 0.75rem !important;
+            border-left: 4px solid var(--gold-bright) !important;
+            text-align: center !important;
+        }
+
+        .summary-card.income {
+            border-left-color: #10b981 !important;
+        }
+
+        .summary-card.expense {
+            border-left-color: #ef4444 !important;
+        }
+
+        .summary-card.balance {
+            border-left-color: var(--gold-bright) !important;
+        }
+
+        .summary-value {
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+            margin: 0.5rem 0 !important;
+        }
+
+        .summary-label {
+            font-size: 0.9rem !important;
+            opacity: 0.8 !important;
+        }
+
+        /* Progress bars - Mobile */
+        .progress-container {
+            margin: 1rem 0 !important;
+        }
+
+        .progress-bar {
+            height: 8px !important;
+            border-radius: 4px;
+        }
+
+        /* Spacing adjustments - Mobile */
+        .mb-4 { margin-bottom: 1.5rem !important; }
+        .mt-4 { margin-top: 1.5rem !important; }
+        .py-4 { padding: 1.5rem 0 !important; }
+        .px-4 { padding: 0 1rem !important; }
+    }
+
+    /* Extra Small Devices */
+    @media (max-width: 480px) {
+        .main-container {
+            padding: 0.5rem !important;
+        }
+
+        .content-area {
+            padding: 0.5rem !important;
+        }
+
+        .card {
+            padding: 1rem 0.75rem !important;
+        }
+
+        .form-container {
+            padding: 1rem 0.75rem !important;
+        }
+
+        .mobile-menu-toggle {
+            left: 0.5rem !important;
+            padding: 0.5rem !important;
+        }
+
+        /* Form improvements for very small screens */
+        input, select, textarea {
+            font-size: 16px !important; /* Prevent zoom on iOS */
+            padding: 0.875rem !important;
+        }
+
+        .btn {
+            padding: 0.875rem !important;
+            font-size: 0.95rem !important;
+        }
+    }
+
+    /* Tablet Portrait */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .main-container {
+            padding: 1.5rem !important;
+        }
+
+        .dashboard-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        .sidebar {
+            width: 220px !important;
+        }
+
+        .content-area {
+            margin-left: 220px !important;
+        }
+    }
+
+    /* Touch-friendly improvements */
+    @media (hover: none) and (pointer: coarse) {
+        /* Touch devices */
+        button, .btn, a, input[type="submit"] {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Larger tap targets */
+        .nav-tab {
+            padding: 1rem !important;
+        }
+
+        /* Remove hover effects on touch devices */
+        .card:hover,
+        .stat-card:hover {
+            transform: none !important;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        .sidebar,
+        .mobile-menu-toggle,
+        .header {
+            display: none !important;
+        }
+
+        .content-area {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+
+        body {
+            color: #000 !important;
+            background: #fff !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ccc !important;
+        }
+    }
+</style>
